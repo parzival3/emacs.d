@@ -37,6 +37,9 @@
   (evil-define-key 'normal 'global (kbd "<leader>,")   'consult-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key 'normal 'global (kbd "<f1>")        'vc-next-action)
+  (evil-define-key 'normal 'global (kbd "<leader>pc")  'project-compile)
+  (evil-define-key 'normal 'global (kbd "<leader>pe")  'project-eshell)
+  (evil-define-key 'normal 'global (kbd "<leader>br")  'revert-buffer)
   :init
   (evil-mode 1))
 
@@ -167,6 +170,11 @@
   :straight t
   :init
   (corfu-global-mode))
+
+(use-package clang-format+
+  :straight t
+  :config
+  (add-hook 'c-mode-common-hook #'clang-format+-mode))
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
