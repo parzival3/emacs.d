@@ -32,7 +32,11 @@
   :config
   (evil-set-leader 'normal (kbd "SPC"))
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'project-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>gg") 'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader>gg")  'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader>,")   'consult-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>fp")  'p-open-config)
+  (evil-define-key 'normal 'global (kbd "<f1>")        'vc-next-action)
   :init
   (evil-mode 1))
 
@@ -252,4 +256,62 @@
   (setq minibuffer-complete-and-exit 'after-completion)
 
   ;; Set tab width to 4
-  (setq tab-width 4))
+  (setq tab-width 4)
+  ;; Set file encoding to linux
+  (prefer-coding-system 'utf-8-unix)
+  )
+
+(use-package bookmark
+  :init
+  (setq bookmark-default-file "~/.emacs_bookmarks"))
+
+;; Custom functions
+
+;; Hooks for vc-next-action
+(defun p-commit-filename ()
+"File name to add to the header of a git commit."
+  (require 'project)
+  (let* ((root (project-root (project-current)))
+         (file-name (abbreviate-file-name (file-name-sans-extension buffer-file-name)))
+         (extension (file-name-extension buffer-file-name))
+         (final-file-name (mapconcat #'identity
+                                     (cl-remove-duplicates (split-string (file-relative-name file-name root))
+                                                           :test #'string-equal) ":")))
+         (when (or (string-equal extension "c")
+                 (string-equal extension "h")
+                 (string-equal extension "cpp")
+                 (string-equal extension "hpp"))
+                (setq final-file-name (format "%s:%s" final-file-name extension)))
+         (concat final-file-name ": ")))
+
+(defun p-insert-preamble (preamble)
+"Insert the PREAMBLE (aka filepath:filename) in the git commit."
+  (when (equal (buffer-name) "*vc-log*")
+                   (insert preamble)))
+
+(defun p-vc-log-advice (orig-fun &rest args)
+  "Advice the 'vc-next-action' function with inser-preamble.
+The arguments are ORIG-FUN (vc-next-action) and ARGS the argument
+of 'vc-next-action'."
+  (let ((preamble (p-commit-filename)))
+    (apply orig-fun args)
+    (p-insert-preamble preamble)))
+
+
+;; Advicing vc-next-action
+(advice-add 'vc-next-action :around #'p-vc-log-advice)
+
+(defun p-open-config ()
+  "Open this configuration."
+  (interactive)
+  (find-file "~/.emacs.personal/init.el"))
+
+(defun p-dos2unix ()
+  "Convert a DOS formatted text buffer to UNIX format"
+  (interactive)
+  (set-buffer-file-coding-system 'undecided-unix nil))
+
+(defun p-unix2dos ()
+  "Convert a UNIX formatted text buffer to DOS format"
+  (interactive)
+  (set-buffer-file-coding-system 'undecided-dos nil))
