@@ -30,16 +30,21 @@
 (use-package evil
   :straight t
   :config
-  (evil-set-leader 'normal (kbd "SPC"))
-  (evil-define-key 'normal 'global (kbd "<leader>SPC") 'project-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>pp")  'project-switch-project)
-  (evil-define-key 'normal 'global (kbd "<leader>gg")  'magit-status)
-  (evil-define-key 'normal 'global (kbd "<leader>,")   'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>fp")  'p-open-config)
-  (evil-define-key 'normal 'global (kbd "<f1>")        'vc-next-action)
-  (evil-define-key 'normal 'global (kbd "<leader>pc")  'project-compile)
-  (evil-define-key 'normal 'global (kbd "<leader>pe")  'project-eshell)
-  (evil-define-key 'normal 'global (kbd "<leader>br")  'revert-buffer)
+  (evil-set-leader '(normal motion visual replace) (kbd "SPC"))
+  (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-buffer)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
+  (evil-define-key '(normal motion) 'global (kbd "<f1>")        'vc-next-action)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pc")  'project-compile)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pe")  'project-eshell)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>br")  'revert-buffer)
+  (evil-define-key '(normal motion)'global (kbd "<leader>po")   'ff-find-other-file)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pt")  'p-project-run-tests)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>bd")  'kill-current-buffer)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'consult-ripgrep)
   :init
   (evil-mode 1))
 
@@ -212,8 +217,11 @@
   (fset 'yes-or-no-p 'y-or-n-p)
 
   ;; Silent startup
-  (setq inhibit-startup-message t)
-  (setq initial-scratch-message nil)
+  (setq inhibit-startup-message t
+        initial-scratch-message nil
+        inhibit-startup-screen t
+        inhibit-default-init t
+        inhibit-startup-echo-area-message user-login-name)
 
   ;; Dired file size as human redeable by default
   (setq-default dired-listing-switches "-alh")
@@ -222,7 +230,7 @@
   (show-paren-mode t)
 
   ;; Don't make sound by flash screen
-  (setq visible-bell t)
+  (setq visible-bell nil)
 
   ;; Try to not use tabs
   (setq-default indent-tabs-mode nil)
@@ -247,7 +255,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
-  (load-theme 'modus-vivendi)
+  (load-theme 'modus-operandi)
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -267,7 +275,10 @@
   (setq tab-width 4)
   ;; Set file encoding to linux
   (prefer-coding-system 'utf-8-unix)
-  )
+
+  ;; custom variables
+  (setq custom-file (concat user-emacs-directory "custom.el"))
+  (load custom-file 'noerror))
 
 (use-package bookmark
   :init
@@ -323,3 +334,29 @@ of 'vc-next-action'."
   "Convert a UNIX formatted text buffer to DOS format"
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
+
+(defvar-local project-test-value nil
+  "Function for testing the current project, ovveride it in the dir locals var.")
+
+(defvar-local project-run-value nil
+  "Function for running the current project, ovveride it in the dir locals var.")
+
+(put 'project-run-value 'safe-local-variable 'string-or-null-p)
+(put 'project-test-value 'safe-local-variable 'string-or-null-p)
+
+(defun p-project-run-tests ()
+  "Run test in the current project."
+  (interactive)
+  (let ((default-directory (project-root (project-current t)))
+        (compile-command (or project-test-value
+                            compile-command)))
+    (call-interactively #'compile)))
+
+(defun p-project-run ()
+  "Run test in the current project."
+  (interactive)
+  (let ((default-directory (project-root (project-current t)))
+        (run-command project-run-value))
+    (cl-flet ((prompt-text (lambda () (insert run-command))))
+      (minibuffer-with-setup-hook #'prompt-text
+          (call-interactively #'project-async-shell-command)))))
