@@ -1,2 +1,9 @@
 /backups/
 /straight/
+/custom.el
+/elpa/
+/eshell/
+/places
+/projects
+/transient/
+/url/
