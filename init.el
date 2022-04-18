@@ -20,7 +20,24 @@
   :straight t)
 
 (use-package cider
-  :straight t)
+  :straight t
+  :config
+
+  (defun evil-collection-cider-last-sexp (command &rest args)
+  "In normal-state or motion-state, last sexp ends at point."
+  (if (and (not evil-move-beyond-eol)
+           (or (evil-normal-state-p) (evil-motion-state-p)))
+      (save-excursion
+        (unless (or (eobp) (eolp)) (forward-char))
+        (apply command args))
+    (apply command args)))
+
+  (unless evil-move-beyond-eol
+    (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
+    (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
+    (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
+    (with-eval-after-load 'cider-eval-sexp-fu
+      (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp))))
 
 (use-package vertico
   :straight t
@@ -32,19 +49,22 @@
   :config
   (evil-set-leader '(normal motion visual replace) (kbd "SPC"))
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'tabspaces-open-existing-project-and-workspace)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
   (evil-define-key '(normal motion) 'global (kbd "<f1>")        'vc-next-action)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pc")  'project-compile)
+  (evil-define-key 'insert          'global  (kbd "C-x C-f")    'dabbrev-completion)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pe")  'project-eshell)
   (evil-define-key '(normal motion) 'global (kbd "<leader>br")  'revert-buffer)
-  (evil-define-key '(normal motion)'global (kbd "<leader>po")   'ff-find-other-file)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>po")  'ff-find-other-file)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pt")  'p-project-run-tests)
   (evil-define-key '(normal motion) 'global (kbd "<leader>bd")  'kill-current-buffer)
   (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'consult-ripgrep)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>wV")  'evil-window-vsplit)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>ws")  'evil-window-split)
   :init
   (evil-mode 1))
 
@@ -150,6 +170,107 @@
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<"))
 
+(use-package embark
+  :straight t
+  :ensure t
+  :bind
+  (("C-;" . embark-act)         ;; pick some comfortable binding
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :straight t
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package which-key
+  :straight t
+  :config
+  (setq which-key-popup-type 'side-window)
+  (setq which-key-side-window-max-width 0.33)
+  (setq which-key-side-window-max-height 0.25)
+  :init
+  (which-key-mode))
+
+(use-package tabspaces
+  ;; use this next line only if you also use straight, otherwise ignore it.
+  :straight (:type git :host github :repo "mclear-tools/tabspaces")
+  :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
+  :commands (tabspaces-create-workspace
+             tabspaces-create-new-project-and-workspace
+             tabspaces-open-existing-project-and-workspace
+             tabspaces-switch-workspace)
+  :custom (tabspaces-use-filtered-buffers-as-default t))
+
+(with-eval-after-load 'consult
+  ;; hide full buffer list (still available with "b")
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  ;; set consult-workspace buffer list
+  (defvar consult--source-workspace
+    (list :name     "Workspace Buffers"
+          :narrow   ?w
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :default  t
+          :items    (lambda ()
+                      (tabspaces--tab-bar-buffer-name-filter ((lambda () (consult--buffer-query :sort 'visibility
+                                                                                                  :as #'buffer-name))))))))
+
+    "Set workspace buffer list for consult-buffer.")
+  (push consult--source-workspace consult-buffer-sources))
+
+(defun embark-which-key-indicator ()
+  "An embark indicator that displays keymaps using which-key.
+The which-key help message will show the type and value of the
+current target followed by an ellipsis if there are further
+targets."
+  (lambda (&optional keymap targets prefix)
+    (if (null keymap)
+        (which-key--hide-popup-ignore-command)
+      (which-key--show-keymap
+       (if (eq (plist-get (car targets) :type) 'embark-become)
+           "Become"
+         (format "Act on %s '%s'%s"
+                 (plist-get (car targets) :type)
+                 (embark--truncate-target (plist-get (car targets) :target))
+                 (if (cdr targets) "…" "")))
+       (if prefix
+           (pcase (lookup-key keymap prefix 'accept-default)
+             ((and (pred keymapp) km) km)
+             (_ (key-binding prefix 'accept-default)))
+         keymap)
+       nil nil t (lambda (binding)
+                   (not (string-suffix-p "-argument" (cdr binding))))))))
+
+(setq embark-indicators
+  '(embark-which-key-indicator
+    embark-highlight-indicator
+    embark-isearch-highlight-indicator))
+
+(defun embark-hide-which-key-indicator (fn &rest args)
+  "Hide the which-key indicator immediately when using the completing-read prompter."
+  (which-key--hide-popup-ignore-command)
+  (let ((embark-indicators
+         (remq #'embark-which-key-indicator embark-indicators)))
+      (apply fn args)))
+
+(advice-add #'embark-completing-read-prompter
+            :around #'embark-hide-which-key-indicator)
 
 (use-package orderless
   :straight t
@@ -187,6 +308,25 @@
   :straight t
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand)))
+
+(use-package doom-themes
+  :straight t
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 (use-package emacs
   :init
@@ -255,7 +395,11 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
-  (load-theme 'modus-operandi)
+
+  (add-to-list 'default-frame-alist '(font . "Hack-12" ))
+  (set-face-attribute 'default t :font "Hack" )
+  (set-face-attribute 'default nil :font "Hack-12")
+  (set-frame-font "Hack-12" nil t)
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -315,7 +459,6 @@ of 'vc-next-action'."
   (let ((preamble (p-commit-filename)))
     (apply orig-fun args)
     (p-insert-preamble preamble)))
-
 
 ;; Advicing vc-next-action
 (advice-add 'vc-next-action :around #'p-vc-log-advice)
