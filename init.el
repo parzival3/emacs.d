@@ -52,6 +52,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'tabspaces-open-existing-project-and-workspace)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'tabspaces-switch-workspace)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
   (evil-define-key '(normal motion) 'global (kbd "<f1>")        'vc-next-action)
