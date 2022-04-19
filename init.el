@@ -15,37 +15,9 @@
 ;; Packages
 (straight-use-package 'use-package)
 
-;; Magit
-(use-package magit
-  :straight t)
-
-(use-package cider
-  :straight t
-  :config
-
-  (defun evil-collection-cider-last-sexp (command &rest args)
-  "In normal-state or motion-state, last sexp ends at point."
-  (if (and (not evil-move-beyond-eol)
-           (or (evil-normal-state-p) (evil-motion-state-p)))
-      (save-excursion
-        (unless (or (eobp) (eolp)) (forward-char))
-        (apply command args))
-    (apply command args)))
-
-  (unless evil-move-beyond-eol
-    (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
-    (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
-    (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
-    (with-eval-after-load 'cider-eval-sexp-fu
-      (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp))))
-
-(use-package vertico
-  :straight t
-  :init
-  (vertico-mode))
-
 (use-package evil
   :straight t
+  :ensure t
   :config
   (evil-set-leader '(normal motion visual replace) (kbd "SPC"))
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
@@ -69,8 +41,41 @@
   :init
   (evil-mode 1))
 
+;; Magit
+(use-package magit
+  :ensure t
+  :straight t)
+
+(use-package vertico
+  :straight t
+  :ensure t
+  :init
+  (vertico-mode))
+
+(use-package cider
+  :ensure t
+  :straight t
+  :config
+
+  (defun evil-collection-cider-last-sexp (command &rest args)
+  "In normal-state or motion-state, last sexp ends at point."
+  (if (and (not evil-move-beyond-eol)
+           (or (evil-normal-state-p) (evil-motion-state-p)))
+      (save-excursion
+        (unless (or (eobp) (eolp)) (forward-char))
+        (apply command args))
+    (apply command args)))
+
+  (unless evil-move-beyond-eol
+    (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
+    (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
+    (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
+    (with-eval-after-load 'cider-eval-sexp-fu
+      (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp))))
+
 (use-package consult
   :straight t
+  :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
@@ -200,6 +205,7 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package which-key
+  :ensure t
   :straight t
   :config
   (setq which-key-popup-type 'side-window)
@@ -209,6 +215,7 @@
   (which-key-mode))
 
 (use-package tabspaces
+  :ensure t
   ;; use this next line only if you also use straight, otherwise ignore it.
   :straight (:type git :host github :repo "mclear-tools/tabspaces")
   :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
@@ -230,7 +237,7 @@
           :default  t
           :items    (lambda ()
                       (tabspaces--tab-bar-buffer-name-filter ((lambda () (consult--buffer-query :sort 'visibility
-                                                                                                  :as #'buffer-name))))))))
+                                                                                                  :as #'buffer-name))))))
 
     "Set workspace buffer list for consult-buffer.")
   (push consult--source-workspace consult-buffer-sources))
@@ -274,6 +281,7 @@ targets."
             :around #'embark-hide-which-key-indicator)
 
 (use-package orderless
+  :ensure t
   :straight t
   :init
   (setq completion-styles '(orderless basic)
@@ -281,6 +289,7 @@ targets."
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
+  :ensure t
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
   :straight t
   :bind (("M-A" . marginalia-cycle)
@@ -294,6 +303,7 @@ targets."
   (marginalia-mode))
 
 (use-package corfu
+  :ensure t
   :straight t
   :init
   (corfu-global-mode))
@@ -305,8 +315,9 @@ targets."
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
+  :ensure t
   ;; Swap M-/ and C-M-/
-  :straight t
+ :straight t
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand)))
 
