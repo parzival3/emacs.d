@@ -37,7 +37,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>po")  'ff-find-other-file)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pt")  'p-project-run-tests)
   (evil-define-key '(normal motion) 'global (kbd "<leader>bd")  'kill-current-buffer)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'consult-ripgrep)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'p-search-for-word-at-point)
   (evil-define-key '(normal motion) 'global (kbd "<leader>wV")  'evil-window-vsplit)
   (evil-define-key '(normal motion) 'global (kbd "<leader>ws")  'evil-window-split)
   :init
@@ -273,7 +273,9 @@ targets."
     embark-isearch-highlight-indicator))
 
 (defun embark-hide-which-key-indicator (fn &rest args)
-  "Hide the which-key indicator immediately when using the completing-read prompter."
+  "Hide the which-key indicator immediately while 'completing-read' prompter.
+FN: the function to apply.
+ARGS: the arguments to the function."
   (which-key--hide-popup-ignore-command)
   (let ((embark-indicators
          (remq #'embark-which-key-indicator embark-indicators)))
@@ -519,3 +521,15 @@ of 'vc-next-action'."
     (cl-flet ((prompt-text (lambda () (insert run-command))))
       (minibuffer-with-setup-hook #'prompt-text
           (call-interactively #'project-async-shell-command)))))
+
+(defun p-search-for-word-at-point (start end)
+  "Search for the current selected word.
+If there is no selected word, simply start an empty search.
+START: beggining of the selected region.
+END: end of the selected region."
+  (interactive "r")
+  (let* ((region (if (use-region-p)
+                     (buffer-substring start end) "")))
+    (consult-ripgrep (project-root (project-current t)) region)))
+
+(provide 'init)\n;;; init.el ends here
