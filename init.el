@@ -1,3 +1,5 @@
+;;; init.el --- Personal Emacs config -*- lexical-binding: t -*-
+
 ;; use streight.el bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -412,6 +414,8 @@ targets."
   (set-face-attribute 'default t :font "Hack" )
   (set-face-attribute 'default nil :font "Hack-12")
   (set-frame-font "Hack-12" nil t)
+  (set-face-font 'fixed-pitch-serif "Hack")
+  (set-face-font 'variable-pitch "Hack")
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -478,7 +482,7 @@ of 'vc-next-action'."
 (defun p-open-config ()
   "Open this configuration."
   (interactive)
-  (find-file "~/.emacs.personal/init.el"))
+  (find-file (concat user-emacs-directory "init.el")))
 
 (defun p-dos2unix ()
   "Convert a DOS formatted text buffer to UNIX format"
@@ -490,14 +494,14 @@ of 'vc-next-action'."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
 
-(defvar-local project-test-value nil
+(defvar-local project-test-cmd nil
   "Function for testing the current project, ovveride it in the dir locals var.")
 
-(defvar-local project-run-value nil
+(defvar-local project-run-cmd nil
   "Function for running the current project, ovveride it in the dir locals var.")
 
-(put 'project-run-value 'safe-local-variable 'string-or-null-p)
-(put 'project-test-value 'safe-local-variable 'string-or-null-p)
+(put 'project-run-cmd 'safe-local-variable 'string-or-null-p)
+(put 'project-test-cmd 'safe-local-variable 'string-or-null-p)
 
 (defun p-project-run-tests ()
   "Run test in the current project."
