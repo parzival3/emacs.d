@@ -1,5 +1,9 @@
 ;;; init.el --- Personal Emacs config -*- lexical-binding: t -*-
 
+;;; Commentary:
+;; My personal init file
+
+;;; Code:
 ;; use streight.el bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -17,7 +21,7 @@
 ;; Packages
 (straight-use-package 'use-package)
 
-(use-package evil
+(use-package 'evil
   :straight t
   :ensure t
   :config
@@ -44,38 +48,38 @@
   (evil-mode 1))
 
 ;; Magit
-(use-package magit
+(use-package 'magit
   :ensure t
   :straight t)
 
-(use-package vertico
+(use-package 'vertico
   :straight t
   :ensure t
   :init
   (vertico-mode))
 
-(use-package cider
+(use-package 'cider
   :ensure t
   :straight t
   :config
+  (with-eval-after-load 'evil
+    (defun evil-collection-cider-last-sexp (command &rest args)
+      "In normal-state or motion-state, last sexp ends at point."
+      (if (and (not evil-move-beyond-eol)
+               (or (evil-normal-state-p) (evil-motion-state-p)))
+          (save-excursion
+            (unless (or (eobp) (eolp)) (forward-char))
+            (apply command args))
+        (apply command args)))
 
-  (defun evil-collection-cider-last-sexp (command &rest args)
-  "In normal-state or motion-state, last sexp ends at point."
-  (if (and (not evil-move-beyond-eol)
-           (or (evil-normal-state-p) (evil-motion-state-p)))
-      (save-excursion
-        (unless (or (eobp) (eolp)) (forward-char))
-        (apply command args))
-    (apply command args)))
+    (unless evil-move-beyond-eol
+      (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
+      (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
+      (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
+      (with-eval-after-load 'cider-eval-sexp-fu
+        (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp)))))
 
-  (unless evil-move-beyond-eol
-    (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
-    (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
-    (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
-    (with-eval-after-load 'cider-eval-sexp-fu
-      (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp))))
-
-(use-package consult
+(use-package 'consult
   :straight t
   :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -130,41 +134,17 @@
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  ;; The :init configuration is always executed (Not lazy)
   :init
-
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
 
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Optionally replace `completing-read-multiple' with an enhanced version.
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
-  ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
-
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
   :config
-
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "M-."))
-  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
    consult-theme
    :preview-key '(:debounce 0.2 any)
@@ -173,9 +153,6 @@
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
    :preview-key (kbd "M-."))
-
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<"))
 
 (use-package embark
@@ -487,12 +464,12 @@ of 'vc-next-action'."
   (find-file (concat user-emacs-directory "init.el")))
 
 (defun p-dos2unix ()
-  "Convert a DOS formatted text buffer to UNIX format"
+  "Convert a DOS formatted text buffer to UNIX format."
   (interactive)
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun p-unix2dos ()
-  "Convert a UNIX formatted text buffer to DOS format"
+  "Convert a UNIX formatted text buffer to DOS format."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
 
@@ -532,4 +509,5 @@ END: end of the selected region."
                      (buffer-substring start end) "")))
     (consult-ripgrep (project-root (project-current t)) region)))
 
-(provide 'init)\n;;; init.el ends here
+(provide 'init)
+;;; init.el ends here
