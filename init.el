@@ -21,7 +21,7 @@
 ;; Packages
 (straight-use-package 'use-package)
 
-(use-package 'evil
+(use-package evil
   :straight t
   :ensure t
   :config
@@ -48,17 +48,17 @@
   (evil-mode 1))
 
 ;; Magit
-(use-package 'magit
+(use-package magit
   :ensure t
   :straight t)
 
-(use-package 'vertico
+(use-package vertico
   :straight t
   :ensure t
   :init
   (vertico-mode))
 
-(use-package 'cider
+(use-package cider
   :ensure t
   :straight t
   :config
@@ -79,7 +79,7 @@
       (with-eval-after-load 'cider-eval-sexp-fu
         (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp)))))
 
-(use-package 'consult
+(use-package consult
   :straight t
   :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -171,7 +171,11 @@
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+
+  ;; override the RET doesn't really work in embark-collect mode, probably because
+  ;; tabulate mode takes precedence?
+  (evil-define-key 'normal 'embark-collect-mode-map (kbd "<leader>o")  'p-emabark-collect-visit-file))
 
 (use-package embark-consult
   :straight t
@@ -222,7 +226,8 @@
   (push consult--source-workspace consult-buffer-sources))
 
 (defun embark-which-key-indicator ()
-  "An embark indicator that displays keymaps using which-key.
+  "An embark indicator tha
+t displays keymaps using which-key.
 The which-key help message will show the type and value of the
 current target followed by an ellipsis if there are further
 targets."
@@ -415,6 +420,14 @@ ARGS: the arguments to the function."
   ;; Set file encoding to linux
   (prefer-coding-system 'utf-8-unix)
 
+  ;; set default find program from git
+  (when (and (eq system-type 'windows-nt)
+             (executable-find "git.exe"))
+    (setq find-program (prin1-to-string
+                        (concat
+                         (file-name-directory (executable-find "git.exe"))
+                         "../usr/bin/find.exe"))))
+
   ;; custom variables
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load custom-file 'noerror))
@@ -422,6 +435,14 @@ ARGS: the arguments to the function."
 (use-package bookmark
   :init
   (setq bookmark-default-file "~/.emacs_bookmarks"))
+
+(use-package dired
+  :after evil
+  :config
+  ;; prevent for creating new buffers for each folder.
+  (setf dired-kill-when-opening-new-dired-buffer t)
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-") 'dired-up-directory))
+
 
 ;; Custom functions
 
@@ -508,6 +529,26 @@ END: end of the selected region."
   (let* ((region (if (use-region-p)
                      (buffer-substring start end) "")))
     (consult-ripgrep (project-root (project-current t)) region)))
+
+;; Embark collect functions
+(defun p-embark-collect-get-xref-item ()
+  "Get the xref-item in the embark-collect mode."
+  (get-text-property (point) 'consult--candidate))
+
+(defun p-visit-xref-item (item)
+  "Open the file pointed by the ITEM wich is a `xref-itme'."
+  (let* ((location (xref-item-location item))
+         (file     (xref-file-location-file location))
+         (line     (xref-file-location-line location))
+         (buffer-name (file-name-nondirectory file)))
+    (save-excursion
+      (with-current-buffer (find-file-other-window file)
+        (goto-line line)))))
+
+(defun p-emabark-collect-visit-file ()
+  "Visit file at point in embark-collect mode."
+  (interactive)
+  (p-visit-xref-item (p-embark-collect-get-xref-item)))
 
 (provide 'init)
 ;;; init.el ends here
