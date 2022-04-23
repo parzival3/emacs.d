@@ -23,7 +23,6 @@
 
 (use-package evil
   :straight t
-  :ensure t
   :config
   (evil-set-leader '(normal motion visual replace) (kbd "SPC"))
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
@@ -49,17 +48,14 @@
 
 ;; Magit
 (use-package magit
-  :ensure t
   :straight t)
 
 (use-package vertico
   :straight t
-  :ensure t
   :init
   (vertico-mode))
 
 (use-package cider
-  :ensure t
   :straight t
   :config
   (with-eval-after-load 'evil
@@ -81,7 +77,6 @@
 
 (use-package consult
   :straight t
-  :ensure t
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
@@ -157,7 +152,6 @@
 
 (use-package embark
   :straight t
-  :ensure t
   :bind
   (("C-;" . embark-act)         ;; pick some comfortable binding
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
@@ -173,13 +167,15 @@
                  nil
                  (window-parameters (mode-line-format . none))))
 
-  ;; override the RET doesn't really work in embark-collect mode, probably because
-  ;; tabulate mode takes precedence?
-  (evil-define-key 'normal 'embark-collect-mode-map (kbd "<leader>o")  'p-emabark-collect-visit-file))
+  ;; fix problem in marginaglia/embark
+  (setf (alist-get 'xref-location embark-default-action-overrides)
+      #'embark-consult-goto-grep)
+
+  (setf (alist-get 'xref-location embark-exporters-alist)
+      #'embark-consult-export-grep))
 
 (use-package embark-consult
   :straight t
-  :ensure t
   :after (embark consult)
   :demand t ; only necessary if you have the hook below
   ;; if you want to have consult previews as you move around an
@@ -188,7 +184,6 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package which-key
-  :ensure t
   :straight t
   :config
   (setq which-key-popup-type 'side-window)
@@ -198,7 +193,6 @@
   (which-key-mode))
 
 (use-package tabspaces
-  :ensure t
   ;; use this next line only if you also use straight, otherwise ignore it.
   :straight (:type git :host github :repo "mclear-tools/tabspaces")
   :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
@@ -267,7 +261,6 @@ ARGS: the arguments to the function."
             :around #'embark-hide-which-key-indicator)
 
 (use-package orderless
-  :ensure t
   :straight t
   :init
   (setq completion-styles '(orderless basic)
@@ -275,7 +268,6 @@ ARGS: the arguments to the function."
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
-  :ensure t
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
   :straight t
   :bind (("M-A" . marginalia-cycle)
@@ -289,7 +281,6 @@ ARGS: the arguments to the function."
   (marginalia-mode))
 
 (use-package corfu
-  :ensure t
   :straight t
   :init
   (corfu-global-mode))
@@ -301,7 +292,6 @@ ARGS: the arguments to the function."
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
-  :ensure t
   ;; Swap M-/ and C-M-/
  :straight t
   :bind (("M-/" . dabbrev-completion)
@@ -309,7 +299,6 @@ ARGS: the arguments to the function."
 
 (use-package doom-themes
   :straight t
-  :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -549,6 +538,8 @@ END: end of the selected region."
   "Visit file at point in embark-collect mode."
   (interactive)
   (p-visit-xref-item (p-embark-collect-get-xref-item)))
+
+
 
 (provide 'init)
 ;;; init.el ends here
