@@ -25,7 +25,9 @@
   :straight t
   :config
   (evil-set-leader '(normal motion visual replace) (kbd "SPC"))
+  (evil-define-key 'visual 'global          (kbd "v") 'evil-delete-char)
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>RET") 'consult-bookmark)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'tabspaces-open-existing-project-and-workspace)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
@@ -167,12 +169,24 @@
                  nil
                  (window-parameters (mode-line-format . none))))
 
+  (defun dired-find-file-directory ()
+    "In Dired, visit the file or directory named on this line."
+    (interactive)
+    (let ((filename (read-from-minibuffer "Input: ")))
+      (dired--find-possibly-alternative-file (file-name-directory filename))))
+
+  (define-key embark-file-map (kbd "d") #'dired-find-file-directory)
+
   ;; fix problem in marginaglia/embark
   (setf (alist-get 'xref-location embark-default-action-overrides)
       #'embark-consult-goto-grep)
-
   (setf (alist-get 'xref-location embark-exporters-alist)
+      #'embark-consult-export-grep)
+  (setf (alist-get 'consult-xref embark-default-action-overrides)
+      #'embark-consult-goto-grep)
+  (setf (alist-get 'consult-xref embark-exporters-alist)
       #'embark-consult-export-grep))
+
 
 (use-package embark-consult
   :straight t
@@ -417,9 +431,29 @@ ARGS: the arguments to the function."
                          (file-name-directory (executable-find "git.exe"))
                          "../usr/bin/find.exe"))))
 
+  ;; DCI configuration for windows
+  (when (and (eq system-type 'windows-nt)
+             (file-directory-p "C:/Git/dci-emacs"))
+    (let ((dci "C:/Git/dci-emacs/dci.el")
+          (msvc "C:/Git/dci-emacs/msvc.el")
+          (gaming "C:/Git/dci-emacs/gaming.el"))
+      (load-file dci)
+      (load-file msvc)
+      (load-file gaming)))
+
+  (add-hook 'prog-mode-hook #'hs-minor-mode)
+
   ;; custom variables
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load custom-file 'noerror))
+
+(use-package profiler
+  :after evil
+  :config
+  (evil-set-initial-state 'profiler-report-mode 'normal)
+  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "RET")   'profiler-report-find-entry)
+  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "q")     'quit-window)
+  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "<tab>") 'profiler-report-toggle-entry))
 
 (use-package bookmark
   :init
@@ -430,8 +464,22 @@ ARGS: the arguments to the function."
   :config
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
-  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-") 'dired-up-directory))
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "RET") 'dired-find-file)
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-")   'dired-up-directory))
 
+(use-package compile
+  :config
+  (setq compilation-scroll-output t)
+  (setq compilation-auto-jump-to-first-error t))
+
+(use-package xref
+  :config
+  (setq xref-search-program 'ripgrep))
+
+(use-package man
+  :config
+  (when (eq system-type 'windows-nt)
+    (setq manual-program "wsl -- man")))
 
 ;; Custom functions
 
@@ -519,27 +567,12 @@ END: end of the selected region."
                      (buffer-substring start end) "")))
     (consult-ripgrep (project-root (project-current t)) region)))
 
-;; Embark collect functions
-(defun p-embark-collect-get-xref-item ()
-  "Get the xref-item in the embark-collect mode."
-  (get-text-property (point) 'consult--candidate))
-
-(defun p-visit-xref-item (item)
-  "Open the file pointed by the ITEM wich is a `xref-itme'."
-  (let* ((location (xref-item-location item))
-         (file     (xref-file-location-file location))
-         (line     (xref-file-location-line location))
-         (buffer-name (file-name-nondirectory file)))
-    (save-excursion
-      (with-current-buffer (find-file-other-window file)
-        (goto-line line)))))
-
-(defun p-emabark-collect-visit-file ()
-  "Visit file at point in embark-collect mode."
-  (interactive)
-  (p-visit-xref-item (p-embark-collect-get-xref-item)))
 
 
+;;; Outdated or only for reference
+;; Set shell file name using WSL
+;; (setq shell-file-name "C:/Windows/system32/bash.exe")
+;; (setenv "ESHELL" "bash")
 
 (provide 'init)
 ;;; init.el ends here
