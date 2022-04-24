@@ -50,15 +50,19 @@
 
 ;; Magit
 (use-package magit
+  :defer t
   :straight t)
 
 (use-package vertico
+  :defer t
   :straight t
   :init
   (vertico-mode))
 
 (use-package cider
+  :defer t
   :straight t
+  :after evil
   :config
   (with-eval-after-load 'evil
     (defun evil-collection-cider-last-sexp (command &rest args)
@@ -78,6 +82,7 @@
         (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp)))))
 
 (use-package consult
+  :defer t
   :straight t
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings (mode-specific-map)
@@ -153,6 +158,7 @@
   (setq consult-narrow-key "<"))
 
 (use-package embark
+  :defer t
   :straight t
   :bind
   (("C-;" . embark-act)         ;; pick some comfortable binding
@@ -189,6 +195,7 @@
 
 
 (use-package embark-consult
+  :defer t
   :straight t
   :after (embark consult)
   :demand t ; only necessary if you have the hook below
@@ -198,6 +205,7 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package which-key
+  :defer t
   :straight t
   :config
   (setq which-key-popup-type 'side-window)
@@ -207,6 +215,7 @@
   (which-key-mode))
 
 (use-package tabspaces
+  :defer t
   ;; use this next line only if you also use straight, otherwise ignore it.
   :straight (:type git :host github :repo "mclear-tools/tabspaces")
   :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
@@ -275,6 +284,7 @@ ARGS: the arguments to the function."
             :around #'embark-hide-which-key-indicator)
 
 (use-package orderless
+  :defer t
   :straight t
   :init
   (setq completion-styles '(orderless basic)
@@ -283,6 +293,7 @@ ARGS: the arguments to the function."
 
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
+  :defer t
   :straight t
   :bind (("M-A" . marginalia-cycle)
          :map minibuffer-local-map
@@ -300,6 +311,7 @@ ARGS: the arguments to the function."
   (corfu-global-mode))
 
 (use-package clang-format+
+  :defer t
   :straight t
   :config
   (add-hook 'c-mode-common-hook #'clang-format+-mode))
@@ -307,7 +319,9 @@ ARGS: the arguments to the function."
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
- :straight t
+  :commands (dabbrev-completion
+             dabbrev-expand)
+  :straight t
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand)))
 
@@ -448,6 +462,10 @@ ARGS: the arguments to the function."
   (load custom-file 'noerror))
 
 (use-package profiler
+  :defer t
+  :commands (profiler-report-find-entry
+             quit-window
+             profiler-report-toggle-entry)
   :after evil
   :config
   (evil-set-initial-state 'profiler-report-mode 'normal)
@@ -456,10 +474,14 @@ ARGS: the arguments to the function."
   (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "<tab>") 'profiler-report-toggle-entry))
 
 (use-package bookmark
+  :defer t
   :init
   (setq bookmark-default-file "~/.emacs_bookmarks"))
 
 (use-package dired
+  :defer t
+  :commands (dired-find-file
+             dired-up-directory)
   :after evil
   :config
   ;; prevent for creating new buffers for each folder.
@@ -468,15 +490,18 @@ ARGS: the arguments to the function."
   (evil-define-key '(normal motion) 'dired-mode-map (kbd "-")   'dired-up-directory))
 
 (use-package compile
+  :defer t
   :config
   (setq compilation-scroll-output t)
   (setq compilation-auto-jump-to-first-error t))
 
 (use-package xref
+  :defer t
   :config
   (setq xref-search-program 'ripgrep))
 
 (use-package man
+  :defer r
   :config
   (when (eq system-type 'windows-nt)
     (setq manual-program "wsl -- man")))
@@ -567,6 +592,13 @@ END: end of the selected region."
                      (buffer-substring start end) "")))
     (consult-ripgrep (project-root (project-current t)) region)))
 
+
+(defun p-update-cpp-etags ()
+  "Update the project etgas for a cpp project."
+
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a")))
 
 
 ;;; Outdated or only for reference
