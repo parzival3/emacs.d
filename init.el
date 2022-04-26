@@ -526,6 +526,17 @@ ARGS: the arguments to the function."
   (when (eq system-type 'windows-nt)
     (setq manual-program "wsl -- man")))
 
+(use-package tramp
+  :defer t
+  :config
+  (when (eq system-type 'windows-nt)
+    (setq tramp-use-ssh-controlmaster-options nil)
+    (add-to-list 'tramp-connection-properties
+	         (list (regexp-quote "/ssh:")
+		       "login-args"
+		       '(("-tt") ("-l" "%u") ("-p" "%p") ("%c")
+		         ("-e" "none") ("%h"))))))
+
 ;; Custom functions
 
 ;; Hooks for vc-next-action
@@ -620,10 +631,13 @@ END: end of the selected region."
   (let ((default-directory (project-root (project-current t))))
     (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a")))
 
+(defun p-consult-grep-folder ()
+  (interactive)
+  (consult-ripgrep default-directory))
 
 ;;; Outdated or only for reference
 ;; Set shell file name using WSL
-;; (setq shell-file-name "C:/Windows/system32/bash.exe")
+(setq shell-file-name "C:/Windows/system32/bash.exe")
 ;; (setenv "ESHELL" "bash")
 
 (provide 'init)
