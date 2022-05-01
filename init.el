@@ -343,6 +343,26 @@ ARGS: the arguments to the function."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
+(use-package window
+  :config
+  (setq display-bffer-alist
+        (append display-buffer-alist '(("\\*\\(cider-error\\|Backtrace\\)\\*"
+                                        (display-buffer-in-side-window)
+                                        (window-height . 0.25)
+                                        (side . bottom)
+                                        (slot . 1))
+                                       ("\\*e?shell\\*"
+                                        (display-buffer-in-side-window)
+                                        (window-height . 0.25)
+                                        (side . bottom)
+                                        (slot . 0))
+                                       ("\\*repl\\*"
+                                        (display-buffer-in-side-window)
+                                        (window-height . 0.25)
+                                        (side . bottom)
+                                        (slot . -1))))))
+
+
 (use-package emacs
   :init
   ;; Configuration
