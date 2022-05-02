@@ -600,7 +600,7 @@ of 'vc-next-action'."
   "Run test in the current project."
   (interactive)
   (let ((default-directory (project-root (project-current t)))
-        (compile-command (or project-test-value
+        (compile-command (or project-test-cmd
                             compile-command)))
     (call-interactively #'compile)))
 
@@ -629,7 +629,7 @@ END: end of the selected region."
 
   (interactive)
   (let ((default-directory (project-root (project-current t))))
-    (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a")))
+    (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o _build/TAGS")))
 
 (defun p-consult-grep-folder ()
   (interactive)
@@ -637,8 +637,9 @@ END: end of the selected region."
 
 ;;; Outdated or only for reference
 ;; Set shell file name using WSL
-(setq shell-file-name "C:/Windows/system32/bash.exe")
+;; (setq shell-file-name "C:/Windows/system32/bash.exe")
 ;; (setenv "ESHELL" "bash")
 
 (provide 'init)
 ;;; init.el ends here
+(put 'narrow-to-region 'disabled nil)
