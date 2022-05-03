@@ -345,7 +345,7 @@ ARGS: the arguments to the function."
 
 (use-package window
   :config
-  (setq display-bffer-alist
+  (setq display-buffer-alist
         (append display-buffer-alist '(("\\*\\(cider-error\\|Backtrace\\)\\*"
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
@@ -355,7 +355,12 @@ ARGS: the arguments to the function."
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
                                         (side . bottom)
-                                        (slot . 0))
+                                        (slot . -1))
+                                       ("\\*Compilation\\*"
+                                        (display-buffer-in-side-window)
+                                        (window-height . 0.25)
+                                        (side . bottom)
+                                        (slot . -1))
                                        ("\\*repl\\*"
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
@@ -507,7 +512,9 @@ ARGS: the arguments to the function."
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
   (evil-define-key '(normal motion) 'dired-mode-map (kbd "RET") 'dired-find-file)
-  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-")   'dired-up-directory))
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-")   'dired-up-directory)
+  ;; easilly copy to other windows
+  (setq dired-dwim-target t))
 
 (use-package compile
   :defer t
@@ -626,7 +633,6 @@ END: end of the selected region."
 
 (defun p-update-cpp-etags ()
   "Update the project etgas for a cpp project."
-
   (interactive)
   (let ((default-directory (project-root (project-current t))))
     (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o _build/TAGS")))
