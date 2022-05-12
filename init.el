@@ -448,8 +448,7 @@ ARGS: the arguments to the function."
   (setq load-prefer-newer t)
 
   ;; Keybindings
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-s") 'consult-line)
 
   ;; Set line numbers in the buffer
   (global-display-line-numbers-mode t)
@@ -635,8 +634,10 @@ END: end of the selected region."
 (defun p-update-cpp-etags ()
   "Update the project etgas for a cpp project."
   (interactive)
-  (let ((default-directory (project-root (project-current t))))
-    (shell-command-to-string "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o _build/TAGS")))
+  (let ((default-directory (project-root (project-current t)))
+        (tag-file "_build/TAGS"))
+    (delete-file tag-file)
+    (shell-command-to-string (concat "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o " tag-file))))
 
 (defun p-consult-grep-folder ()
   (interactive)
