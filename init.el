@@ -56,6 +56,8 @@
 (use-package vertico
   :defer t
   :straight t
+  :config
+  (setq vertico-cycle t)
   :init
   (vertico-mode))
 
@@ -636,7 +638,9 @@ END: end of the selected region."
   (interactive)
   (let ((default-directory (project-root (project-current t)))
         (tag-file "_build/TAGS"))
-    (delete-file tag-file)
+    ;;; TODO: complete this
+    (when (file-exists-p tag-file)
+      (delete-file tag-file))
     (shell-command-to-string (concat "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o " tag-file))))
 
 (defun p-consult-grep-folder ()
@@ -650,4 +654,3 @@ END: end of the selected region."
 
 (provide 'init)
 ;;; init.el ends here
-(put 'narrow-to-region 'disabled nil)
