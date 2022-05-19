@@ -317,7 +317,8 @@ ARGS: the arguments to the function."
   :defer t
   :straight t
   :config
-  (add-hook 'c-mode-common-hook #'clang-format+-mode))
+  ;;(add-hook 'c-mode-common-hook #'clang-format+-mode)
+  )
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
@@ -638,9 +639,14 @@ END: end of the selected region."
   (interactive)
   (let ((default-directory (project-root (project-current t)))
         (tag-file "_build/TAGS"))
-    ;;; TODO: complete this
+
+    ;; Create directory
+    (unless (file-exists-p (file-name-directory tag-file))
+      (make-directory (file-name-directory tag-file)))
+    ;; Delete TAG file if exists
     (when (file-exists-p tag-file)
       (delete-file tag-file))
+    ;; Create TAG file
     (shell-command-to-string (concat "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o " tag-file))))
 
 (defun p-consult-grep-folder ()
