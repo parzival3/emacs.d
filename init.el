@@ -32,6 +32,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
   (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'tabspaces-switch-workspace)
+  (evil-define-key 'insert          'global (kbd "TAB")         'hippie-expand)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
   (evil-define-key '(normal motion) 'global (kbd "<f1>")        'vc-next-action)
@@ -403,7 +404,7 @@ ARGS: the arguments to the function."
   ;; Silent startup
   (setq inhibit-startup-message t
         initial-scratch-message nil
-        inhibit-startup-screen t
+        inhibit-startup-screen t
         inhibit-default-init t
         inhibit-startup-echo-area-message user-login-name)
 
