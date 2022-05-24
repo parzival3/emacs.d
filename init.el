@@ -404,7 +404,7 @@ ARGS: the arguments to the function."
   ;; Silent startup
   (setq inhibit-startup-message t
         initial-scratch-message nil
-        inhibit-startup-screen t
+        inhibit-startup-screen t
         inhibit-default-init t
         inhibit-startup-echo-area-message user-login-name)
 
@@ -465,6 +465,9 @@ ARGS: the arguments to the function."
   (setq tab-width 4)
   ;; Set file encoding to linux
   (prefer-coding-system 'utf-8-unix)
+
+  ;; don't hide the line feed type
+  (setq inhibit-eol-conversion t)
 
   ;; set default find program from git
   (when (and (eq system-type 'windows-nt)
