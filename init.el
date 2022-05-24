@@ -29,7 +29,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
   (evil-define-key '(normal motion) 'global (kbd "<leader>RET") 'consult-bookmark)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'tabspaces-open-existing-project-and-workspace)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status-quick)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
   (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'tabspaces-switch-workspace)
   (evil-define-key 'insert          'global (kbd "TAB")         'hippie-expand)
