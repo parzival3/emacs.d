@@ -52,6 +52,9 @@
 ;; Magit
 (use-package magit
   :defer t
+  :commands (magit-status-quick)
+  :bind
+  (("C-x g" . magit-status-quick))
   :straight t)
 
 (use-package vertico
