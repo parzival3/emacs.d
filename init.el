@@ -296,7 +296,8 @@ ARGS: the arguments to the function."
   :init
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion))
+                                        (eglot (styles . (orderless flex))))))
 
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
@@ -313,7 +314,9 @@ ARGS: the arguments to the function."
   (marginalia-mode))
 
 (use-package corfu
-  :straight t
+  :demand t
+  :custom
+  (corfu-auto t)
   :init
   (corfu-global-mode))
 
@@ -554,6 +557,15 @@ ARGS: the arguments to the function."
 		       '(("-tt") ("-l" "%u") ("-p" "%p") ("%c")
 		         ("-e" "none") ("%h"))))))
 
+(use-package cc-vars
+  :defer t
+  :config
+  (setq c-old-style-variable-behavior t))
+
+(use-package eglot
+  :defer t
+  :straight t)
+
 ;; Custom functions
 
 ;; Hooks for vc-next-action
@@ -597,6 +609,9 @@ of 'vc-next-action'."
 (defun p-dos2unix ()
   "Convert a DOS formatted text buffer to UNIX format."
   (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (format-replace-strings '(("" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun p-unix2dos ()
