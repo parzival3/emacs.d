@@ -28,9 +28,9 @@
   (evil-define-key 'visual 'global          (kbd "v") 'evil-delete-char)
   (evil-define-key '(normal motion) 'global (kbd "<leader>SPC") 'project-find-file)
   (evil-define-key '(normal motion) 'global (kbd "<leader>RET") 'consult-bookmark)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'tabspaces-open-existing-project-and-workspace)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'project-switch-project)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status-quick)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-project-buffer)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-switch-project)
   (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'tabspaces-switch-workspace)
   (evil-define-key 'insert          'global (kbd "TAB")         'hippie-expand)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
@@ -200,6 +200,8 @@
   (setf (alist-get 'consult-xref embark-exporters-alist)
       #'embark-consult-export-grep))
 
+(use-package rust-mode
+  :straight t)
 
 (use-package embark-consult
   :defer t
@@ -314,7 +316,7 @@ ARGS: the arguments to the function."
   (marginalia-mode))
 
 (use-package corfu
-  :demand t
+  :straight t
   :custom
   (corfu-auto t)
   :init
@@ -324,6 +326,7 @@ ARGS: the arguments to the function."
   :defer t
   :straight t
   :config
+
   ;;(add-hook 'c-mode-common-hook #'clang-format+-mode)
   )
 
@@ -342,7 +345,7 @@ ARGS: the arguments to the function."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
+  (load-theme 'doom-Iosvkem t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -391,11 +394,16 @@ ARGS: the arguments to the function."
 	  mac-right-option-modifier 'none
 	  ns-right-option-modifier  'none))
 
+  (setq whitespace-line-column 200)
+
   ;; Remove white spaces before saving
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
   ;; Camel-case words are separated words in program mode :-)
   (add-hook 'prog-mode-hook 'subword-mode)
+
+  ;; Camel-case words are separated words in program mode :-)
+  (add-hook 'prog-mode-hook 'whitespace-mode)
 
   ;; Single space after period
   (setq sentence-end-double-space nil)
@@ -447,10 +455,10 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "Hack-12" ))
+  (add-to-list 'default-frame-alist '(font . "Hack-10" ))
   (set-face-attribute 'default t :font "Hack" )
-  (set-face-attribute 'default nil :font "Hack-12")
-  (set-frame-font "Hack-12" nil t)
+  (set-face-attribute 'default nil :font "Hack-10")
+  (set-frame-font "Hack-10" nil t)
   (set-face-font 'fixed-pitch-serif "Hack")
   (set-face-font 'variable-pitch "Hack")
 
@@ -497,7 +505,15 @@ ARGS: the arguments to the function."
 
   ;; custom variables
   (setq custom-file (concat user-emacs-directory "custom.el"))
-  (load custom-file 'noerror))
+  (load custom-file 'noerror)
+
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
+
 
 (use-package profiler
   :defer t
@@ -611,7 +627,7 @@ of 'vc-next-action'."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (format-replace-strings '(("" . ""))))
+    (format-replace-strings '(("" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun p-unix2dos ()
