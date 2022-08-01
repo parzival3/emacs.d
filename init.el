@@ -31,7 +31,6 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'project-switch-project)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status-quick)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-switch-project)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'tabspaces-switch-workspace)
   (evil-define-key 'insert          'global (kbd "TAB")         'hippie-expand)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
@@ -222,34 +221,6 @@
   (setq which-key-side-window-max-height 0.25)
   :init
   (which-key-mode))
-
-(use-package tabspaces
-  :defer t
-  ;; use this next line only if you also use straight, otherwise ignore it.
-  :straight (:type git :host github :repo "mclear-tools/tabspaces")
-  :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
-  :commands (tabspaces-create-workspace
-             tabspaces-create-new-project-and-workspace
-             tabspaces-open-existing-project-and-workspace
-             tabspaces-switch-workspace)
-  :custom (tabspaces-use-filtered-buffers-as-default t))
-
-(with-eval-after-load 'consult
-  ;; hide full buffer list (still available with "b")
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  ;; set consult-workspace buffer list
-  (defvar consult--source-workspace
-    (list :name     "Workspace Buffers"
-          :narrow   ?w
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :default  t
-          :items    (lambda ()
-                      (tabspaces--tab-bar-buffer-name-filter ((lambda () (consult--buffer-query :sort 'visibility
-                                                                                                  :as #'buffer-name))))))
-
-    "Set workspace buffer list for consult-buffer.")
-  (push consult--source-workspace consult-buffer-sources))
 
 (defun embark-which-key-indicator ()
   "An embark indicator tha
