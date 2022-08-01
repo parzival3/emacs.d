@@ -45,6 +45,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'p-search-for-word-at-point)
   (evil-define-key '(normal motion) 'global (kbd "<leader>wV")  'evil-window-vsplit)
   (evil-define-key '(normal motion) 'global (kbd "<leader>ws")  'evil-window-split)
+  (evil-define-key '(normal motion) 'global (kbd "<f2>")  'whitespace-mode)
   :init
   (evil-mode 1))
 
