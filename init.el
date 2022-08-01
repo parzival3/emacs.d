@@ -320,7 +320,7 @@ ARGS: the arguments to the function."
   :custom
   (corfu-auto t)
   :init
-  (corfu-global-mode))
+  (global-corfu-mode))
 
 (use-package clang-format+
   :defer t
