@@ -375,7 +375,7 @@ ARGS: the arguments to the function."
   (add-hook 'prog-mode-hook 'subword-mode)
 
   ;; Camel-case words are separated words in program mode :-)
-  (add-hook 'prog-mode-hook 'whitespace-mode)
+  ;; (add-hook 'prog-mode-hook 'whitespace-mode)
 
   ;; Single space after period
   (setq sentence-end-double-space nil)
