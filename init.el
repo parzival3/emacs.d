@@ -317,7 +317,7 @@ ARGS: the arguments to the function."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-Iosvkem t)
+  (load-theme 'modus-operandi t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -427,12 +427,12 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "Hack-10" ))
-  (set-face-attribute 'default t :font "Hack" )
-  (set-face-attribute 'default nil :font "Hack-10")
-  (set-frame-font "Hack-10" nil t)
-  (set-face-font 'fixed-pitch-serif "Hack")
-  (set-face-font 'variable-pitch "Hack")
+  (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-12" ))
+  (set-face-attribute 'default t :font "Ubuntu Mono" )
+  (set-face-attribute 'default nil :font "Ubuntu Mono-12")
+  (set-frame-font "Ubuntu Mono-12" nil t)
+  (set-face-font 'fixed-pitch-serif "Ubuntu Mono")
+  (set-face-font 'variable-pitch "Ubuntu Mono")
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -467,7 +467,6 @@ ARGS: the arguments to the function."
   (when (and (eq system-type 'windows-nt)
              (file-directory-p "C:/Git/dci-emacs"))
     (let ((dci "C:/Git/dci-emacs/dci.el")
-          (msvc "C:/Git/dci-emacs/msvc.el")
           (gaming "C:/Git/dci-emacs/gaming.el"))
       (load-file dci)
       (load-file msvc)
