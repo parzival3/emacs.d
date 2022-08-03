@@ -1,5 +1,3 @@
-
-
 * CL comparing function
 
 In order to compare string in cl mapping algorithm we can simply use the :test keyword with the function that we want to use for example
