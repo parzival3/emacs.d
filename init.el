@@ -55,7 +55,17 @@
   :commands (magit-status-quick)
   :bind
   (("C-x g" . magit-status-quick))
-  :straight t)
+  :straight t
+  :config
+  (defun winnt-get-git-tools-path ()
+     (let ((git-exe-path (shell-command-to-string "where git.exe")))
+         (if (string-match "git" git-exe-path)
+             (let ((git-path  (butlast (file-name-split git-exe-path) 2)))
+               (concat (mapconcat #'identity git-path "/") "/usr/bin/")))))
+
+  (when (eq system-type `windows-nt)
+    (setq exec-path (cons (winnt-get-git-tools-path) exec-path))
+    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path))))
 
 (use-package vertico
   :defer t
@@ -447,6 +457,14 @@ ARGS: the arguments to the function."
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (setq minibuffer-complete-and-exit 'after-completion)
 
+  ;; Open a new file when switching tab
+  (advice-add #'tab-new :after (lambda (&rest r) (call-interactively #'find-file)) '((name . "new-tab-find-file")))
+
+  ;; Open a new file when switching tab
+  (advice-add #'tab-duplicate :after (lambda (&rest r) (call-interactively #'find-file)) '((name . "new-tab-find-file")))
+
+  (global-set-key (kbd "C-x t k") #'tab-close)
+
   ;; Set tab width to 4
   (setq tab-width 4)
   ;; Set file encoding to linux
@@ -669,3 +687,15 @@ END: end of the selected region."
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values '((project-run-value . "cargo run"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
