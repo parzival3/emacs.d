@@ -65,7 +65,7 @@
 
   (when (eq system-type `windows-nt)
     (setq exec-path (cons (winnt-get-git-tools-path) exec-path))
-    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path))))
+    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path)))))
 
 (use-package vertico
   :defer t
