@@ -361,7 +361,9 @@ ARGS: the arguments to the function."
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
                                         (side . bottom)
-                                        (slot . -1))))))
+                                        (slot . -1))
+                                        ("\\*no-display\\*"
+                                        ((display-buffer-no-window)))))))
 
 
 (use-package emacs
