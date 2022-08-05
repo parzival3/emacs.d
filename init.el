@@ -479,6 +479,9 @@ ARGS: the arguments to the function."
 
   (global-set-key (kbd "C-x t k") #'tab-close)
 
+  ;; recompile with f5
+  (global-set-key (kbd "<f5>") #'recompile)
+
   ;; Set tab width to 4
   (setq tab-width 4)
   ;; Set file encoding to linux
@@ -583,7 +586,11 @@ ARGS: the arguments to the function."
 
 (use-package eglot
   :defer t
-  :straight t)
+  :straight t
+  :config
+  (when (eq system-type `windows-nt)
+    (add-to-list 'eglot-server-programs
+                 `((c++-mode . '("C:/Tools/LLVM/bin/clangd.exe"))))))
 
 ;; Custom functions
 
@@ -630,7 +637,7 @@ of 'vc-next-action'."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (format-replace-strings '(("" . ""))))
+    (format-replace-strings '(("" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun p-unix2dos ()
