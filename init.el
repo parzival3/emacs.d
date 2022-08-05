@@ -65,7 +65,15 @@
 
   (when (eq system-type `windows-nt)
     (setq exec-path (cons (winnt-get-git-tools-path) exec-path))
-    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path)))))
+    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path))))
+
+  (defun magit-commit-fast (commit-message)
+    (interactive "scommit message:")
+    (let ((magit-commit-ask-to-stage t)
+          (magit-commit-show-diff nil))
+      (magit-git "commit" "--all" "-m" commit-message))))
+
+  )
 
 (use-package vertico
   :defer t
