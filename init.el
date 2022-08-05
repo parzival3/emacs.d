@@ -423,8 +423,14 @@ ARGS: the arguments to the function."
 
   ;; Setup the backup directory
   (unless backup-directory-alist
-    (setq backup-directory-alist `(("." . ,(concat user-emacs-directory
-                                                   "backups")))))
+    (setq backup-directory-alist `((".*" . ,(concat user-emacs-directory
+                                                   "backups")))
+          auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+          backup-by-copying t      ; don't clobber symlinks
+          delete-old-versions t
+          kept-new-versions 6
+          kept-old-versions 2
+          version-control t))
 
   ;; Uniquify is a library to make the filename of similar buffer different
   (require 'uniquify)
@@ -618,7 +624,7 @@ of 'vc-next-action'."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (format-replace-strings '(("" . ""))))
+    (format-replace-strings '(("" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun p-unix2dos ()
