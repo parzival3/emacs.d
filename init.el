@@ -73,8 +73,6 @@
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message))))
 
-  )
-
 (use-package vertico
   :defer t
   :straight t
