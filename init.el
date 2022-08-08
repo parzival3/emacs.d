@@ -368,8 +368,7 @@ ARGS: the arguments to the function."
                                         (window-height . 0.25)
                                         (side . bottom)
                                         (slot . -1))
-                                        ("\\*no-display\\*"
-                                        ((display-buffer-no-window)))))))
+                                        ("\\*no-display\\*" (display-buffer-no-window))))))
 
 
 (use-package emacs
@@ -713,6 +712,8 @@ END: end of the selected region."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("c282a528137220d5f71c84ca68eb8bd87b3ccb3656434b20ad600a380f9f198c" default))
  '(safe-local-variable-values '((project-run-value . "cargo run"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
