@@ -313,10 +313,7 @@ ARGS: the arguments to the function."
 (use-package clang-format+
   :defer t
   :straight t
-  :config
-
-  ;;(add-hook 'c-mode-common-hook #'clang-format+-mode)
-  )
+  :config)
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
@@ -589,7 +586,7 @@ ARGS: the arguments to the function."
   :config
   (when (eq system-type `windows-nt)
     (add-to-list 'eglot-server-programs
-                 `((c++-mode . '("C:/Tools/LLVM/bin/clangd.exe"))))))
+                 `(c++-mode . ("c:/Tools/LLVM/bin/clangd.exe")))))
 
 ;; Custom functions
 
