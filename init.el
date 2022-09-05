@@ -31,6 +31,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>pp")  'project-switch-project)
   (evil-define-key '(normal motion) 'global (kbd "<leader>gg")  'magit-status-quick)
   (evil-define-key '(normal motion) 'global (kbd "<leader>,")   'consult-switch-project)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>TAB") 'project-switch-to-buffer)
   (evil-define-key 'insert          'global (kbd "TAB")         'hippie-expand)
   (evil-define-key '(normal motion) 'global (kbd "<leader>fp")  'p-open-config)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pr")  'p-project-run)
@@ -216,7 +217,14 @@
       #'embark-consult-export-grep))
 
 (use-package rust-mode
-  :straight t)
+  :straight t
+  :config
+  (let ((cargo-dir (concat (file-name-as-directory (getenv "HOME"))
+                           ".cargo/bin")))
+    (when (and (file-exists-p cargo-dir)
+               (not (cl-find-if (lambda (path) (not (null (string-match "cargo" path)))) exec-path)))
+      (setq exec-path (cons cargo-dir exec-path))
+      (setenv "PATH" (concat (getenv "PATH") ":" cargo-dir)))))
 
 (use-package embark-consult
   :defer t
