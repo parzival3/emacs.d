@@ -685,21 +685,6 @@ END: end of the selected region."
     (consult-ripgrep (project-root (project-current t)) region)))
 
 
-(defun p-update-cpp-etags ()
-  "Update the project etgas for a cpp project."
-  (interactive)
-  (let ((default-directory (project-root (project-current t)))
-        (tag-file "_build/TAGS"))
-
-    ;; Create directory
-    (unless (file-exists-p (file-name-directory tag-file))
-      (make-directory (file-name-directory tag-file)))
-    ;; Delete TAG file if exists
-    (when (file-exists-p tag-file)
-      (delete-file tag-file))
-    ;; Create TAG file
-    (shell-command-to-string (concat "fd --path-separator \"/\" \"\\.(h|cpp|hpp|cxx|c)$\" -X etags -a -o " tag-file))))
-
 (defun p-consult-grep-folder ()
   (interactive)
   (consult-ripgrep default-directory))
