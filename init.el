@@ -227,7 +227,6 @@
       (setenv "PATH" (concat (getenv "PATH") ":" cargo-dir)))))
 
 (use-package embark-consult
-  :defer t
   :straight t
   :after (embark consult)
   :demand t ; only necessary if you have the hook below
