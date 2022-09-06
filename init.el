@@ -647,6 +647,18 @@ of 'vc-next-action'."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
 
+(defun p-make-unix-dir (dir)
+  (interactive)
+  (let ((files (directory-files dir t)))
+    (while files
+      (let ((current-file (pop files)))
+        (if (not (file-directory-p current-file))
+            (with-temp-file current-file
+              (insert-file-contents current-file)
+              (p-dos2unix))
+          (unless (string-match "^." (file-name-base current-file)) ;; remove all the hidden files
+            (p-make-unix-dir current-file)))))))
+
 (defvar-local project-test-cmd nil
   "Function for testing the current project, ovveride it in the dir locals var.")
 
