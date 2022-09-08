@@ -48,7 +48,7 @@
   (evil-define-key '(normal motion) 'global (kbd "<leader>po")  'ff-find-other-file)
   (evil-define-key '(normal motion) 'global (kbd "<leader>pt")  'p-project-run-tests)
   (evil-define-key '(normal motion) 'global (kbd "<leader>bd")  'kill-current-buffer)
-  (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'p-search-for-word-at-point)
+  (evil-define-key '(normal motion) 'global (kbd "<leader>/")   'p-search-for-word-in-directory)
   (evil-define-key '(normal motion) 'global (kbd "<leader>wV")  'evil-window-vsplit)
   (evil-define-key '(normal motion) 'global (kbd "<leader>ws")  'evil-window-split)
   (evil-define-key '(normal motion) 'global (kbd "<f2>")  'whitespace-mode)
@@ -690,16 +690,13 @@ of 'vc-next-action'."
       (minibuffer-with-setup-hook #'prompt-text
           (call-interactively #'project-async-shell-command)))))
 
-(defun p-search-for-word-at-point (start end)
-  "Search for the current selected word.
-If there is no selected word, simply start an empty search.
-START: beggining of the selected region.
-END: end of the selected region."
-  (interactive "r")
-  (let* ((region (if (use-region-p)
-                     (buffer-substring start end) "")))
-    (consult-ripgrep (project-root (project-current t)) region)))
-
+(defun p-search-for-word-in-directory (dir-to-search)
+  "Search for current word inside the DIR-TO-SEARCH
+If there is no selected word, simply start an empty search."
+  (interactive "DChoose the directory...")
+  (let* ((string-to-search (if (use-region-p)
+                     (buffer-substring (region-beginning) (region-end)) "")))
+    (consult-grep dir-to-search string-to-search)))
 
 (defun p-consult-grep-folder ()
   (interactive)
