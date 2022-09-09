@@ -21,7 +21,7 @@
 ;; Packages
 (straight-use-package 'use-package)
 
-(when (eq system-type `gnu-linux)
+(when (eq system-type `gnu/linux)
   (use-package vterm
     :defer t
     :straight t))
