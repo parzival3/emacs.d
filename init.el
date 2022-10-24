@@ -341,7 +341,7 @@ ARGS: the arguments to the function."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
+  (load-theme 'doom-vibrant t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -468,6 +468,9 @@ ARGS: the arguments to the function."
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
 
+  ;; Disabled functions
+  (put 'narrow-to-region 'disabled nil)
+
   ;; Keybindings
   (global-set-key (kbd "C-s") 'consult-line)
 
@@ -585,6 +588,11 @@ ARGS: the arguments to the function."
 		       "login-args"
 		       '(("-tt") ("-l" "%u") ("-p" "%p") ("%c")
 		         ("-e" "none") ("%h"))))))
+
+(use-package hippie-exp
+  :config
+  (setq hippie-expand-try-functions-list
+        (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
 
 (use-package cc-vars
   :defer t
