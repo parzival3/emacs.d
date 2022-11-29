@@ -56,11 +56,16 @@
   :init
   (evil-mode 1))
 
+(use-package flyspell
+  :straight t
+  :config
+  (flyspell-mode)
+
 ;; Magit
 (use-package magit
-  :commands (magit-status-quick)
+  :commands (magit-status)
   :bind
-  (("C-x g" . magit-status-quick))
+  (("C-x g" . magit-status))
   :straight t
   :config
   (defun winnt-get-git-tools-path ()
@@ -74,7 +79,7 @@
     (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path))))
 
   (defun magit-commit-fast (commit-message)
-    (interactive "scommit message:")
+    (interactive "commit message:")
     (let ((magit-commit-ask-to-stage t)
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message))))
