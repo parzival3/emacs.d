@@ -31,12 +31,17 @@
   :config
   ;; Define a new prefix for only git/vc/magit commands
   (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
-  (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
   (global-set-key (kbd "<f1>") 'vc-actions-map)
   (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
-  ;;(define-key 'language-actions (kbd "<f2>") 'whitespace-mode)
-  ;;(evil-define-key       '(normal motion) 'global         (kbd "<f2>") 'language-actions)
-  ;;(evil-define-key       '(normal motion) 'language-actions         (kbd "<f2>") 'whitespace-mode)
+
+  ;; Define a new prefix for the languages actions
+  (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
+  (global-set-key (kbd "<f2>") 'language-actions-map)
+  (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
+  (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
+  (define-key 'language-actions-map (kbd "r") 'eglot-rename)
+  (define-key 'language-actions-map (kbd "f") 'eglot-format)
+
   (evil-set-leader       '(normal motion visual replace)  (kbd "SPC"))
   (evil-define-key       'visual 'global                  (kbd "v") 'evil-delete-char)
   (evil-define-key       '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
