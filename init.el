@@ -29,7 +29,11 @@
 (use-package evil
   :straight t
   :config
+  ;; Define a new prefix for only git/vc/magit commands
+  (define-prefix-command 'vc-actions nil "prefix for all the vc/magit actions")
   (evil-set-leader '(normal motion visual replace)  (kbd "SPC"))
+  (evil-define-key '(normal motion) 'global         (kbd "<f1>") 'vc-actions)
+  (evil-define-key '(normal motion) 'vc-actions     (kbd "<f1>") 'vc-next-action)
   (evil-define-key 'visual 'global                  (kbd "v") 'evil-delete-char)
   (evil-define-key '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
   (evil-define-key '(normal motion) 'global         (kbd "<leader>SPC") 'project-find-file)
