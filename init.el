@@ -29,30 +29,31 @@
 (use-package evil
   :straight t
   :config
-  (evil-set-leader '(normal motion visual replace)   (kbd "SPC"))
-  (evil-define-key 'visual 'global                   (kbd "v") 'evil-delete-char)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>SPC") 'project-find-file)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>RET") 'consult-bookmark)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>pp")  'project-switch-project)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>gg")  'magit-status-quick)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>,")   'consult-switch-project)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>TAB") 'project-switch-to-buffer)
-  (evil-define-key 'insert          'global          (kbd "TAB")         'hippie-expand)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>fp")  'p-open-config)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>pr")  'p-project-run)
-  (evil-define-key '(normal motion) 'global          (kbd "<f1>")        'vc-next-action)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>pc")  'project-compile)
-  (evil-define-key 'insert          'global          (kbd "C-x C-f")    'dabbrev-completion)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>pe")  'project-eshell)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>br")  'revert-buffer)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>po")  'ff-find-other-file)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>pt")  'p-project-run-tests)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>bd")  'kill-current-buffer)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>/")   'p-search-for-word-in-directory)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>wV")  'evil-window-vsplit)
-  (evil-define-key '(normal motion) 'global          (kbd "<leader>ws")  'evil-window-split)
-  (evil-define-key '(normal motion) 'dired-mode-map  (kbd "F")  'find-dired)
-  (evil-define-key '(normal motion) 'global          (kbd "<f2>")  'whitespace-mode)
+  (evil-set-leader '(normal motion visual replace)  (kbd "SPC"))
+  (evil-define-key 'visual 'global                  (kbd "v") 'evil-delete-char)
+  (evil-define-key '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>SPC") 'project-find-file)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>RET") 'consult-bookmark)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>gg")  'magit-status-quick)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>,")   'consult-switch-project)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>TAB") 'project-switch-to-buffer)
+  (evil-define-key 'insert          'global         (kbd "TAB")         'hippie-expand)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>fp")  'p-open-config)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>pr")  'p-project-run)
+  (evil-define-key '(normal motion) 'global         (kbd "<f1> <f1>")    'vc-next-action)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>pc")  'project-compile)
+  (evil-define-key 'insert          'global         (kbd "C-x C-f")    'dabbrev-completion)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>pe")  'project-eshell)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>br")  'revert-buffer)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>po")  'ff-find-other-file)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>pt")  'p-project-run-tests)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>bd")  'kill-current-buffer)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
+  (evil-define-key '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
+  (evil-define-key '(normal motion) 'global         (kbd "<f2>")  'whitespace-mode)
   :init
   (evil-mode 1))
 
@@ -92,6 +93,14 @@
   (setq vertico-cycle t)
   :init
   (vertico-mode))
+
+(use-package flutter
+  :straight t
+  :config
+  (setq flutter-buffer-name "*Flutter-Runner*"))
+
+(use-package dart-mode
+  :straight t)
 
 (use-package consult
   :defer t
@@ -355,6 +364,11 @@ ARGS: the arguments to the function."
                                         (window-height . 0.25)
                                         (side . bottom)
                                         (slot . -1))
+                                       ("\\*Flutter-Runner\\*"
+                                        (display-buffer-in-side-window)
+                                        (window-height . 0.25)
+                                        (side . bottom)
+                                        (slot . -1))
                                        ("\\*repl\\*"
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
@@ -587,6 +601,7 @@ ARGS: the arguments to the function."
   :defer t
   :straight t
   :config
+  (global-set-key (kbd "C-.") 'eglot-code-actions)
   (when (eq system-type `windows-nt)
     (add-to-list 'eglot-server-programs
                  `(c++-mode . ("c:/Tools/LLVM/bin/clangd.exe")))))
