@@ -59,7 +59,8 @@
 (use-package flyspell
   :straight t
   :config
-  (flyspell-mode)
+  :hook
+  ((tex-mode prog-mode) . flyspell-mode))
 
 ;; Magit
 (use-package magit
@@ -91,28 +92,6 @@
   (setq vertico-cycle t)
   :init
   (vertico-mode))
-
-(use-package cider
-  :defer t
-  :straight t
-  :after evil
-  :config
-  (with-eval-after-load 'evil
-    (defun evil-collection-cider-last-sexp (command &rest args)
-      "In normal-state or motion-state, last sexp ends at point."
-      (if (and (not evil-move-beyond-eol)
-               (or (evil-normal-state-p) (evil-motion-state-p)))
-          (save-excursion
-            (unless (or (eobp) (eolp)) (forward-char))
-            (apply command args))
-        (apply command args)))
-
-    (unless evil-move-beyond-eol
-      (advice-add 'cider-eval-last-sexp :around 'evil-collection-cider-last-sexp)
-      (advice-add 'cider-eval-last-sexp-and-replace :around 'evil-collection-cider-last-sexp)
-      (advice-add 'cider-eval-last-sexp-to-repl :around 'evil-collection-cider-last-sexp)
-      (with-eval-after-load 'cider-eval-sexp-fu
-        (advice-add 'cider-esf--bounds-of-last-sexp :around 'evil-collection-cider-last-sexp)))))
 
 (use-package consult
   :defer t
@@ -714,11 +693,6 @@ If there is no selected word, simply start an empty search."
 (defun p-consult-grep-folder ()
   (interactive)
   (consult-ripgrep default-directory))
-
-;;; Outdated or only for reference
-;; Set shell file name using WSL
-;; (setq shell-file-name "C:/Windows/system32/bash.exe")
-;; (setenv "ESHELL" "bash")
 
 (provide 'init)
 ;;; init.el ends here
