@@ -42,6 +42,12 @@
   (define-key 'language-actions-map (kbd "r") 'eglot-rename)
   (define-key 'language-actions-map (kbd "f") 'eglot-format)
 
+  (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
+  (global-set-key (kbd "<f3>") 'org-actions-map)
+  (define-key 'org-actions-map (kbd "j") #'org-jurnal-capture)
+  (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
+  (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
+
   (evil-set-leader       '(normal motion visual replace)  (kbd "SPC"))
   (evil-define-key       'visual 'global                  (kbd "v") 'evil-delete-char)
   (evil-define-key       '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
@@ -328,7 +334,17 @@ ARGS: the arguments to the function."
 (use-package clang-format+
   :defer t
   :straight t
-  :config)
+  :config
+  (defun dired-clang-format-thing ()
+    (interactive)
+    (let ((list-of-files (dired-get-marked-files)))
+      (while list-of-files
+        (let ((current-file (pop list-of-files)))
+          (if (file-name-directory current-file)
+              (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
+            (dired-run-shell-command (format "clang-format -i %s" current-file)))))))
+
+  (evil-define-key '(normal motion) 'dired-mode-map (kbd "C-c f")  'dired-clang-format-thing))
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
@@ -386,6 +402,34 @@ ARGS: the arguments to the function."
                                         (side . bottom)
                                         (slot . -1))
                                         ("\\*no-display\\*" (display-buffer-no-window))))))
+
+(use-package org-capture
+  :config
+  ;; TODO I need to improove this
+  (defun org-jurnal-capture ()
+    "Insert a new entry in the org jurnal."
+    (interactive)
+    (org-capture nil "j"))
+
+  (defun org-todo-capture ()
+    "Insert a new entry in the org gtd file."
+    (interactive)
+    (org-capture nil "t"))
+
+  (setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "/mutagen_test/notes/gtd.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree "/mutagen_test/notes/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a"))))
+
+(use-package org
+  :config
+  (setq org-notes-folder "/mutagen_test/notes/")
+  (defun org-list-of-notes ()
+    (interactive)
+      (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
+
+  (setq org-export-backends (add-to-list 'org-export-backends 'md)))
 
 
 (use-package emacs
@@ -519,9 +563,9 @@ ARGS: the arguments to the function."
 
   ;; DCI configuration for windows
   (when (and (eq system-type 'windows-nt)
-             (file-directory-p "C:/Git/dci-emacs"))
-    (let ((dci "C:/Git/dci-emacs/dci.el")
-          (gaming "C:/Git/dci-emacs/gaming.el"))
+             (file-directory-p "/mutagen_test/dci-emacs"))
+    (let ((dci "/mutagen_test/dci-emacs/dci.el")
+          (gaming "/mutagen_test/dci-emacs/gaming.el"))
       (load-file dci)
       (load-file msvc)
       (load-file gaming)))
@@ -539,6 +583,26 @@ ARGS: the arguments to the function."
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete))
 
+(use-package string-inflection
+  :straight t
+  :config
+
+  (defun to-pascal-case ()
+         (interactive)
+         (let ((word (symbol-name (symbol-at-point)))
+               (bounds (bounds-of-thing-at-point 'symbol)))
+           (kill-region (car bounds) (cdr bounds))
+           (insert (string-inflection-pascal-case-function word)))))
+
+(use-package treesit
+  :config
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
+  (setq c-ts-mode-indent-offset 4)
+  (setq c-ts-mode-indent-style 'bsd))
 
 (use-package profiler
   :defer t
