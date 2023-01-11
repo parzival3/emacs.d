@@ -21,6 +21,9 @@
 ;; Packages
 (straight-use-package 'use-package)
 
+;; Load enviroment file for this computer based on the hostname
+(load-file (concat user-emacs-directory "env/" (system-name) ".el"))
+
 (when (eq system-type `gnu/linux)
   (use-package vterm
     :defer t
@@ -417,14 +420,14 @@ ARGS: the arguments to the function."
     (org-capture nil "t"))
 
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "/mutagen_test/notes/gtd.org" "Tasks")
+      '(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
-        ("j" "Journal" entry (file+datetree "/mutagen_test/notes/journal.org")
+        ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i\n  %a"))))
 
 (use-package org
   :config
-  (setq org-notes-folder "/mutagen_test/notes/")
+  (setq org-notes-folder (concat git-directory "/notes/"))
   (defun org-list-of-notes ()
     (interactive)
       (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
@@ -510,12 +513,12 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-12" ))
-  (set-face-attribute 'default t :font "Ubuntu Mono" )
-  (set-face-attribute 'default nil :font "Ubuntu Mono-12")
-  (set-frame-font "Ubuntu Mono-12" nil t)
-  (set-face-font 'fixed-pitch-serif "Ubuntu Mono")
-  (set-face-font 'variable-pitch "Ubuntu Mono")
+  (add-to-list 'default-frame-alist '(font . "Fira Mono-12" ))
+  (set-face-attribute 'default t :font "Fira Mono" )
+  (set-face-attribute 'default nil :font "Fira Mono-12")
+  (set-frame-font "Fira Mono-12" nil t)
+  (set-face-font 'fixed-pitch-serif "Fira Mono")
+  (set-face-font 'variable-pitch "Fira Mono")
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -562,9 +565,9 @@ ARGS: the arguments to the function."
 
   ;; DCI configuration for windows
   (when (and (eq system-type 'windows-nt)
-             (file-directory-p "/mutagen_test/dci-emacs"))
-    (let ((dci "/mutagen_test/dci-emacs/dci.el")
-          (gaming "/mutagen_test/dci-emacs/gaming.el"))
+             (file-directory-p (concat git-directory "dci-emacs")))
+    (let ((dci (concat git-directory  "/dci-emacs/dci.el"))
+          (gaming (concat git-directory "dci-emacs/gaming.el")))
       (load-file dci)
       (load-file msvc)
       (load-file gaming)))
