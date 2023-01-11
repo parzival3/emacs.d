@@ -78,7 +78,7 @@
   :straight t
   :config
   :hook
-  ((tex-mode prog-mode) . flyspell-mode))
+  ((org-mode) . flyspell-mode))
 
 ;; Magit
 (use-package magit
@@ -430,7 +430,6 @@ ARGS: the arguments to the function."
       (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
 
   (setq org-export-backends (add-to-list 'org-export-backends 'md)))
-
 
 (use-package emacs
   :init
