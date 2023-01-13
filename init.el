@@ -364,7 +364,7 @@ ARGS: the arguments to the function."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-vibrant t)
+  (load-theme 'doom-badger t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -420,7 +420,7 @@ ARGS: the arguments to the function."
     (org-capture nil "t"))
 
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
+      `(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i\n  %a"))))
@@ -513,12 +513,12 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "Fira Mono-12" ))
-  (set-face-attribute 'default t :font "Fira Mono" )
-  (set-face-attribute 'default nil :font "Fira Mono-12")
-  (set-frame-font "Fira Mono-12" nil t)
-  (set-face-font 'fixed-pitch-serif "Fira Mono")
-  (set-face-font 'variable-pitch "Fira Mono")
+  (add-to-list 'default-frame-alist '(font . "Fira Code-12" ))
+  (set-face-attribute 'default t :font "Fira Code" )
+  (set-face-attribute 'default nil :font "Fira Code-12")
+  (set-frame-font "Fira Code-12" nil t)
+  (set-face-font 'fixed-pitch-serif "Fira Code")
+  (set-face-font 'variable-pitch "Fira Code")
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
