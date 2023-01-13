@@ -246,12 +246,7 @@
 
 (use-package embark-consult
   :straight t
-  :after (embark consult)
-  :demand t ; only necessary if you have the hook below
-  ;; if you want to have consult previews as you move around an
-  ;; auto-updating embark collect buffer
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  :after (embark consult))
 
 (use-package which-key
   :defer t
@@ -423,7 +418,7 @@ ARGS: the arguments to the function."
       `(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
-         "* %?\nEntered on %U\n  %i\n  %a"))))
+         "* %?\nEntered on %U\n  %i"))))
 
 (use-package org
   :config
@@ -564,13 +559,10 @@ ARGS: the arguments to the function."
                          "../usr/bin/find.exe"))))
 
   ;; DCI configuration for windows
-  (when (and (eq system-type 'windows-nt)
-             (file-directory-p (concat git-directory "dci-emacs")))
+  (when (file-directory-p (concat git-directory "dci-emacs"))
     (let ((dci (concat git-directory  "/dci-emacs/dci.el"))
           (gaming (concat git-directory "dci-emacs/gaming.el")))
-      (load-file dci)
-      (load-file msvc)
-      (load-file gaming)))
+      (load-file dci)))
 
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
