@@ -82,6 +82,7 @@
 (use-package flyspell
   :straight t
   :config
+  (setq ispell-program-name "aspell")
   :hook
   ((org-mode) . flyspell-mode))
 
