@@ -20,6 +20,7 @@
 
 ;; Packages
 (straight-use-package 'use-package)
+(straight-use-package 'org)
 
 ;; Load enviroment file for this computer based on the hostname
 (load-file (concat user-emacs-directory "env/" (system-name) ".el"))
@@ -47,7 +48,8 @@
 
   (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
   (global-set-key (kbd "<f3>") 'org-actions-map)
-  (define-key 'org-actions-map (kbd "j") #'org-jurnal-capture)
+  (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
+  (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
   (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
   (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
 
@@ -420,6 +422,44 @@ ARGS: the arguments to the function."
         ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i"))))
 
+(use-package org-roam
+  :straight t
+  :init
+  (setq org-roam-directory (concat git-directory "notes/org-roam"))
+  (setq org-roam-dailies-directory "daily/")
+  :config
+  (org-roam-db-autosync-mode)
+  (setq org-roam-completion-everywhere t)
+  (require 'org-roam-protocol)
+
+  (setq p-daily-note-filename "%<%Y-%m-%d>.org"
+        p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
+
+  (setq org-roam-dailies-capture-templates
+      `(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))
+        ("j" "journal" entry
+        "* %<%I:%M %p> - Journal  :journal:\n\n%?\n\n"
+        :if-new (file+head+olp ,p-daily-note-filename
+                               ,p-daily-note-header
+                               ("Log")))
+        ("f" "feeling" entry
+        "* %<%I:%M %p> - Feeling  :feeling:\n\n%?\n\n"
+        :if-new (file+head+olp ,p-daily-note-filename
+                               ,p-daily-note-header
+                               ("Log")))))
+
+  (defun org-roam-insert-jurnal ()
+    (interactive)
+    (org-roam-dailies-capture-today nil "j"))
+
+  (defun org-roam-insert-feeling ()
+    (interactive)
+    (org-roam-dailies-capture-today nil "f")))
+
+
 (use-package org
   :config
   (setq org-notes-folder (concat git-directory "/notes/"))
@@ -575,7 +615,10 @@ ARGS: the arguments to the function."
 
   ;; Enable indentation+completion using the TAB key.
   ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
+  (setq tab-always-indent 'complete)
+
+  ;; Start server for org-roam-protocol-capture
+  (server-start))
 
 (use-package string-inflection
   :straight t
