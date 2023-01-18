@@ -25,7 +25,8 @@
 ;; Load enviroment file for this computer based on the hostname
 (load-file (concat user-emacs-directory "env/" (system-name) ".el"))
 
-(when (eq system-type `gnu/linux)
+(when (or (eq system-type `gnu/linux)
+          (eq system-type 'darwin))
   (use-package vterm
     :defer t
     :straight t))
