@@ -24,6 +24,7 @@
 
 ;; Load enviroment file for this computer based on the hostname
 (load-file (concat user-emacs-directory "env/" (system-name) ".el"))
+(load-file secrets-file)
 
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
@@ -423,6 +424,20 @@ ARGS: the arguments to the function."
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i"))))
+
+(use-package elfeed-protocol
+  :straight t)
+
+(use-package elfeed
+  :straight t
+  :init
+  (elfeed-protocol-enable)
+  :custom
+  (elfeed-use-curl t)
+  (setq elfeed-protocol-enabled-protocols '(ttrss))
+  (setq elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
+                        :password ,ttrss-password))))
+
 
 (use-package org-roam
   :straight t

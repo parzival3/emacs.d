@@ -11,3 +11,4 @@
 /eln-cache/
 /network-security.data
 /org-roam.db
+/env/secrets.el
