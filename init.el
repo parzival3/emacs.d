@@ -28,9 +28,17 @@
 
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
+
   (use-package vterm
     :defer t
     :straight t))
+
+(use-package flyspell
+  :straight t
+  :config
+  (setq ispell-program-name "aspell")
+  :hook
+  ((org-mode) . flyspell-mode))
 
 (use-package evil
   :straight t
@@ -80,13 +88,6 @@
   (evil-define-key       '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
   :init
   (evil-mode 1))
-
-(use-package flyspell
-  :straight t
-  :config
-  (setq ispell-program-name "aspell")
-  :hook
-  ((org-mode) . flyspell-mode))
 
 ;; Magit
 (use-package magit
@@ -264,8 +265,7 @@
   (which-key-mode))
 
 (defun embark-which-key-indicator ()
-  "An embark indicator tha
-t displays keymaps using which-key.
+  "An embark indicator that displays keymaps using which-key.
 The which-key help message will show the type and value of the
 current target followed by an ellipsis if there are further
 targets."
@@ -437,7 +437,6 @@ ARGS: the arguments to the function."
   (setq elfeed-protocol-enabled-protocols '(ttrss))
   (setq elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
                         :password ,ttrss-password))))
-
 
 (use-package org-roam
   :straight t
@@ -789,6 +788,7 @@ of 'vc-next-action'."
   (set-buffer-file-coding-system 'undecided-dos nil))
 
 (defun p-make-unix-dir (dir)
+  "Find all non hidden files in DIR and convert their line ending into unix."
   (interactive)
   (let ((files (directory-files dir t)))
     (while files
@@ -827,16 +827,12 @@ of 'vc-next-action'."
           (call-interactively #'project-async-shell-command)))))
 
 (defun p-search-for-word-in-directory (dir-to-search)
-  "Search for current word inside the DIR-TO-SEARCH
+  "Search for current word inside the DIR-TO-SEARCH.
 If there is no selected word, simply start an empty search."
   (interactive "DChoose the directory...")
   (let* ((string-to-search (if (use-region-p)
                      (buffer-substring (region-beginning) (region-end)) "")))
     (consult-grep dir-to-search string-to-search)))
-
-(defun p-consult-grep-folder ()
-  (interactive)
-  (consult-ripgrep default-directory))
 
 (provide 'init)
 ;;; init.el ends here
