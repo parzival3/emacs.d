@@ -12,3 +12,6 @@
 /network-security.data
 /org-roam.db
 /env/secrets.el
+/tramp
+/tutorial/
+/.org-id-locations
