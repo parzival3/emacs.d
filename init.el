@@ -40,6 +40,16 @@
   :hook
   ((org-mode) . flyspell-mode))
 
+(use-package clojure-mode
+  :defer t
+  :straight t)
+
+(use-package carp
+  :straight (el-patch :type git :host github :repo "carp-lang/carp-emacs")
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
+
 (use-package evil
   :straight t
   :config
@@ -123,6 +133,7 @@
 (use-package flutter
   :straight t
   :config
+  (evil-define-key  '(normal motion) 'dart-mode-map (kbd "<f5>")  'flutter-run-or-hot-reload)
   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package dart-mode
