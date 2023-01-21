@@ -564,12 +564,12 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "FiraCode NF-12" ))
-  (set-face-attribute 'default t :font "FiraCode NF" )
-  (set-face-attribute 'default nil :font "FiraCode NF-12")
-  (set-frame-font "FiraCode NF-12" nil t)
-  (set-face-font 'fixed-pitch-serif "FiraCode NF")
-  (set-face-font 'variable-pitch "FiraCode NF")
+  (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font Mono-14" ))
+  (set-face-attribute 'default t :font "FiraCode Nerd Font Mono-14" )
+  (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono-14")
+  (set-frame-font "FiraCode Nerd Font Mono-14" nil t)
+  (set-face-font 'fixed-pitch-serif "FiraCode Nerd Font Mono-14")
+  (set-face-font 'variable-pitch "FiraCode Nerd Font Mono-14")
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
