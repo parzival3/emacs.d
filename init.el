@@ -445,8 +445,8 @@ ARGS: the arguments to the function."
   (elfeed-protocol-enable)
   :custom
   (elfeed-use-curl t)
-  (setq elfeed-protocol-enabled-protocols '(ttrss))
-  (setq elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
+  (elfeed-protocol-enabled-protocols '(ttrss))
+  (elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
                         :password ,ttrss-password))))
 
 (use-package org-roam
@@ -575,12 +575,13 @@ ARGS: the arguments to the function."
   (menu-bar-mode -1)
   (horizontal-scroll-bar-mode -1)
 
-  (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font Mono-14" ))
-  (set-face-attribute 'default t :font "FiraCode Nerd Font Mono-14" )
-  (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono-14")
-  (set-frame-font "FiraCode Nerd Font Mono-14" nil t)
-  (set-face-font 'fixed-pitch-serif "FiraCode Nerd Font Mono-14")
-  (set-face-font 'variable-pitch "FiraCode Nerd Font Mono-14")
+
+  (add-to-list 'default-frame-alist `(font . ,p-font))
+  (set-face-attribute 'default t :font p-font )
+  (set-face-attribute 'default nil :font p-font)
+  (set-frame-font p-font nil t)
+  (set-face-font 'fixed-pitch-serif p-font)
+  (set-face-font 'variable-pitch p-font)
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
