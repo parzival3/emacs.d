@@ -484,8 +484,29 @@ ARGS: the arguments to the function."
 
   (defun org-roam-insert-feeling ()
     (interactive)
-    (org-roam-dailies-capture-today nil "f")))
+    (org-roam-dailies-capture-today nil "f"))
 
+  (defun p-org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
+
+  (defun p-org-roam-find-project ()
+    (interactive)
+    (let ((new-project '(file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")))
+      (org-roam-node-add-capture
+       (p-org-roam-filter-by-tag "Project") ;; filter function
+       :templates
+       `(("t" "TODO" entry "* TODO %?\n  %i\n  %a" :if-new ,new-project :unnarrowed t)
+         ("c" "comment" entry "* %? :comment:\n\n%a\n\n" :if-new ,new-project :unnarrowed t)))))
+
+  (cl-defun org-roam-node-add-capture (&optional filter-fn &key templates)
+    "Add a capture using TEMPLATES to a node filterd using FILTER-FN"
+    (interactive current-prefix-arg)
+    (let ((node-name (org-roam-node-read nil filter-fn nil)))
+      (org-roam-capture-
+       :node node-name
+       :templates templates
+       :props '(:finalize find-file)))))
 
 (use-package org
   :config
