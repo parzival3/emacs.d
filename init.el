@@ -96,7 +96,7 @@
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
-  (evil-define-key       '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
+  ;;(evil-define-key       '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
@@ -367,9 +367,9 @@ ARGS: the arguments to the function."
         (let ((current-file (pop list-of-files)))
           (if (file-name-directory current-file)
               (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
-            (dired-run-shell-command (format "clang-format -i %s" current-file)))))))
+            (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
 
-  (evil-define-key '(normal motion) 'dired-mode-map (kbd "C-c f")  'dired-clang-format-thing))
+  ;;(evil-define-key '(normal motion) 'dired-mode-map (kbd "C-c f")  'dired-clang-format-thing))
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
@@ -448,7 +448,8 @@ ARGS: the arguments to the function."
          "* %?\nEntered on %U\n  %i"))))
 
 (use-package elfeed-protocol
-  :straight t)
+  :straight t
+  :after elfeed)
 
 (use-package elfeed
   :straight t
@@ -470,8 +471,28 @@ ARGS: the arguments to the function."
   (setq org-roam-completion-everywhere t)
   (require 'org-roam-protocol)
 
+  (setq org-roam-bookmarklet
+        "javascript:location.href = (function() {
+
+            if (page_title_components.length >= 3 && page_title_components[1] === "browse" && page_title_components[2].match(/SEC\w+-\d+/g)) {
+                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())
+            } else {
+                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())
+            }
+
+        })()")
+
   (setq p-daily-note-filename "%<%Y-%m-%d>.org"
         p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
+
+  (setq org-roam-capture-ref-templates
+        '(("r" "ref" plain "%?"
+           :target (file+head "web/${slug}.org" "#+title: ${title}")
+           :unnarrowed t)
+          ("ji" "JIRA" plain "* %?\n"
+           :target (file+head "JIRA/${slug}.org" "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n")
+           :unnarrowed t
+           :empty-lines-before 1)))
 
   (setq org-roam-dailies-capture-templates
       `(("d" "default" entry
@@ -701,18 +722,6 @@ ARGS: the arguments to the function."
   (setq c-ts-mode-indent-offset 4)
   (setq c-ts-mode-indent-style 'bsd))
 
-(use-package profiler
-  :defer t
-  :commands (profiler-report-find-entry
-             quit-window
-             profiler-report-toggle-entry)
-  :after evil
-  :config
-  (evil-set-initial-state 'profiler-report-mode 'normal)
-  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "RET")   'profiler-report-find-entry)
-  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "q")     'quit-window)
-  (evil-define-key '(normal motion) 'profiler-report-mode-map (kbd "<tab>") 'profiler-report-toggle-entry))
-
 (use-package bookmark
   :defer t
   :init
@@ -720,14 +729,9 @@ ARGS: the arguments to the function."
 
 (use-package dired
   :defer t
-  :commands (dired-find-file
-             dired-up-directory)
-  :after evil
   :config
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
-  (evil-define-key '(normal motion) 'dired-mode-map (kbd "RET") 'dired-find-file)
-  (evil-define-key '(normal motion) 'dired-mode-map (kbd "-")   'dired-up-directory)
   ;; easilly copy to other windows
   (setq dired-dwim-target t))
 
