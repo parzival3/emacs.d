@@ -96,7 +96,6 @@
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
-  ;;(evil-define-key       '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
@@ -369,7 +368,6 @@ ARGS: the arguments to the function."
               (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
             (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
 
-  ;;(evil-define-key '(normal motion) 'dired-mode-map (kbd "C-c f")  'dired-clang-format-thing))
 
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
@@ -473,11 +471,12 @@ ARGS: the arguments to the function."
 
   (setq org-roam-bookmarklet
         "javascript:location.href = (function() {
+             let page_title_components = window.location.pathname.split('/');
 
             if (page_title_components.length >= 3 && page_title_components[1] === "browse" && page_title_components[2].match(/SEC\w+-\d+/g)) {
-                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())
+                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection());
             } else {
-                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())
+                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection());
             }
 
         })()")
