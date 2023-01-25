@@ -51,6 +51,7 @@
   (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
 
 (use-package evil
+  :ensure t
   :straight t
   :config
   ;; Define a new prefix for only git/vc/magit commands
@@ -97,7 +98,17 @@
   (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
   (evil-define-key       '(normal motion) 'dired-mode-map (kbd "F")  'find-dired)
   :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config
   (evil-mode 1))
+
+(use-package evil-collection
+  :straight t
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 ;; Magit
 (use-package magit
