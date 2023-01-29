@@ -471,12 +471,28 @@ ARGS: the arguments to the function."
 
   (setq org-roam-bookmarklet
         "javascript:location.href = (function() {
-             let page_title_components = window.location.pathname.split('/');
+            let hostname = window.location.hostname;
+            let page_title_components = window.location.pathname.split('/');
+            // add bitbucket to the hosts
+            if (hostname === "github.com")
+            {
+                if (page_title_components.length >= 3)
+                {
+                    let title = "github_" + page_title_components[1] + page_title_components[2];
+                    return 'org-protocol://roam-ref?template=r&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(title) + '&body=' + encodeURIComponent(window.getSelection().toString());
+                }
+                else
+                {
+                    alert("The page doesn't have 3 components so I cannot create the proper note");
+                }
 
+            }
+
+            // check for the domain name if it is jira or not
             if (page_title_components.length >= 3 && page_title_components[1] === "browse" && page_title_components[2].match(/SEC\w+-\d+/g)) {
-                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection());
+                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
             } else {
-                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection());
+                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
             }
 
         })()")
@@ -485,7 +501,7 @@ ARGS: the arguments to the function."
         p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
 
   (setq org-roam-capture-ref-templates
-        '(("r" "ref" plain "%?"
+        '(("r" "ref" plain "%? \n #+begin_quote \n ${body} \n #+end_quote\n"
            :target (file+head "web/${slug}.org" "#+title: ${title}")
            :unnarrowed t)
           ("ji" "JIRA" plain "* %?\n"
