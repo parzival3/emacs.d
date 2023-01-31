@@ -271,6 +271,9 @@
       (setq exec-path (cons cargo-dir exec-path))
       (setenv "PATH" (concat (getenv "PATH") ":" cargo-dir)))))
 
+(use-package zig-mode
+  :straight t)
+
 (use-package embark-consult
   :straight t
   :after (embark consult))
@@ -474,28 +477,27 @@ ARGS: the arguments to the function."
             let hostname = window.location.hostname;
             let page_title_components = window.location.pathname.split('/');
             // add bitbucket to the hosts
-            if (hostname === 'github.com')
-            {
-                if (page_title_components.length >= 3)
-                {
+            if (hostname === 'github.com') {
+                if (page_title_components.length >= 3) {
                     let title = 'github_' + page_title_components[1] + page_title_components[2];
                     return 'org-protocol://roam-ref?template=r&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(title) + '&body=' + encodeURIComponent(window.getSelection().toString());
-                }
-                else
-                {
-                    alert('The page doesn't have 3 components so I cannot create the proper note');
+                } else {
+                    alert('The page doesn\'t have 3 components so I cannot create the proper note');
+                    throw new Error('Wrong parameters for hostname');
                 }
 
             }
 
-            // check for the domain name if it is jira or not
-            if (page_title_components.length >= 3 && page_title_components[1] === 'browse' && page_title_components[2].match(/SEC\w+-\d+/g)) {
-                return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
-            } else {
-                return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
+            if (hostname === 'jira.kitenet.com') {
+                if (page_title_components.length >= 3 && page_title_components[1] === 'browse' && page_title_components[2].match(/SEC\w+-\d+/g)) {
+                    return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
+                } else {
+                    alert('The page doesn\'t match the 3 components' + page_title_components[2] + ' ' + page_title_components[3]);
+                    throw new Error('Wroong parameters for hostname');
+                }
             }
-
-        })()")
+            return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
+         })()")
 
   (setq p-daily-note-filename "%<%Y-%m-%d>.org"
         p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
