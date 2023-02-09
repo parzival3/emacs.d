@@ -109,6 +109,9 @@
   :config
   (evil-collection-init))
 
+(use-package wgrep
+  :straight t)
+
 ;; Magit
 (use-package magit
   :commands (magit-status)
