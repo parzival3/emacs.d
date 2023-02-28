@@ -1,6 +1,11 @@
 (defvar git-directory "~/Git/")
 (defvar secrets-file (concat user-emacs-directory "env/secrets.el"))
-(defvar p-font-size "14")
+
+(defvar p-font-size (let ((geometry (alist-get 'geometry (car (display-monitor-attributes-list)))))
+         (if (eq 1440 (caddr geometry))
+             "12"
+           "14")))
+
 (defvar p-font (concat "FiraCode Nerd Font Mono-" p-font-size))
 
 (add-to-list 'exec-path "/opt/homebrew/bin/")

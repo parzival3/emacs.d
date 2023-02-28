@@ -50,64 +50,207 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
 
-(use-package evil
-  :ensure t
+;; (use-package evil
+;;   :ensure t
+;;   :straight t
+;;   :config
+;;   ;; Define a new prefix for only git/vc/magit commands
+;;   (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
+;;   (global-set-key (kbd "<f1>") 'vc-actions-map)
+;;   (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
+
+;;   ;; Define a new prefix for the languages actions
+;;   (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
+;;   (global-set-key (kbd "<f2>") 'language-actions-map)
+;;   (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
+;;   (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
+;;   (define-key 'language-actions-map (kbd "r") 'eglot-rename)
+;;   (define-key 'language-actions-map (kbd "f") 'eglot-format)
+
+;;   (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
+;;   (global-set-key (kbd "<f3>") 'org-actions-map)
+;;   (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
+;;   (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
+;;   (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
+;;   (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
+
+;;   (evil-set-leader       '(normal motion visual replace)  (kbd "SPC"))
+;;   (evil-define-key       'visual 'global                  (kbd "v") 'evil-delete-char)
+;;   (evil-define-key       '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>SPC") 'project-find-file)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>RET") 'consult-bookmark)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pp")  'project-switch-project)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>gg")  'magit-status-quick)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>,")   'consult-switch-project)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>TAB") 'project-switch-to-buffer)
+;;   (evil-define-key       'insert          'global         (kbd "TAB")         'hippie-expand)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>fp")  'p-open-config)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pr")  'p-project-run)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pc")  'project-compile)
+;;   (evil-define-key       'insert          'global         (kbd "C-x C-f")    'dabbrev-completion)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pe")  'project-eshell)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>br")  'revert-buffer)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>po")  'ff-find-other-file)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pt")  'p-project-run-tests)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>bd")  'kill-current-buffer)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
+;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
+;;   :init
+;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+;;   (setq evil-want-keybinding nil)
+;;   :config
+;;   (evil-mode 1))
+
+;; (use-package evil-collection
+;;   :straight t
+;;   :after evil
+;;   :ensure t
+;;   :config
+;;   (evil-collection-init))
+
+(defun p-find-file ()
+  (interactive)
+  ;; Project current check if we are inside a project otherwise uses the normal find
+  (if (project-current)
+    (project-find-file)
+    (call-interactively (find-file))))
+
+(use-package meow
   :straight t
-  :config
-  ;; Define a new prefix for only git/vc/magit commands
-  (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
-  (global-set-key (kbd "<f1>") 'vc-actions-map)
-  (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
-
-  ;; Define a new prefix for the languages actions
-  (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
-  (global-set-key (kbd "<f2>") 'language-actions-map)
-  (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
-  (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
-  (define-key 'language-actions-map (kbd "r") 'eglot-rename)
-  (define-key 'language-actions-map (kbd "f") 'eglot-format)
-
-  (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
-  (global-set-key (kbd "<f3>") 'org-actions-map)
-  (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
-  (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
-  (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
-  (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
-
-  (evil-set-leader       '(normal motion visual replace)  (kbd "SPC"))
-  (evil-define-key       'visual 'global                  (kbd "v") 'evil-delete-char)
-  (evil-define-key       '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>SPC") 'project-find-file)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>RET") 'consult-bookmark)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>pp")  'project-switch-project)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>gg")  'magit-status-quick)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>,")   'consult-switch-project)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>TAB") 'project-switch-to-buffer)
-  (evil-define-key       'insert          'global         (kbd "TAB")         'hippie-expand)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>fp")  'p-open-config)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>pr")  'p-project-run)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>pc")  'project-compile)
-  (evil-define-key       'insert          'global         (kbd "C-x C-f")    'dabbrev-completion)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>pe")  'project-eshell)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>br")  'revert-buffer)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>po")  'ff-find-other-file)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>pt")  'p-project-run-tests)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>bd")  'kill-current-buffer)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
-  (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1))
-
-(use-package evil-collection
-  :straight t
-  :after evil
   :ensure t
   :config
-  (evil-collection-init))
+  (defun meow-setup ()
+    ;; Define a new prefix for only git/vc/magit commands
+    (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
+    (global-set-key (kbd "<f1>") 'vc-actions-map)
+    (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
+
+    ;; Define a new prefix for the languages actions
+    (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
+    (global-set-key (kbd "<f2>") 'language-actions-map)
+    (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
+    (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
+    (define-key 'language-actions-map (kbd "r") 'eglot-rename)
+    (define-key 'language-actions-map (kbd "f") 'eglot-format)
+
+    (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
+    (global-set-key (kbd "<f3>") 'org-actions-map)
+    (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
+    (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
+    (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
+    (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
+
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     ;; '("j" . "H-j")
+     ;; '("k" . "H-k")
+     '("ff" . p-find-file)
+     '("pp" . project-switch-project)
+     '("pe" . project-eshell)
+     '("gg" . magit-status)
+     '("fp" . p-open-config)
+     '("pc" . project-compile)
+     '("bb" . consult-buffer)
+     '("bd" . kill-current-buffer)
+
+     ;; Windows movements
+     '("ws" . split-window-below)
+     '("wv" . split-window-right)
+     '("wk" . windmove-up)
+     '("wj" . windmove-down)
+     '("wh" . windmove-left)
+     '("wl" . windmove-right)
+
+     ;; Lsp
+     '("a"  . eglot-code-actions)
+
+     ;; Search
+     '("sd" . p-search-for-word-in-directory)
+     '("sf" . find-dired)
+
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+  (meow-setup)
+  (meow-global-mode 1))
 
 (use-package wgrep
   :straight t)
@@ -143,11 +286,11 @@
   :init
   (vertico-mode))
 
-(use-package flutter
-  :straight t
-  :config
-  (evil-define-key  '(normal motion) 'dart-mode-map (kbd "<f5>")  'flutter-run-or-hot-reload)
-  (setq flutter-buffer-name "*Flutter-Runner*"))
+;; (use-package flutter
+;;   :straight t
+;;   :config
+;;   (evil-define-key  '(normal motion) 'dart-mode-map (kbd "<f5>")  'flutter-run-or-hot-reload)
+;;   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package dart-mode
   :straight t)
@@ -710,6 +853,9 @@ ARGS: the arguments to the function."
   ;; custom variables
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load custom-file 'noerror)
+
+  ;; Use window move
+  (windmove-default-keybindings)
 
   ;; TAB cycle if there are only few candidates
   (setq completion-cycle-threshold 3)
