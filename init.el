@@ -26,231 +26,22 @@
 (load-file (concat user-emacs-directory "env/" (system-name) ".el"))
 (load-file secrets-file)
 
+;; Load the keybidings configuration
+(load-file (concat user-emacs-directory "kbd.el"))
+
+;; Load the language packages
+(load-file (concat user-emacs-directory "lang.el"))
+
+;; Load the org customization
+(load-file (concat user-emacs-directory "org.el"))
+
+
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
 
   (use-package vterm
     :defer t
     :straight t))
-
-(use-package flyspell
-  :straight t
-  :config
-  (setq ispell-program-name "aspell")
-  :hook
-  ((org-mode) . flyspell-mode))
-
-(use-package clojure-mode
-  :defer t
-  :straight t)
-
-(use-package carp
-  :straight (el-patch :type git :host github :repo "carp-lang/carp-emacs")
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
-
-;; (use-package evil
-;;   :ensure t
-;;   :straight t
-;;   :config
-;;   ;; Define a new prefix for only git/vc/magit commands
-;;   (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
-;;   (global-set-key (kbd "<f1>") 'vc-actions-map)
-;;   (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
-
-;;   ;; Define a new prefix for the languages actions
-;;   (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
-;;   (global-set-key (kbd "<f2>") 'language-actions-map)
-;;   (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
-;;   (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
-;;   (define-key 'language-actions-map (kbd "r") 'eglot-rename)
-;;   (define-key 'language-actions-map (kbd "f") 'eglot-format)
-
-;;   (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
-;;   (global-set-key (kbd "<f3>") 'org-actions-map)
-;;   (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
-;;   (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
-;;   (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
-;;   (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
-
-;;   (evil-set-leader       '(normal motion visual replace)  (kbd "SPC"))
-;;   (evil-define-key       'visual 'global                  (kbd "v") 'evil-delete-char)
-;;   (evil-define-key       '(normal motion visual) 'global  (kbd "C-.") 'eglot-code-actions)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>SPC") 'project-find-file)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>RET") 'consult-bookmark)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pp")  'project-switch-project)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>gg")  'magit-status-quick)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>,")   'consult-switch-project)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>TAB") 'project-switch-to-buffer)
-;;   (evil-define-key       'insert          'global         (kbd "TAB")         'hippie-expand)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>fp")  'p-open-config)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pr")  'p-project-run)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pc")  'project-compile)
-;;   (evil-define-key       'insert          'global         (kbd "C-x C-f")    'dabbrev-completion)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pe")  'project-eshell)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>br")  'revert-buffer)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>po")  'ff-find-other-file)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>pt")  'p-project-run-tests)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>bd")  'kill-current-buffer)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>/")   'p-search-for-word-in-directory)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>wV")  'evil-window-vsplit)
-;;   (evil-define-key       '(normal motion) 'global         (kbd "<leader>ws")  'evil-window-split)
-;;   :init
-;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-;;   (setq evil-want-keybinding nil)
-;;   :config
-;;   (evil-mode 1))
-
-;; (use-package evil-collection
-;;   :straight t
-;;   :after evil
-;;   :ensure t
-;;   :config
-;;   (evil-collection-init))
-
-(defun p-find-file ()
-  (interactive)
-  ;; Project current check if we are inside a project otherwise uses the normal find
-  (if (project-current)
-    (project-find-file)
-    (call-interactively (find-file))))
-
-(use-package meow
-  :straight t
-  :ensure t
-  :config
-  (defun meow-setup ()
-    ;; Define a new prefix for only git/vc/magit commands
-    (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
-    (global-set-key (kbd "<f1>") 'vc-actions-map)
-    (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
-
-    ;; Define a new prefix for the languages actions
-    (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
-    (global-set-key (kbd "<f2>") 'language-actions-map)
-    (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
-    (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
-    (define-key 'language-actions-map (kbd "r") 'eglot-rename)
-    (define-key 'language-actions-map (kbd "f") 'eglot-format)
-
-    (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
-    (global-set-key (kbd "<f3>") 'org-actions-map)
-    (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
-    (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
-    (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
-    (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
-
-    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-    (meow-motion-overwrite-define-key
-     '("j" . meow-next)
-     '("k" . meow-prev)
-     '("<escape>" . ignore))
-    (meow-leader-define-key
-     ;; SPC j/k will run the original command in MOTION state.
-     ;; '("j" . "H-j")
-     ;; '("k" . "H-k")
-     '("ff" . p-find-file)
-     '("pp" . project-switch-project)
-     '("pe" . project-eshell)
-     '("gg" . magit-status)
-     '("fp" . p-open-config)
-     '("pc" . project-compile)
-     '("bb" . consult-buffer)
-     '("bd" . kill-current-buffer)
-
-     ;; Windows movements
-     '("ws" . split-window-below)
-     '("wv" . split-window-right)
-     '("wk" . windmove-up)
-     '("wj" . windmove-down)
-     '("wh" . windmove-left)
-     '("wl" . windmove-right)
-
-     ;; Lsp
-     '("a"  . eglot-code-actions)
-
-     ;; Search
-     '("sd" . p-search-for-word-in-directory)
-     '("sf" . find-dired)
-
-     ;; Use SPC (0-9) for digit arguments.
-     '("1" . meow-digit-argument)
-     '("2" . meow-digit-argument)
-     '("3" . meow-digit-argument)
-     '("4" . meow-digit-argument)
-     '("5" . meow-digit-argument)
-     '("6" . meow-digit-argument)
-     '("7" . meow-digit-argument)
-     '("8" . meow-digit-argument)
-     '("9" . meow-digit-argument)
-     '("0" . meow-digit-argument)
-     '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet))
-    (meow-normal-define-key
-     '("0" . meow-expand-0)
-     '("9" . meow-expand-9)
-     '("8" . meow-expand-8)
-     '("7" . meow-expand-7)
-     '("6" . meow-expand-6)
-     '("5" . meow-expand-5)
-     '("4" . meow-expand-4)
-     '("3" . meow-expand-3)
-     '("2" . meow-expand-2)
-     '("1" . meow-expand-1)
-     '("-" . negative-argument)
-     '(";" . meow-reverse)
-     '("," . meow-inner-of-thing)
-     '("." . meow-bounds-of-thing)
-     '("[" . meow-beginning-of-thing)
-     '("]" . meow-end-of-thing)
-     '("a" . meow-append)
-     '("A" . meow-open-below)
-     '("b" . meow-back-word)
-     '("B" . meow-back-symbol)
-     '("c" . meow-change)
-     '("d" . meow-delete)
-     '("D" . meow-backward-delete)
-     '("e" . meow-next-word)
-     '("E" . meow-next-symbol)
-     '("f" . meow-find)
-     '("g" . meow-cancel-selection)
-     '("G" . meow-grab)
-     '("h" . meow-left)
-     '("H" . meow-left-expand)
-     '("i" . meow-insert)
-     '("I" . meow-open-above)
-     '("j" . meow-next)
-     '("J" . meow-next-expand)
-     '("k" . meow-prev)
-     '("K" . meow-prev-expand)
-     '("l" . meow-right)
-     '("L" . meow-right-expand)
-     '("m" . meow-join)
-     '("n" . meow-search)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
-     '("p" . meow-yank)
-     '("q" . meow-quit)
-     '("Q" . meow-goto-line)
-     '("r" . meow-replace)
-     '("R" . meow-swap-grab)
-     '("s" . meow-kill)
-     '("t" . meow-till)
-     '("u" . meow-undo)
-     '("U" . meow-undo-in-selection)
-     '("v" . meow-visit)
-     '("w" . meow-mark-word)
-     '("W" . meow-mark-symbol)
-     '("x" . meow-line)
-     '("X" . meow-goto-line)
-     '("y" . meow-save)
-     '("Y" . meow-sync-grab)
-     '("z" . meow-pop-selection)
-     '("'" . repeat)
-     '("<escape>" . ignore)))
-  (meow-setup)
-  (meow-global-mode 1))
 
 (use-package wgrep
   :straight t)
@@ -285,15 +76,6 @@
   (setq vertico-cycle t)
   :init
   (vertico-mode))
-
-;; (use-package flutter
-;;   :straight t
-;;   :config
-;;   (evil-define-key  '(normal motion) 'dart-mode-map (kbd "<f5>")  'flutter-run-or-hot-reload)
-;;   (setq flutter-buffer-name "*Flutter-Runner*"))
-
-(use-package dart-mode
-  :straight t)
 
 (use-package consult
   :defer t
@@ -407,18 +189,6 @@
   (setf (alist-get 'consult-xref embark-exporters-alist)
       #'embark-consult-export-grep))
 
-(use-package rust-mode
-  :straight t
-  :config
-  (let ((cargo-dir (concat (file-name-as-directory (getenv "HOME"))
-                           ".cargo/bin")))
-    (when (and (file-exists-p cargo-dir)
-               (not (cl-find-if (lambda (path) (not (null (string-match "cargo" path)))) exec-path)))
-      (setq exec-path (cons cargo-dir exec-path))
-      (setenv "PATH" (concat (getenv "PATH") ":" cargo-dir)))))
-
-(use-package zig-mode
-  :straight t)
 
 (use-package embark-consult
   :straight t
@@ -504,20 +274,6 @@ ARGS: the arguments to the function."
   :init
   (global-corfu-mode))
 
-(use-package clang-format+
-  :defer t
-  :straight t
-  :config
-  (defun dired-clang-format-thing ()
-    (interactive)
-    (let ((list-of-files (dired-get-marked-files)))
-      (while list-of-files
-        (let ((current-file (pop list-of-files)))
-          (if (file-name-directory current-file)
-              (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
-            (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
-
-
 ;; Use dabbrev with Corfu!
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
@@ -575,24 +331,7 @@ ARGS: the arguments to the function."
                                         (slot . -1))
                                         ("\\*no-display\\*" (display-buffer-no-window))))))
 
-(use-package org-capture
-  :config
-  ;; TODO I need to improove this
-  (defun org-jurnal-capture ()
-    "Insert a new entry in the org jurnal."
-    (interactive)
-    (org-capture nil "j"))
 
-  (defun org-todo-capture ()
-    "Insert a new entry in the org gtd file."
-    (interactive)
-    (org-capture nil "t"))
-
-  (setq org-capture-templates
-      `(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
-         "* TODO %?\n  %i\n  %a")
-        ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
-         "* %?\nEntered on %U\n  %i"))))
 
 (use-package elfeed-protocol
   :straight t
@@ -607,110 +346,6 @@ ARGS: the arguments to the function."
   (elfeed-protocol-enabled-protocols '(ttrss))
   (elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
                         :password ,ttrss-password))))
-
-(use-package org-roam
-  :straight t
-  :init
-  (setq org-roam-directory (concat git-directory "notes/org-roam"))
-  (setq org-roam-dailies-directory "daily/")
-  :config
-  (org-roam-db-autosync-mode)
-  (setq org-roam-completion-everywhere t)
-  (require 'org-roam-protocol)
-
-  (setq org-roam-bookmarklet
-        "javascript:location.href = (function() {
-            let hostname = window.location.hostname;
-            let page_title_components = window.location.pathname.split('/');
-            // add bitbucket to the hosts
-            if (hostname === 'github.com') {
-                if (page_title_components.length >= 3) {
-                    let title = 'github_' + page_title_components[1] + page_title_components[2];
-                    return 'org-protocol://roam-ref?template=r&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(title) + '&body=' + encodeURIComponent(window.getSelection().toString());
-                } else {
-                    alert('The page doesn\'t have 3 components so I cannot create the proper note');
-                    throw new Error('Wrong parameters for hostname');
-                }
-
-            }
-
-            if (hostname === 'jira.kitenet.com') {
-                if (page_title_components.length >= 3 && page_title_components[1] === 'browse' && page_title_components[2].match(/SEC\w+-\d+/g)) {
-                    return 'org-protocol://roam-ref?template=ji&ref=' + encodeURIComponent(location.href)  + '&title=' +  encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
-                } else {
-                    alert('The page doesn\'t match the 3 components' + page_title_components[2] + ' ' + page_title_components[3]);
-                    throw new Error('Wroong parameters for hostname');
-                }
-            }
-            return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
-         })()")
-
-  (setq p-daily-note-filename "%<%Y-%m-%d>.org"
-        p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
-
-  (setq org-roam-capture-ref-templates
-        '(("r" "ref" plain "%? \n #+begin_quote \n ${body} \n #+end_quote\n"
-           :target (file+head "web/${slug}.org" "#+title: ${title}")
-           :unnarrowed t)
-          ("ji" "JIRA" plain "* %?\n"
-           :target (file+head "JIRA/${slug}.org" "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n")
-           :unnarrowed t
-           :empty-lines-before 1)))
-
-  (setq org-roam-dailies-capture-templates
-      `(("d" "default" entry
-         "* %?"
-         :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n"))
-        ("j" "journal" entry
-        "* %<%I:%M %p> - Journal  :journal:\n\n%?\n\n"
-        :if-new (file+head+olp ,p-daily-note-filename
-                               ,p-daily-note-header
-                               ("Log")))
-        ("f" "feeling" entry
-        "* %<%I:%M %p> - Feeling  :feeling:\n\n%?\n\n"
-        :if-new (file+head+olp ,p-daily-note-filename
-                               ,p-daily-note-header
-                               ("Log")))))
-
-  (defun org-roam-insert-jurnal ()
-    (interactive)
-    (org-roam-dailies-capture-today nil "j"))
-
-  (defun org-roam-insert-feeling ()
-    (interactive)
-    (org-roam-dailies-capture-today nil "f"))
-
-  (defun p-org-roam-filter-by-tag (tag-name)
-    (lambda (node)
-      (member tag-name (org-roam-node-tags node))))
-
-  (defun p-org-roam-find-project ()
-    (interactive)
-    (let ((new-project '(file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")))
-      (org-roam-node-add-capture
-       (p-org-roam-filter-by-tag "Project") ;; filter function
-       :templates
-       `(("t" "TODO" entry "* TODO %?\n  %i\n  %a" :if-new ,new-project :unnarrowed t)
-         ("c" "comment" entry "* %? :comment:\n\n%a\n\n" :if-new ,new-project :unnarrowed t)))))
-
-  (cl-defun org-roam-node-add-capture (&optional filter-fn &key templates)
-    "Add a capture using TEMPLATES to a node filterd using FILTER-FN"
-    (interactive current-prefix-arg)
-    (let ((node-name (org-roam-node-read nil filter-fn nil)))
-      (org-roam-capture-
-       :node node-name
-       :templates templates
-       :props '(:finalize find-file)))))
-
-(use-package org
-  :config
-  (setq org-notes-folder (concat git-directory "/notes/"))
-  (defun org-list-of-notes ()
-    (interactive)
-      (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
-
-  (setq org-export-backends (add-to-list 'org-export-backends 'md)))
 
 (use-package emacs
   :init
@@ -895,6 +530,9 @@ ARGS: the arguments to the function."
 
 (use-package dired
   :defer t
+  :bind
+  (:map dired-mode-map
+   ("-" . dired-up-directory))
   :config
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
@@ -1047,6 +685,13 @@ If there is no selected word, simply start an empty search."
   (let* ((string-to-search (if (use-region-p)
                      (buffer-substring (region-beginning) (region-end)) "")))
     (consult-grep dir-to-search string-to-search)))
+
+(defun p-find-file ()
+  (interactive)
+  ;; Project current check if we are inside a project otherwise uses the normal find
+  (if (project-current)
+    (project-find-file)
+    (call-interactively (find-file))))
 
 (provide 'init)
 ;;; init.el ends here
