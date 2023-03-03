@@ -1,4 +1,5 @@
 (use-package emacs
+  :config
   ;; Define a new prefix for only git/vc/magit commands
   (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
   (global-set-key (kbd "<f1>") 'vc-actions-map)
@@ -17,9 +18,12 @@
   (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
   (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
   (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
-  (define-key 'org-actions-map (kbd "l") #'org-list-of-notes))
+  (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
 
-
+  (global-set-key (kbd "M-<up>") #'enlarge-window)
+  (global-set-key (kbd "M-<down>") #'shrink-window)
+  (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
+  (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally))
 
 (use-package meow
   :straight t
@@ -39,11 +43,13 @@
      '("ff" . p-find-file)
      '("pp" . project-switch-project)
      '("pe" . project-eshell)
+     '("po" . ff-find-other-file)
      '("gg" . magit-status)
      '("fp" . p-open-config)
      '("pc" . project-compile)
      '("bb" . consult-buffer)
      '("bd" . kill-current-buffer)
+     '("br" . revert-buffer)
 
      ;; Windows movements
      '("ws" . split-window-below)
