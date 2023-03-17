@@ -48,3 +48,7 @@
           (if (file-name-directory current-file)
               (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
             (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
+
+(use-package cc-mode
+  :config
+  (setq delete-trailing-lines nil))
