@@ -52,3 +52,6 @@
 (use-package cc-mode
   :config
   (setq delete-trailing-lines nil))
+
+(use-package devdocs
+  :straight t)
