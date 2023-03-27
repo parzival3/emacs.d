@@ -525,16 +525,6 @@ ARGS: the arguments to the function."
            (kill-region (car bounds) (cdr bounds))
            (insert (string-inflection-pascal-case-function word)))))
 
-(use-package treesit
-  :config
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
-  (setq c-ts-mode-indent-offset 4)
-  (setq c-ts-mode-indent-style 'bsd))
-
 (use-package bookmark
   :defer t
   :init
