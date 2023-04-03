@@ -73,3 +73,7 @@
   :straight t
   :config
   (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)

@@ -1,3 +1,12 @@
+(defun p-copilot-tab ()
+  "Tab command that will complet with copilot if a completion is
+available. Otherwise will try company, yasnippet or normal
+tab-indent."
+  (interactive)
+  (or (copilot-accept-completion)
+      (indent-for-tab-command)))
+
+
 (use-package emacs
   :config
   ;; Define a new prefix for only git/vc/magit commands
@@ -23,7 +32,11 @@
   (global-set-key (kbd "M-<up>") #'enlarge-window)
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
-  (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally))
+  (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
+
+  (global-set-key (kbd "M-[") #'copilot-previous)
+  (global-set-key (kbd "M-]") #'copilot-next)
+  (global-set-key (kbd "<tab>") #'p-copilot-tab))
 
 (use-package meow
   :straight t
