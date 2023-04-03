@@ -6,7 +6,6 @@ tab-indent."
   (or (copilot-accept-completion)
       (indent-for-tab-command)))
 
-
 (use-package emacs
   :config
   ;; Define a new prefix for only git/vc/magit commands
@@ -29,14 +28,14 @@ tab-indent."
   (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
   (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
 
+  (global-set-key (kbd "M-/") #'copilot-previous-completion)
+  (global-set-key (kbd "M-\\") #'copilot-next-completion)
+
   (global-set-key (kbd "M-<up>") #'enlarge-window)
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
-
-  (global-set-key (kbd "M-[") #'copilot-previous)
-  (global-set-key (kbd "M-]") #'copilot-next)
-  (global-set-key (kbd "<tab>") #'p-copilot-tab))
+  (global-set-key (kbd "TAB") #'p-copilot-tab))
 
 (use-package meow
   :straight t

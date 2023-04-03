@@ -301,7 +301,10 @@ ARGS: the arguments to the function."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-badger t)
+
+  (if (not (display-graphic-p))
+           (load-theme 'modus-vivendi t)
+       (load-theme 'doom-badger t))
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
