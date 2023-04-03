@@ -68,3 +68,8 @@
   :config
   (setq c-ts-mode-indent-style 'bsd)
   (setq c-ts-mode-indent-offset 4))
+
+(use-package powershell
+  :straight t
+  :config
+  (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
