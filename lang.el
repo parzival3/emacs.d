@@ -56,6 +56,7 @@
 (use-package devdocs
   :straight t)
 
+
 (use-package treesit
   :config
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
@@ -69,11 +70,27 @@
   (setq c-ts-mode-indent-style 'bsd)
   (setq c-ts-mode-indent-offset 4))
 
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+
 (use-package powershell
   :straight t
   :config
   (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
 
-(use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t)
+(use-package treesit
+  :commands (treesit-install-language-grammar nf/treesit-install-all-languages)
+  :init
+  (setq treesit-language-source-alist
+   '((PowerShell . ("https://github.com/parzival3/tree-sitter-PowerShell.git"))
+     ))
+  :config
+  (defun p-treesit-install-all-languages ()
+    "Install all languages specified by `treesit-language-source-alist'."
+    (interactive)
+    (let ((languages (mapcar 'car treesit-language-source-alist)))
+      (dolist (lang languages)
+	      (treesit-install-language-grammar lang)
+	      (message "`%s' parser was installed." lang)
+	      (sit-for 0.75)))))
