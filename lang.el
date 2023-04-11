@@ -101,7 +101,7 @@
   (defun groovy-remove-indentation ()
     ;; remove the electric indentation
     (add-hook 'hack-local-variable-hook
-              (lambda () (setq 'indent-line-function #'identity))
+              (lambda () (setq indent-line-function #'identity))
               nil t))
   :hook
   (groovy-mode . #'groovy-remove-indentation))
