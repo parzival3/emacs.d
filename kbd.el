@@ -35,14 +35,29 @@ tab-indent."
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
-  (global-set-key (kbd "TAB") #'p-copilot-tab))
+  (global-set-key (kbd "TAB") #'p-copilot-tab)
+  (global-set-key (kbd "<xterm-paste>") #'scroll-up-command))
 
 (use-package meow
   :straight t
   :ensure t
   :config
-  (defun meow-setup ()
+  ; wsl-copy
+  (defun wsl-copy (start end)
+    (interactive "r")
+    (shell-command-on-region start end "/mnt/c/Windows/System32/clip.exe")
+    (deactivate-mark))
 
+ ; wsl-paste
+ (defun wsl-paste ()
+  (interactive)
+  (let ((clipboard
+     (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
+    (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
+    (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+    (insert clipboard)))
+
+ (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-overwrite-define-key
      '("j" . meow-next)
@@ -134,7 +149,9 @@ tab-indent."
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
-     '("p" . meow-clipboard-yank)
+     `("p" . ,(if (not (display-graphic-p))
+                  #'wsl-paste
+                #'meow-clipboard-paste))
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
@@ -148,7 +165,9 @@ tab-indent."
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
      '("X" . meow-goto-line)
-     '("y" . meow-clipboard-save)
+     `("y" . ,(if (not (display-graphic-p))
+                 #'wsl-copy
+               #'meow-clipboard-save))
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("'" . repeat)
