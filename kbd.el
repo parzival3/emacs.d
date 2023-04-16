@@ -42,7 +42,6 @@ tab-indent."
   :straight t
   :ensure t
   :config
-<<<<<<< Updated upstream
   ; wsl-copy
   (defun wsl-copy (start end)
     (interactive "r")
@@ -59,11 +58,6 @@ tab-indent."
     (insert clipboard)))
 
  (defun meow-setup ()
-=======
-  (defun meow-setup ()
-    (global-set-key (kbd "M-[") #'copilot-previous-completion)
-    (global-set-key (kbd "M-]") #'copilot-next-completion)
->>>>>>> Stashed changes
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-overwrite-define-key
      '("j" . meow-next)
