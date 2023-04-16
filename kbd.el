@@ -156,7 +156,7 @@ tab-indent."
      '("O" . meow-to-block)
      `("p" . ,(if (not (display-graphic-p))
                   #'wsl-paste
-                #'meow-clipboard-paste))
+                #'meow-clipboard-yank))
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
