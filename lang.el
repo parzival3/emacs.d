@@ -21,6 +21,7 @@
 (use-package flutter
   :straight t
   :config
+  (add-hook #'dart-mode-hook #'eglot-ensure)
   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package rust-mode
@@ -56,7 +57,6 @@
 (use-package devdocs
   :straight t)
 
-
 (use-package treesit
   :config
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
@@ -72,7 +72,9 @@
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t)
+  :ensure t
+  :config
+  ))
 
 (use-package powershell
   :straight t
@@ -105,3 +107,4 @@
               nil t))
   :hook
   (groovy-mode . #'groovy-remove-indentation))
+
