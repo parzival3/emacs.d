@@ -74,7 +74,8 @@
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :ensure t
   :config
-  )
+  :hook
+  (prog-mode . copilot-mode))
 
 (use-package powershell
   :straight t
