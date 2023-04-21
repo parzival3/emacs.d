@@ -46,6 +46,7 @@ tab-indent."
   (defun wsl-copy (start end)
     (interactive "r")
     (shell-command-on-region start end "/mnt/c/Windows/System32/clip.exe")
+    (kill-ring-save start end)
     (deactivate-mark))
 
  ; wsl-paste
@@ -56,6 +57,11 @@ tab-indent."
     (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
     (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
     (insert clipboard)))
+
+ (defun wsl-cut (start end)
+   (interactive "r")
+   (wsl-copy start end)
+   (delete-region start end))
 
  (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -161,7 +167,9 @@ tab-indent."
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
      '("R" . meow-swap-grab)
-     '("s" . meow-clipboard-kill)
+     `("s" . ,(if (not (display-graphic-p))
+                  #'wsl-cut
+                #'meow-clipboard-kill))
      '("t" . meow-till)
      '("u" . meow-undo)
      '("U" . meow-undo-in-selection)
