@@ -109,3 +109,5 @@
   :hook
   (groovy-mode . #'groovy-remove-indentation))
 
+(use-package yaml-mode
+  :straight t)

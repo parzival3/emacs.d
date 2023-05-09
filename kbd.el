@@ -83,6 +83,7 @@ tab-indent."
      '("bb" . consult-buffer)
      '("bd" . kill-current-buffer)
      '("br" . revert-buffer)
+     '("bm" . consult-bookmark)
 
      ;; Windows movements
      '("ws" . split-window-below)
