@@ -36,7 +36,6 @@
 ;; Load the org customization
 (load-file (concat user-emacs-directory "org.el"))
 
-
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
 
@@ -170,6 +169,7 @@
   :straight t
   :bind
   (("C-;" . embark-act)         ;; pick some comfortable binding
+   ("C-\\" . embark-act)
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface

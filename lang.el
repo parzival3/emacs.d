@@ -58,12 +58,12 @@
   :straight t)
 
 (use-package treesit
-  :config
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode)))
+  :config)
+  ;; (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode)))
 
 (use-package c-ts-mode
   :config
