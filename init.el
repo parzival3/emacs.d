@@ -697,5 +697,24 @@ If there is no selected word, simply start an empty search."
     (project-find-file)
     (call-interactively (find-file))))
 
+(defun file-metadata ()
+  (interactive)
+  (let* ((fname (buffer-file-name))
+         (data (file-attributes fname))
+         (access (current-time-string (nth 4 data)))
+         (mod (current-time-string (nth 5 data)))
+         (change (current-time-string (nth 6 data)))
+         (size (nth 7 data))
+         (mode (nth 8 data)))
+    (message
+     "%s:
+  Accessed: %s
+  Modified: %s
+  Changed: %s
+  Size: %s bytes
+  Mode: %s"
+     fname access mod change size mode)))
+
+
 (provide 'init)
 ;;; init.el ends here
