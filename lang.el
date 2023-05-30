@@ -60,6 +60,10 @@
 
 (use-package treesit
   :config
+  (defun remove-value-from-alist (value alist)
+    (cl-remove-if #'(lambda (x) (equal (cdr x) value)) alist))
+  (setq auto-mode-alist (remove-value-from-alist 'c++-ts-mode auto-mode-alist))
+  (setq auto-mode-alist (remove-value-from-alist 'c-ts-mode auto-mode-alist))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-mode))
