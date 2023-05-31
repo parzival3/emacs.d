@@ -49,6 +49,20 @@ tab-indent."
     (kill-ring-save start end)
     (deactivate-mark))
 
+  (defun sys-clipoard-copy ()
+    ;; copy system clipboard to kill ring
+    (interactive)
+    (let ((powershell-program "powershell.exe")
+          (clip-program "Get-Clipboard"))
+      (kill-new
+       (replace-regexp-in-string
+        "\r" ""
+        (replace-regexp-in-string
+         "\n$" ""
+         (with-output-to-string
+           (with-current-buffer standard-output
+             (call-process powershell-program nil t nil "-Command" clip-program))))))))
+
  ; wsl-paste
  (defun wsl-paste ()
   (interactive)
