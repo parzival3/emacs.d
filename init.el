@@ -50,6 +50,7 @@
 (use-package magit
   :commands (magit-status)
   :bind
+  :ensure t
   (("C-x g" . magit-status))
   :straight t
   :config
@@ -68,6 +69,12 @@
     (let ((magit-commit-ask-to-stage t)
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message))))
+
+
+(use-package project
+  :config
+  ;;; add element to project-switch-commands alist
+        (add-to-list 'project-switch-commands '(magit-status "Magit Status" ?m)))
 
 (use-package vertico
   :defer t
