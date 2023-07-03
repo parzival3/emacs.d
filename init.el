@@ -74,7 +74,7 @@
 (use-package project
   :config
   ;;; add element to project-switch-commands alist
-        (add-to-list 'project-switch-commands '(magit-status "Magit Status" ?m)))
+  (add-to-list 'project-switch-commands '(magit-status "Magit Status" ?m)))
 
 (use-package vertico
   :defer t
