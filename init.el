@@ -50,8 +50,8 @@
 (use-package magit
   :commands (magit-status)
   :bind
-  :ensure t
   (("C-x g" . magit-status))
+  :ensure t
   :straight t
   :config
   (defun winnt-get-git-tools-path ()
@@ -69,7 +69,6 @@
     (let ((magit-commit-ask-to-stage t)
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message))))
-
 
 (use-package project
   :config
@@ -532,7 +531,22 @@ ARGS: the arguments to the function."
          (let ((word (symbol-name (symbol-at-point)))
                (bounds (bounds-of-thing-at-point 'symbol)))
            (kill-region (car bounds) (cdr bounds))
-           (insert (string-inflection-pascal-case-function word)))))
+           (insert (string-inflection-pascal-case-function word))))
+
+  (defun to-lower-case ()
+         (interactive)
+         (let ((word (symbol-name (symbol-at-point)))
+               (bounds (bounds-of-thing-at-point 'symbol)))
+           (kill-region (car bounds) (cdr bounds))
+           (insert (downcase word))))
+
+  (defun search-and-relace-to-lowecase ()
+         (interactive)
+         (let ((word (symbol-name (symbol-at-point))))
+           ;; save excusion
+           (save-excursion
+             (beginning-of-buffer)
+             (query-replace-regexp word (downcase word))))))
 
 (use-package bookmark
   :defer t
