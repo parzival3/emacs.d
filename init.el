@@ -73,7 +73,10 @@
 (use-package project
   :config
   ;;; add element to project-switch-commands alist
-  (add-to-list 'project-switch-commands '(magit-status "Magit Status" ?m)))
+  (defun project-magit-status ()
+    (interactive)
+    (magit-status (project-root (project-current t default-directory))))
+  (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m)))
 
 (use-package vertico
   :defer t
