@@ -75,7 +75,7 @@
   ;;; add element to project-switch-commands alist
   (defun project-magit-status ()
     (interactive)
-    (magit-status (project-root (project-current t default-directory))))
+    (magit-status (project-root (project-current t))))
   (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m)))
 
 (use-package vertico
