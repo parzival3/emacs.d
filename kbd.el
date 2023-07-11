@@ -36,7 +36,8 @@ tab-indent."
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
   (global-set-key (kbd "TAB") #'p-copilot-tab)
-  (global-set-key (kbd "<xterm-paste>") #'scroll-up-command))
+  (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
+  (global-set-key (kbd "<f12>")  #'clang-format-buffer))
 
 (use-package meow
   :straight t
@@ -52,7 +53,7 @@ tab-indent."
   (defun sys-clipoard-copy ()
     ;; copy system clipboard to kill ring
     (interactive)
-    (let ((powershell-program "powershell.exe")
+    (let ((powershell-program "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
           (clip-program "Get-Clipboard"))
       (kill-new
        (replace-regexp-in-string
@@ -63,21 +64,21 @@ tab-indent."
            (with-current-buffer standard-output
              (call-process powershell-program nil t nil "-Command" clip-program))))))))
 
- ; wsl-paste
- (defun wsl-paste ()
-  (interactive)
-  (let ((clipboard
-     (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
-    (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
-    (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
-    (insert clipboard)))
+                                        ; wsl-paste
+  (defun wsl-paste ()
+    (interactive)
+    (let ((clipboard
+           (shell-command-to-string "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'")))
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (insert clipboard)))
 
- (defun wsl-cut (start end)
-   (interactive "r")
-   (wsl-copy start end)
-   (delete-region start end))
+  (defun wsl-cut (start end)
+    (interactive "r")
+    (wsl-copy start end)
+    (delete-region start end))
 
- (defun meow-setup ()
+  (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-overwrite-define-key
      '("j" . meow-next)
