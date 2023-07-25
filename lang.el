@@ -25,14 +25,7 @@
   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package rust-mode
-  :straight t
-  :config
-  (let ((cargo-dir (concat (file-name-as-directory (getenv "HOME"))
-                           ".cargo/bin")))
-    (when (and (file-exists-p cargo-dir)
-               (not (cl-find-if (lambda (path) (not (null (string-match "cargo" path)))) exec-path)))
-      (setq exec-path (cons cargo-dir exec-path))
-      (setenv "PATH" (concat (getenv "PATH") ":" cargo-dir)))))
+  :straight t)
 
 (use-package zig-mode
   :straight t)
@@ -56,7 +49,6 @@
 
 (use-package devdocs
   :straight t)
-
 
 (use-package treesit
   :config
