@@ -177,7 +177,9 @@
   :defer t
   :straight t
   :bind
-  (("C-;" . embark-act)         ;; pick some comfortable binding
+  (("<f9>" . embark-export)
+   ("C-." . embark-act)
+   ("C-;" . embark-act)         ;; pick some comfortable binding
    ("C-\\" . embark-act)
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
@@ -326,13 +328,19 @@ ARGS: the arguments to the function."
 
 (use-package window
   :config
+  (defvar original-siplay-buffer-alist display-buffer-alist)
   (setq display-buffer-alist
-        (append display-buffer-alist '(("\\*\\(cider-error\\|Backtrace\\)\\*"
+        (append display-buffer-alist '(("\\*\\(Embark Export\\)\\*"
+                                        (display-buffer-in-side-window)
+                                        (windows-width . 0.75)
+                                        (side . left)
+                                        (slot . 1))
+                                       ("\\*\\(cider-error\\|Backtrace\\)\\*"
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
                                         (side . bottom)
                                         (slot . 1))
-                                       ("\\*e?shell\\*"
+                                       ("\\(*e?shell|*vterm*\\)\\*"
                                         (display-buffer-in-side-window)
                                         (window-height . 0.25)
                                         (side . bottom)
