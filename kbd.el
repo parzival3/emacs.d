@@ -12,6 +12,7 @@ tab-indent."
   (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
   (global-set-key (kbd "<f1>") 'vc-actions-map)
   (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
+  (define-key 'vc-actions-map (kbd "<f2>") #'magit-push)
 
   ;; Define a new prefix for the languages actions
   (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
