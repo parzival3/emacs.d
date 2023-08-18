@@ -378,6 +378,9 @@ ARGS: the arguments to the function."
   (elfeed-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
                         :password ,ttrss-password))))
 
+(use-package fd-dired
+  :straight t)
+
 (use-package emacs
   :init
   ;; Configuration
