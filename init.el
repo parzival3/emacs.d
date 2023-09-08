@@ -326,6 +326,9 @@ ARGS: the arguments to the function."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
+(use-package color-theme-sanityinc-tomorrow
+  :straight t)
+
 (use-package window
   :config
   (defvar original-siplay-buffer-alist display-buffer-alist)
