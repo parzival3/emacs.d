@@ -379,7 +379,21 @@ ARGS: the arguments to the function."
                         :password ,ttrss-password))))
 
 (use-package fd-dired
-  :straight t)
+  :straight t
+  :config
+  (defun fd-dired-simple ()
+    (interactive (list (read-string "Run fd (with args and search): " fd-dired-input-fd-args
+                                    '(fd-dired-args-history . 1))))
+    ;; if current buffer is a dired buffer, use its directory
+    (let ((dir (if (eq major-mode 'dired-mode)
+                   ;; if the element under the cursor is a directory use it
+                   (if (file-directory-p (dired-get-file-for-visit))
+                       (dired-get-file-for-visit))
+                 default-directory)))
+      (fd-dired dir fd-dired-input-fd-args)))
+  :bind
+  (:map dired-mode-map
+        ("C-x C-d" . fd-dired-simple)))
 
 (use-package emacs
   :init
@@ -499,6 +513,9 @@ ARGS: the arguments to the function."
   (setq tab-width 4)
   ;; Set file encoding to linux
   (prefer-coding-system 'utf-8-unix)
+
+  ;; enable column mode
+  (setq column-number-mode 1)
 
   ;; don't hide the line feed type
   (setq inhibit-eol-conversion t)
