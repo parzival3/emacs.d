@@ -329,6 +329,12 @@ ARGS: the arguments to the function."
 (use-package color-theme-sanityinc-tomorrow
   :straight t)
 
+(use-package diminish
+  :straight t
+  :config
+  (diminish 'copilot-mode " CoPy")
+  (diminish 'eldoc-mode))
+
 (use-package window
   :config
   (defvar original-siplay-buffer-alist display-buffer-alist)
