@@ -68,7 +68,20 @@
   :ensure t
   :config
   :hook
-  (prog-mode . copilot-mode))
+  (prog-mode . copilot-mode)
+  :config
+  (defun toggle-copilot-mode ()
+  "Toggle Copilot mode for programming modes."
+  (interactive)
+  (if (bound-and-true-p copilot-mode)
+      (progn
+        (remove-hook 'prog-mode-hook 'copilot-mode)
+        (setq copilot-mode nil)
+        (message "Copilot mode disabled for programming mode"))
+    (setq copilot-mode t)
+    (add-hook 'prog-mode-hook 'copilot-mode)
+    (message "Copilot mode enabled for programming mode")))
+  (global-set-key (kbd "<f10>") #'toggle-copilot-mode))
 
 (use-package powershell
   :straight t

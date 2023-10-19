@@ -39,9 +39,9 @@
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
 
-  (use-package vterm
-    :defer t
-    :straight t))
+(use-package vterm
+  :defer t
+  :straight t))
 
 (use-package wgrep
   :straight t)
@@ -335,42 +335,49 @@ ARGS: the arguments to the function."
   (diminish 'copilot-mode " CoPy")
   (diminish 'eldoc-mode))
 
+(use-package gptel
+  :straight t
+  :config
+  (setq gptel-program "gptel"))
+
+
 (use-package window
   :config
-  (defvar original-siplay-buffer-alist display-buffer-alist)
-  (setq display-buffer-alist
-        (append display-buffer-alist '(("\\*\\(Embark Export\\)\\*"
-                                        (display-buffer-in-side-window)
-                                        (windows-width . 0.75)
-                                        (side . left)
-                                        (slot . 1))
-                                       ("\\*\\(cider-error\\|Backtrace\\)\\*"
-                                        (display-buffer-in-side-window)
-                                        (window-height . 0.25)
-                                        (side . bottom)
-                                        (slot . 1))
-                                       ("\\(*e?shell|*vterm*\\)\\*"
-                                        (display-buffer-in-side-window)
-                                        (window-height . 0.25)
-                                        (side . bottom)
-                                        (slot . -1))
-                                       ("\\*Compilation\\*"
-                                        (display-buffer-in-side-window)
-                                        (window-height . 0.25)
-                                        (side . bottom)
-                                        (slot . -1))
-                                       ("\\*Flutter-Runner\\*"
-                                        (display-buffer-in-side-window)
-                                        (window-height . 0.25)
-                                        (side . bottom)
-                                        (slot . -1))
-                                       ("\\*repl\\*"
-                                        (display-buffer-in-side-window)
-                                        (window-height . 0.25)
-                                        (side . bottom)
-                                        (slot . -1))
-                                        ("\\*no-display\\*" (display-buffer-no-window))))))
+  (defvar original-display-buffer-alist display-buffer-alist)
 
+  ;; Define common parameters
+  (setq display-buffer-base-params
+        '((window-height . 0.25)
+          (side . bottom)
+          (slot . -1)
+          (window-parameters
+           (no-delete-other-windows . nil))))
+
+  ;; Add entries using add-to-list
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(Embark Export\\|cider-error\\|Flutter-Runner\\|repl\\)\\*"
+                 (display-buffer-in-side-window)
+                 ,@display-buffer-base-params))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(e?shell\\|vterm\\)\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.33)
+                 ,@display-buffer-base-params))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*no-display\\*"
+                 (display-buffer-no-window)))
+
+  ;; Additional entries can be added using add-to-list
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\)\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.33)
+                 (side . bottom)
+                 (slot . 0)
+                 (window-parameters
+                  (no-delete-other-windows . nil)))))
 
 
 (use-package elfeed-protocol
@@ -756,7 +763,7 @@ If there is no selected word, simply start an empty search."
   ;; Project current check if we are inside a project otherwise uses the normal find
   (if (project-current)
     (project-find-file)
-    (call-interactively (find-file))))
+    (call-interactively 'find-file)))
 
 (defun file-metadata ()
   (interactive)
