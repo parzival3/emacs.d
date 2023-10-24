@@ -312,10 +312,6 @@ ARGS: the arguments to the function."
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  (if (not (display-graphic-p))
-           (load-theme 'modus-vivendi t)
-       (load-theme 'doom-badger t))
-
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
@@ -565,6 +561,9 @@ ARGS: the arguments to the function."
   ;; Enable indentation+completion using the TAB key.
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete)
+
+  ;; Set current theme to my p-theme variable
+  (load-theme p-theme t)
 
   ;; Start server for org-roam-protocol-capture
   (server-start))
