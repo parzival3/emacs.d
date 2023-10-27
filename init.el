@@ -365,11 +365,10 @@ ARGS: the arguments to the function."
                '("\\*no-display\\*"
                  (display-buffer-no-window)))
 
-  ;; Additional entries can be added using add-to-list
   (add-to-list 'display-buffer-alist
                '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\)\\*"
                  (display-buffer-in-side-window)
-                 (window-height . 0.33)
+                 (window-height . 0.20)
                  (side . bottom)
                  (slot . 0)
                  (window-parameters
