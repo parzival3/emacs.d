@@ -812,6 +812,19 @@ If there is no selected word, simply start an empty search."
   Mode: %s"
      fname access mod change size mode)))
 
+(defun p-other-window ()
+  "Switch to the next window in a cyclic manner, including side windows."
+  (interactive)
+  (let ((windows (window-list)))
+    (cond
+     ((null windows)
+      (message "No windows to switch to."))
+     ((= 1 (length windows))
+      (message "Only one window is available."))
+     (t
+      (select-window (if (eq (selected-window) (car (last windows)))
+                         (car windows)
+                       (next-window)))))))
 
 (provide 'init)
 ;;; init.el ends here

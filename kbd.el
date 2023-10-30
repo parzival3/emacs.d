@@ -39,6 +39,7 @@ tab-indent."
   (global-set-key (kbd "TAB") #'p-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
   (global-set-key (kbd "<f12>")  #'clang-format-buffer))
+  (global-set-key (kbd "C-x o")  #'p-other-window)
 
 (use-package meow
   :straight t
