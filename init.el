@@ -423,6 +423,8 @@ ARGS: the arguments to the function."
   ;; Remove white spaces before saving
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+  (add-hook 'find-file-hook 'set-file-coding-if-crlf)
+
   ;; Camel-case words are separated words in program mode :-)
   (add-hook 'prog-mode-hook 'subword-mode)
 
@@ -707,7 +709,36 @@ of 'vc-next-action'."
 (defun p-unix2dos ()
   "Convert a UNIX formatted text buffer to DOS format."
   (interactive)
-  (set-buffer-file-coding-system 'undecided-dos nil))
+  (set-buffer-file-coding-system 'undecided-dos)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\n" nil t)
+      (replace-match "\r\n"))))
+
+(defun p-trim-whitespace-based-on-encoding ()
+  "Trim trailing whitespace based on the buffer's encoding."
+  (interactive)
+  (let ((coding-system (symbol-name buffer-file-coding-system)))
+    (if (string-match "dos" coding-system)
+        (progn
+          ;; For Windows (CRLF) encoding
+          (goto-char (point-min))
+          (while (re-search-forward "[ \t]+$" nil t)
+            (replace-match "")))
+      (if (string-match "unix" coding-system)
+        (delete-trailing-whitespace)))))
+
+(add-hook 'before-save-hook 'p-trim-whitespace-based-on-encoding)
+
+(defun set-file-coding-if-crlf ()
+  "Check for ^M characters (Windows line endings) in the current buffer.
+   If found, set the file's encoding to utf-8-dos."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "\r\n" nil t)
+      (set-buffer-file-coding-system 'utf-8-dos)
+      (message "File encoding set to utf-8-dos due to Windows line endings (^M)."))))
 
 (defun p-make-unix-dir (dir)
   "Find all non hidden files in DIR and convert their line ending into unix."
