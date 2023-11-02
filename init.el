@@ -343,8 +343,7 @@ ARGS: the arguments to the function."
 
   ;; Define common parameters
   (setq display-buffer-base-params
-        '((window-height . 0.25)
-          (side . bottom)
+        '((side . bottom)
           (slot . -1)
           (window-parameters
            (no-delete-other-windows . nil))))
@@ -353,6 +352,7 @@ ARGS: the arguments to the function."
   (add-to-list 'display-buffer-alist
                '("\\*\\(Embark Export\\|cider-error\\|Flutter-Runner\\|repl\\)\\*"
                  (display-buffer-in-side-window)
+                 (window-height . 0.25)
                  ,@display-buffer-base-params))
 
   (add-to-list 'display-buffer-alist
@@ -368,7 +368,7 @@ ARGS: the arguments to the function."
   (add-to-list 'display-buffer-alist
                '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\)\\*"
                  (display-buffer-in-side-window)
-                 (window-height . 0.20)
+                 (window-height . 0.25)
                  (side . bottom)
                  (slot . 0)
                  (window-parameters
