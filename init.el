@@ -420,9 +420,6 @@ ARGS: the arguments to the function."
 
   (setq whitespace-line-column 200)
 
-  ;; Remove white spaces before saving
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
   (add-hook 'find-file-hook 'set-file-coding-if-crlf)
 
   ;; Camel-case words are separated words in program mode :-)
@@ -825,6 +822,12 @@ If there is no selected word, simply start an empty search."
       (select-window (if (eq (selected-window) (car (last windows)))
                          (car windows)
                        (next-window)))))))
+
+(defun p-set-msdos-file-type ()
+  "Set the file type as MSDOS (CRLF line endings)."
+  (interactive)
+  (setq buffer-file-coding-system 'dos)
+  (message "File type set to MSDOS (CRLF line endings)."))
 
 (provide 'init)
 ;;; init.el ends here

@@ -60,8 +60,27 @@
 
 (use-package c-ts-mode
   :config
-  (setq c-ts-mode-indent-style 'bsd)
-  (setq c-ts-mode-indent-offset 4))
+  (setq c-ts-mode-indent-style 'k&r)
+  (setq c-ts-mode-indent-offset 4)
+  (setq-local indent-tabs-mode nil))
+
+(defun c-ts-microsoft-style ()
+  (let ((microsoft-style
+         '(((node-is "}") parent-bol 0)
+           ((node-is "labeled_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "labeled_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "compound_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "if_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "else_clause") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "for_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "while_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "switch_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "case_statement") parent-bol c-ts-mode-indent-offset)
+           ((parent-is "do_statement") parent-bol c-ts-mode-indent-offset))))
+    ;; Merge with the existing 'linux' style
+    (setq microsoft-style (cons 'microsoft-style (alist-get 'linux (c-ts-mode--indent-styles 'c++))))
+    (print microsoft-style)
+    microsoft-style))
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
