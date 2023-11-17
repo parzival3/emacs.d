@@ -1,4 +1,4 @@
-(defun p-copilot-tab ()
+(defun et-copilot-tab ()
   "Tab command that will complet with copilot if a completion is
 available. Otherwise will try company, yasnippet or normal
 tab-indent."
@@ -36,10 +36,10 @@ tab-indent."
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
-  (global-set-key (kbd "TAB") #'p-copilot-tab)
+  (global-set-key (kbd "TAB") #'et-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
-  (global-set-key (kbd "<f12>")  #'clang-format-buffer))
-  (global-set-key (kbd "C-x o")  #'p-other-window)
+  (global-set-key (kbd "<f12>")  #'et-format-code-or-region)
+  (global-set-key (kbd "C-x o")  #'et-other-window)
 
 (use-package meow
   :straight t
@@ -90,12 +90,12 @@ tab-indent."
      ;; SPC j/k will run the original command in MOTION state.
      ;; '("j" . "H-j")
      ;; '("k" . "H-k")
-     '("ff" . p-find-file)
+     '("ff" . et-find-file)
      '("pp" . project-switch-project)
      '("pe" . project-eshell)
      '("po" . ff-find-other-file)
      '("gg" . magit-status)
-     '("fp" . p-open-config)
+     '("fp" . et-open-config)
      '("pc" . project-compile)
      '("bb" . consult-buffer)
      '("bd" . kill-current-buffer)
@@ -119,7 +119,7 @@ tab-indent."
      '("]"  . copilot-next-completion)
 
      ;; Search
-     '("sd" . p-search-for-word-in-directory)
+     '("sd" . et-search-for-word-in-directory)
      '("sf" . find-dired)
 
      ;; Use SPC (0-9) for digit arguments.

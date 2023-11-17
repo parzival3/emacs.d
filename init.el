@@ -485,12 +485,12 @@ ARGS: the arguments to the function."
   (horizontal-scroll-bar-mode -1)
 
 
-  (add-to-list 'default-frame-alist `(font . ,p-font))
-  (set-face-attribute 'default t :font p-font )
-  (set-face-attribute 'default nil :font p-font)
-  (set-frame-font p-font nil t)
-  (set-face-font 'fixed-pitch-serif p-font)
-  (set-face-font 'variable-pitch p-font)
+  (add-to-list 'default-frame-alist `(font . ,et-font))
+  (set-face-attribute 'default t :font et-font )
+  (set-face-attribute 'default nil :font et-font)
+  (set-frame-font et-font nil t)
+  (set-face-font 'fixed-pitch-serif et-font)
+  (set-face-font 'variable-pitch et-font)
 
   ;; Prefer to load the more recent version of a file
   (setq load-prefer-newer t)
@@ -561,7 +561,7 @@ ARGS: the arguments to the function."
   (setq tab-always-indent 'complete)
 
   ;; Set current theme to my p-theme variable
-  (load-theme p-theme t)
+  (load-theme et-theme t)
 
   ;; Start server for org-roam-protocol-capture
   (server-start))
@@ -658,7 +658,7 @@ ARGS: the arguments to the function."
 ;; Custom functions
 
 ;; Hooks for vc-next-action
-(defun p-commit-filename ()
+(defun et-commit-filename ()
 "File name to add to the header of a git commit."
   (require 'project)
   (let* ((root (project-root (project-current)))
@@ -674,28 +674,28 @@ ARGS: the arguments to the function."
                 (setq final-file-name (format "%s:%s" final-file-name extension)))
          (concat final-file-name ": ")))
 
-(defun p-insert-preamble (preamble)
+(defun et-insert-preamble (preamble)
 "Insert the PREAMBLE (aka filepath:filename) in the git commit."
   (when (equal (buffer-name) "*vc-log*")
                    (insert preamble)))
 
-(defun p-vc-log-advice (orig-fun &rest args)
+(defun et-vc-log-advice (orig-fun &rest args)
   "Advice the 'vc-next-action' function with inser-preamble.
 The arguments are ORIG-FUN (vc-next-action) and ARGS the argument
 of 'vc-next-action'."
-  (let ((preamble (p-commit-filename)))
+  (let ((preamble (et-commit-filename)))
     (apply orig-fun args)
-    (p-insert-preamble preamble)))
+    (et-insert-preamble preamble)))
 
 ;; Advicing vc-next-action
-(advice-add 'vc-next-action :around #'p-vc-log-advice)
+(advice-add 'vc-next-action :around #'et-vc-log-advice)
 
-(defun p-open-config ()
+(defun et-open-config ()
   "Open this configuration."
   (interactive)
   (find-file (concat user-emacs-directory "init.el")))
 
-(defun p-dos2unix ()
+(defun et-dos2unix ()
   "Convert a DOS formatted text buffer to UNIX format."
   (interactive)
   (save-excursion
@@ -703,7 +703,7 @@ of 'vc-next-action'."
     (format-replace-strings '(("" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
-(defun p-unix2dos ()
+(defun et-unix2dos ()
   "Convert a UNIX formatted text buffer to DOS format."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos)
@@ -712,7 +712,7 @@ of 'vc-next-action'."
     (while (re-search-forward "\n" nil t)
       (replace-match "\r\n"))))
 
-(defun p-trim-whitespace-based-on-encoding ()
+(defun et-trim-whitespace-based-on-encoding ()
   "Trim trailing whitespace based on the buffer's encoding."
   (interactive)
   (let ((coding-system (symbol-name buffer-file-coding-system)))
@@ -725,7 +725,7 @@ of 'vc-next-action'."
       (if (string-match "unix" coding-system)
         (delete-trailing-whitespace)))))
 
-(add-hook 'before-save-hook 'p-trim-whitespace-based-on-encoding)
+(add-hook 'before-save-hook 'et-trim-whitespace-based-on-encoding)
 
 (defun set-file-coding-if-crlf ()
   "Check for ^M characters (Windows line endings) in the current buffer.
@@ -737,7 +737,7 @@ of 'vc-next-action'."
       (set-buffer-file-coding-system 'utf-8-dos)
       (message "File encoding set to utf-8-dos due to Windows line endings (^M)."))))
 
-(defun p-make-unix-dir (dir)
+(defun et-make-unix-dir (dir)
   "Find all non hidden files in DIR and convert their line ending into unix."
   (interactive)
   (let ((files (directory-files dir t)))
@@ -746,9 +746,9 @@ of 'vc-next-action'."
         (if (not (file-directory-p current-file))
             (with-temp-file current-file
               (insert-file-contents current-file)
-              (p-dos2unix))
+              (et-dos2unix))
           (unless (string-match "^." (file-name-base current-file)) ;; remove all the hidden files
-            (p-make-unix-dir current-file)))))))
+            (et-make-unix-dir current-file)))))))
 
 (defvar-local project-test-cmd nil
   "Function for testing the current project, ovveride it in the dir locals var.")
@@ -759,7 +759,7 @@ of 'vc-next-action'."
 (put 'project-run-cmd 'safe-local-variable 'string-or-null-p)
 (put 'project-test-cmd 'safe-local-variable 'string-or-null-p)
 
-(defun p-project-run-tests ()
+(defun et-project-run-tests ()
   "Run test in the current project."
   (interactive)
   (let ((default-directory (project-root (project-current t)))
@@ -767,7 +767,7 @@ of 'vc-next-action'."
                             compile-command)))
     (call-interactively #'compile)))
 
-(defun p-project-run ()
+(defun et-project-run ()
   "Run test in the current project."
   (interactive)
   (let ((default-directory (project-root (project-current t)))
@@ -776,7 +776,7 @@ of 'vc-next-action'."
       (minibuffer-with-setup-hook #'prompt-text
           (call-interactively #'project-async-shell-command)))))
 
-(defun p-search-for-word-in-directory (dir-to-search)
+(defun et-search-for-word-in-directory (dir-to-search)
   "Search for current word inside the DIR-TO-SEARCH.
 If there is no selected word, simply start an empty search."
   (interactive "DChoose the directory...")
@@ -784,7 +784,7 @@ If there is no selected word, simply start an empty search."
                      (buffer-substring (region-beginning) (region-end)) "")))
     (consult-grep dir-to-search string-to-search)))
 
-(defun p-find-file ()
+(defun et-find-file ()
   (interactive)
   ;; Project current check if we are inside a project otherwise uses the normal find
   (if (project-current)
@@ -809,7 +809,7 @@ If there is no selected word, simply start an empty search."
   Mode: %s"
      fname access mod change size mode)))
 
-(defun p-other-window ()
+(defun et-other-window ()
   "Switch to the next window in a cyclic manner, including side windows."
   (interactive)
   (let ((windows (window-list)))
@@ -823,7 +823,7 @@ If there is no selected word, simply start an empty search."
                          (car windows)
                        (next-window)))))))
 
-(defun p-set-msdos-file-type ()
+(defun et-set-msdos-file-type ()
   "Set the file type as MSDOS (CRLF line endings)."
   (interactive)
   (setq buffer-file-coding-system 'dos)

@@ -54,8 +54,8 @@
             return 'org-protocol://roam-ref?template=r&ref='  + encodeURIComponent(location.href)  + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection().toString());
          })()")
 
-  (setq p-daily-note-filename "%<%Y-%m-%d>.org"
-        p-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
+  (setq et-daily-note-filename "%<%Y-%m-%d>.org"
+        et-daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
 
   (setq org-roam-capture-ref-templates
         '(("r" "ref" plain "%? \n #+begin_quote \n ${body} \n #+end_quote\n"
@@ -73,13 +73,13 @@
                             "#+title: %<%Y-%m-%d>\n"))
         ("j" "journal" entry
         "* %<%I:%M %p> - Journal  :journal:\n\n%?\n\n"
-        :if-new (file+head+olp ,p-daily-note-filename
-                               ,p-daily-note-header
+        :if-new (file+head+olp ,et-daily-note-filename
+                               ,et-daily-note-header
                                ("Log")))
         ("f" "feeling" entry
         "* %<%I:%M %p> - Feeling  :feeling:\n\n%?\n\n"
-        :if-new (file+head+olp ,p-daily-note-filename
-                               ,p-daily-note-header
+        :if-new (file+head+olp ,et-daily-note-filename
+                               ,et-daily-note-header
                                ("Log")))))
 
   (defun org-roam-insert-jurnal ()
@@ -90,15 +90,15 @@
     (interactive)
     (org-roam-dailies-capture-today nil "f"))
 
-  (defun p-org-roam-filter-by-tag (tag-name)
+  (defun et-org-roam-filter-by-tag (tag-name)
     (lambda (node)
       (member tag-name (org-roam-node-tags node))))
 
-  (defun p-org-roam-find-project ()
+  (defun et-org-roam-find-project ()
     (interactive)
     (let ((new-project '(file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")))
       (org-roam-node-add-capture
-       (p-org-roam-filter-by-tag "Project") ;; filter function
+       (et-org-roam-filter-by-tag "Project") ;; filter function
        :templates
        `(("t" "TODO" entry "* TODO %?\n  %i\n  %a" :if-new ,new-project :unnarrowed t)
          ("c" "comment" entry "* %? :comment:\n\n%a\n\n" :if-new ,new-project :unnarrowed t)))))

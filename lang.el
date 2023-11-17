@@ -114,7 +114,7 @@
    '((PowerShell . ("https://github.com/parzival3/tree-sitter-PowerShell.git"))
      ))
   :config
-  (defun p-treesit-install-all-languages ()
+  (defun et-treesit-install-all-languages ()
     "Install all languages specified by `treesit-language-source-alist'."
     (interactive)
     (let ((languages (mapcar 'car treesit-language-source-alist)))
@@ -136,3 +136,31 @@
 
 (use-package yaml-mode
   :straight t)
+
+
+(defvar et-format-functions-alist
+  '((python-mode blacken-buffer blacken-region)
+    (js-mode prettier-js prettier-js-region)
+    (c++-mode clang-format-buffer clang-format-region)
+    (c-mode clang-format-buffer clang-format-region)
+    (c++-ts-mode clang-format-buffer clang-format-region)
+    (c-ts-mode clang-format-buffer clang-format-region)
+    ;; Add more modes and their associated formatting functions here
+    )
+  "Alist of major modes and their corresponding buffer and region formatting functions.")
+
+(defun et-format-code-or-region (start end)
+  "Formats the current buffer or a region based on the major mode.
+If START and END are provided, format that region."
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list nil nil)))
+  (let ((buffer-formatter (nth 1 (assoc major-mode format-functions-alist)))
+        (region-formatter (nth 2 (assoc major-mode format-functions-alist))))
+    (if start
+        (if region-formatter
+            (funcall region-formatter start end)
+          (indent-region start end))
+      (if buffer-formatter
+          (funcall buffer-formatter)
+        (indent-region (point-min) (point-max))))))
