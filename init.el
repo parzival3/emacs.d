@@ -700,7 +700,9 @@ of 'vc-next-action'."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (format-replace-strings '(("" . ""))))
+    (format-replace-strings '(("" . "")))
+    (goto-char (point-min))
+    (format-replace-strings '((" " . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
 (defun et-unix2dos ()
