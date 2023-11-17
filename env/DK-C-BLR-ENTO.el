@@ -11,5 +11,5 @@
 (defvar p-theme 'doom-badger)
 
 (if (not (display-graphic-p))
-    (setq p-theme 'modus-vivendi)
+    (setq p-theme 'doom-laserwave)
   (setq p-theme 'doom-laserwave))
