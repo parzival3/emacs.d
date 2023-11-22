@@ -383,13 +383,14 @@ ARGS: the arguments to the function."
   :straight t
   :init
   (setq elfeed-use-curl t)
-  (elfeed-set-timeout 36000)
+
   (setq elfeed-protocol-ttrss-maxsize 200) ; bigger than 200 is invalid
   (setq elfeed-protocol-ttrss-fetch-category-as-tag t)
   (setq elfeed-protocol-enabled-protocols '(ttrss))
   (setq elfeed-protocol-feeds `((,(concat "ttrss+https://" user@ttrss-url "/tt-rss")
                                  :password ,ttrss-password)))
   :config
+  (elfeed-set-timeout 36000)
   (elfeed-protocol-enable))
 
 (use-package fd-dired
