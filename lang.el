@@ -155,8 +155,8 @@ If START and END are provided, format that region."
   (interactive (if (use-region-p)
                    (list (region-beginning) (region-end))
                  (list nil nil)))
-  (let ((buffer-formatter (nth 1 (assoc major-mode format-functions-alist)))
-        (region-formatter (nth 2 (assoc major-mode format-functions-alist))))
+  (let ((buffer-formatter (nth 1 (assoc major-mode et-format-functions-alist)))
+        (region-formatter (nth 2 (assoc major-mode et-format-functions-alist))))
     (if start
         (if region-formatter
             (funcall region-formatter start end)
