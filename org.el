@@ -135,9 +135,8 @@
          (link (if (string-match "href=\"\\(.*\\)\"" raw-link)
                    (match-string 1 raw-link)
                  raw-link)) ; Extract URL from HTML tag if necessary
-         (content (format "* %s\n\nSource: %s\n\n%s"
-                          title link
-                          (elfeed-deref (elfeed-entry-content entry)))))
+         (content (format "* %s\n\nSource: %s"
+                          title link)))
     (org-roam-capture- :node (org-roam-node-create :title title)
                        :info (list :title title :url link)
                        :templates `(("d" "default" plain ,content
