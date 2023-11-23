@@ -120,3 +120,26 @@
       (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
 
   (setq org-export-backends (add-to-list 'org-export-backends 'md)))
+
+
+(defun et-create-org-roam-node-from-elfeed-entry-buffer ()
+  "Create an org-roam node from the elfeed entry in the current buffer."
+  (interactive)
+  (unless (eq major-mode 'elfeed-show-mode)
+    (error "This function must be called from an elfeed-entry buffer"))
+
+  (let* ((entry elfeed-show-entry)
+         (title (or (elfeed-entry-title entry)
+                    (read-string "Enter title: "))) ; Prompt for title if nil
+         (raw-link (elfeed-entry-link entry))
+         (link (if (string-match "href=\"\\(.*\\)\"" raw-link)
+                   (match-string 1 raw-link)
+                 raw-link)) ; Extract URL from HTML tag if necessary
+         (content (format "* %s\n\nSource: %s\n\n%s"
+                          title link
+                          (elfeed-deref (elfeed-entry-content entry)))))
+    (org-roam-capture- :node (org-roam-node-create :title title)
+                       :info (list :title title :url link)
+                       :templates `(("d" "default" plain ,content
+                                     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        "#+title: ${title}\n"))))))
