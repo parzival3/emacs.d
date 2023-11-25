@@ -331,12 +331,6 @@ ARGS: the arguments to the function."
   (diminish 'copilot-mode " CoPy")
   (diminish 'eldoc-mode))
 
-(use-package gptel
-  :straight t
-  :config
-  (setq gptel-program "gptel"))
-
-
 (use-package window
   :config
   (defvar original-display-buffer-alist display-buffer-alist)
