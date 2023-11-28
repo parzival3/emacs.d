@@ -391,7 +391,21 @@ ARGS: the arguments to the function."
                                  :password ,ttrss-password)))
   :config
   (elfeed-set-timeout 36000)
-  (elfeed-protocol-enable))
+  (elfeed-protocol-enable)
+
+  (defun et-elfeed-eww-visit (&optional use-generic-p)
+    "Visit the current entry in eww."
+    (interactive "P")
+    (let ((browse-url-browser-function 'eww-browse-url))
+      (elfeed-show-visit use-generic-p)))
+
+  :bind
+        (:map elfeed-search-mode-map
+                ("b" . et-elfeed-eww-visit)
+                ("B" . elfeed-show-visit))
+        (:map elfeed-show-mode-map
+                ("b" . et-elfeed-eww-visit)
+                ("B" . elfeed-show-visit)))
 
 (use-package fd-dired
   :straight t
