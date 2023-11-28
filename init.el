@@ -400,6 +400,17 @@ ARGS: the arguments to the function."
         (:map elfeed-show-mode-map
                 ("b" . et-elfeed-eww-visit)
                 ("B" . elfeed-show-visit)))
+(use-package eww
+  :bind
+  (:map eww-mode-map
+        ("L" . eww-forward-url)
+        ("H" . eww-back-url)
+        ("l" . meow-right)
+        ("h" . meow-left)
+        ("j" . meow-up)
+        ("k" . meow-down)
+        ("x" . meow-line)
+        ("y" . meow-clipboard-save)))
 
 (use-package fd-dired
   :straight t
