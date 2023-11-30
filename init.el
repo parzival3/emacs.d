@@ -70,6 +70,19 @@
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message))))
 
+(use-package debugger
+  :defer t
+  :config
+  :bind
+  (:map debugger-mode-map
+        ("h" . meow-left)
+        ("l" . meow-right)
+        ("j" . meow-up)
+        ("k" . meow-down)
+        ("x" . meow-line)
+        ("y" . meow-clipboard-save)
+        ("q" . debugger-quit)))
+
 (use-package project
   :config
   ;;; add element to project-switch-commands alist
