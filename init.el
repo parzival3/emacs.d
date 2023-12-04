@@ -55,6 +55,8 @@
   (("C-x g" . magit-status))
   :ensure t
   :straight t
+  :bind (:map magit-mode-map
+              ("D" . #'magit-discard))
   :config
   (defun winnt-get-git-tools-path ()
      (let ((git-exe-path (shell-command-to-string "where git.exe")))
