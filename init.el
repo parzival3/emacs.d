@@ -872,6 +872,7 @@ If there is no selected word, simply start an empty search."
   (message "File type set to MSDOS (CRLF line endings)."))
 
 (defun et-system-type ()
+  "Detect if we are using a WSL system or not."
   (if (not (eq 'wsl 0))
       'wsl
     system-type))
