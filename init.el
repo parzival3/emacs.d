@@ -458,7 +458,7 @@ ARGS: the arguments to the function."
 	  mac-right-option-modifier 'none
 	  ns-right-option-modifier  'none))
 
-  (defvar wls (string-match-p "Microsoft" (shell-command-to-string "uname -a")))
+  (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
 
   (setq whitespace-line-column 200)
 
