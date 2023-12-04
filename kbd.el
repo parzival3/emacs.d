@@ -45,6 +45,7 @@ tab-indent."
   :straight t
   :ensure t
   :config
+
   ; wsl-copy
   (defun wsl-copy (start end)
     (interactive "r")
@@ -52,21 +53,6 @@ tab-indent."
     (kill-ring-save start end)
     (deactivate-mark))
 
-  (defun sys-clipoard-copy ()
-    ;; copy system clipboard to kill ring
-    (interactive)
-    (let ((powershell-program "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
-          (clip-program "Get-Clipboard"))
-      (kill-new
-       (replace-regexp-in-string
-        "\r" ""
-        (replace-regexp-in-string
-         "\n$" ""
-         (with-output-to-string
-           (with-current-buffer standard-output
-             (call-process powershell-program nil t nil "-Command" clip-program))))))))
-
-                                        ; wsl-paste
   (defun wsl-paste ()
     (interactive)
     (let ((clipboard
@@ -79,6 +65,30 @@ tab-indent."
     (interactive "r")
     (wsl-copy start end)
     (delete-region start end))
+
+  (defun platform-copy ()
+    (interactive)
+    (cond
+     ((eq (et-system-type) 'wsl) (call-interactively #'wsl-copy))
+     ((eq (et-system-type) 'darwin) (call-interactively #'meow-clipboard-save))
+     ((eq (et-system-type) 'gnu/linux) (call-interactively #'meow-clipboard-save))
+     ((eq (et-system-type) 'windows-nt) (call-interactively #'wsl-copy))))
+
+  (defun platform-paste ()
+    (interactive)
+    (cond
+     ((eq (et-system-type) 'wsl) (call-interactively #'wsl-paste))
+     ((eq (et-system-type) 'darwin) (call-interactively #'meow-clipboard-yank))
+     ((eq (et-system-type) 'gnu/linux) (call-interactively #'meow-clipboard-yank))
+     ((eq (et-system-type) 'windows-nt) (call-interactively #'wsl-paste))))
+
+  (defun platform-cut ()
+    (interactive)
+    (cond
+     ((eq system-type 'wsl) (call-interactively #'wsl-cut))
+     ((eq system-type 'darwin) (call-interactively #'meow-clipboard-kill))
+     ((eq system-type 'gnu/linux) (call-interactively #'meow-clipboard-kill))
+     ((eq system-type 'windows-nt) (call-interactively #'wsl-cut))))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -178,16 +188,12 @@ tab-indent."
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
-     `("p" . ,(if (not (display-graphic-p))
-                  #'wsl-paste
-                #'meow-clipboard-yank))
+     '("p" . platoform-paste)
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
      '("R" . meow-swap-grab)
-     `("s" . ,(if (not (display-graphic-p))
-                  #'wsl-cut
-                #'meow-clipboard-kill))
+     '("s" . platform-cut)
      '("t" . meow-till)
      '("u" . meow-undo)
      '("U" . meow-undo-in-selection)
@@ -196,9 +202,7 @@ tab-indent."
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
      '("X" . meow-goto-line)
-     `("y" . ,(if (not (display-graphic-p))
-                 #'wsl-copy
-               #'meow-clipboard-save))
+     '("y" . platform-copy)
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("'" . repeat)

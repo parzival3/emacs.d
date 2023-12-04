@@ -41,7 +41,9 @@
 
 (use-package vterm
   :defer t
-  :straight t))
+  :straight t)
+:config
+  (setq vterm-copy-mode-remove-fake-newlines t))
 
 (use-package wgrep
   :straight t)
@@ -453,6 +455,8 @@ ARGS: the arguments to the function."
 	  ns-option-modifier        'meta
 	  mac-right-option-modifier 'none
 	  ns-right-option-modifier  'none))
+
+  (defvar wls (string-match-p "Microsoft" (shell-command-to-string "uname -a")))
 
   (setq whitespace-line-column 200)
 
@@ -866,6 +870,11 @@ If there is no selected word, simply start an empty search."
   (interactive)
   (setq buffer-file-coding-system 'dos)
   (message "File type set to MSDOS (CRLF line endings)."))
+
+(defun et-system-type ()
+  (if (not (eq 'wsl 0))
+      'wsl
+    system-type))
 
 (provide 'init)
 ;;; init.el ends here
