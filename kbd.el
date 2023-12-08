@@ -188,7 +188,7 @@ tab-indent."
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
-     '("p" . platoform-paste)
+     '("p" . platform-paste)
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
