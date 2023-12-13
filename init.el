@@ -322,6 +322,9 @@ ARGS: the arguments to the function."
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand)))
 
+(use-package spacemacs-theme
+  :straight t)
+
 (use-package doom-themes
   :straight t
   :config

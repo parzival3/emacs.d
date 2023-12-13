@@ -6,5 +6,6 @@
 (defvar et-theme 'doom-badger)
 
 (if (not (display-graphic-p))
-    (setq et-theme 'modus-vivendi)
-  (setq et-theme 'doom-laserwave))
+    (setq et-theme 'doom-laserwave)
+  (setq et-theme 'spacemacs-dark))
+
