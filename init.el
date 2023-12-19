@@ -878,9 +878,9 @@ If there is no selected word, simply start an empty search."
 
 (defun et-system-type ()
   "Detect if we are using a WSL system or not."
-  (if (not (eq 'wsl 0))
-      'wsl
-    system-type))
+  (if (eq wsl nil)
+      system-type
+    wsl))
 
 (provide 'init)
 ;;; init.el ends here

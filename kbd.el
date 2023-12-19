@@ -46,6 +46,29 @@ tab-indent."
   :ensure t
   :config
 
+  (defun et-is-current-coding-system (coding-system)
+    (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
+      (cond
+       ((eq coding-system 'dos) (string-equal eol-type-memonic eol-mnemonic-dos))
+       ((eq coding-system 'unix) (string-equal eol-type-memonic eol-mnemonic-unix)))))
+
+  (defun et-clean-clipboard-yank (original-yank &rest args)
+    "Remove extra carriage returns from the clipboard before yanking only if the buffer is unix
+     or we don't have a file (which means we are trying to debug something or playing with the scratch
+     buffer."
+    (if (or (not buffer-file-name) (et-is-current-coding-system 'unix))
+        ;; sanitize
+        (progn
+          (let ((cleaned-clip (replace-regexp-in-string "\r" "" (current-kill 0))))
+               (kill-new cleaned-clip)
+               (apply original-yank args)))
+        ;; else
+       (apply original-yank args)))
+
+  (when (eq system-type 'windows-nt)
+    (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
+    (advice-add 'yank :around #'et-clean-clipboard-yank))
+
   ; wsl-copy
   (defun wsl-copy (start end)
     (interactive "r")
@@ -72,7 +95,7 @@ tab-indent."
      ((eq (et-system-type) 'wsl) (call-interactively #'wsl-copy))
      ((eq (et-system-type) 'darwin) (call-interactively #'meow-clipboard-save))
      ((eq (et-system-type) 'gnu/linux) (call-interactively #'meow-clipboard-save))
-     ((eq (et-system-type) 'windows-nt) (call-interactively #'meow-clipbaord-save))))
+     ((eq (et-system-type) 'windows-nt) (call-interactively #'meow-clipboard-save))))
 
   (defun platform-paste ()
     (interactive)
@@ -88,7 +111,7 @@ tab-indent."
      ((eq system-type 'wsl) (call-interactively #'wsl-cut))
      ((eq system-type 'darwin) (call-interactively #'meow-clipboard-kill))
      ((eq system-type 'gnu/linux) (call-interactively #'meow-clipboard-kill))
-     ((eq system-type 'windows-nt) (call-interactively #'wsl-cut))))
+     ((eq system-type 'windows-nt) (call-interactively #'meow-clipboard-kill))))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -97,9 +120,6 @@ tab-indent."
      '("k" . meow-prev)
      '("<escape>" . ignore))
     (meow-leader-define-key
-     ;; SPC j/k will run the original command in MOTION state.
-     ;; '("j" . "H-j")
-     ;; '("k" . "H-k")
      '("ff" . et-find-file)
      '("pp" . project-switch-project)
      '("pe" . project-eshell)

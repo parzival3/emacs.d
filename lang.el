@@ -85,11 +85,9 @@
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t
   :config
-  :hook
-  (prog-mode . copilot-mode)
-  :config
+   (when (not (eq system-type 'windows-nt))
+    (add-hook 'prog-mode-hook 'copilot-mode))
   (defun toggle-copilot-mode ()
   "Toggle Copilot mode for programming modes."
   (interactive)
@@ -108,13 +106,34 @@
   :config
   (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
 
+;; TODO: move this function
+(defun et-download-and-extract-tar-gz (url target-directory)
+  "Download a tar.gz file from URL and extract it into TARGET-DIRECTORY."
+  (require 'url)
+  (require 'tar-mode)
+  (let ((download-file (concat temporary-file-directory "downloaded.tar.gz")))
+    (url-copy-file url download-file t)
+    (when (file-exists-p target-directory)
+      (delete-directory target-directory t))
+    (make-directory target-directory t)
+    (let ((default-directory target-directory))
+      (shell-command (format "tar -xf %s" download-file)))))
+
 (use-package treesit
   :commands (treesit-install-language-grammar nf/treesit-install-all-languages)
   :init
   (setq treesit-language-source-alist
-   '((PowerShell . ("https://github.com/parzival3/tree-sitter-PowerShell.git"))
-     ))
+   '((PowerShell . ("https://github.com/parzival3/tree-sitter-PowerShell.git"))))
+
   :config
+  (defvar language-pack-version "0.12.86")
+  (defvar languages-pack-url
+    (format "https://github.com/emacs-tree-sitter/tree-sitter-langs/releases/download/%s/tree-sitter-grammars-windows-%s.tar.gz" language-pack-version language-pack-version)
+    "Url for downloading the treesiter language package (mainly for windows)")
+
+  (defun download-new-languages ()
+    (interactive)
+    (et-download-and-extract-tar-gz languages-pack-url (concat user-emacs-directory "tree-sitter")))
   (defun et-treesit-install-all-languages ()
     "Install all languages specified by `treesit-language-source-alist'."
     (interactive)
@@ -137,6 +156,14 @@
 
 (use-package yaml-mode
   :straight t)
+
+(use-package edebug
+  :bind
+  (:map edebug-mode-map
+        ("<f10>" . #'edebug-step-mode)
+        ("<f11>" . #'edebug-step-in)
+        ))
+
 
 
 (defvar et-format-functions-alist
