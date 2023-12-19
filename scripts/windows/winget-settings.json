@@ -1,0 +1,13 @@
+{
+    // This should be saved in %LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json
+    // or opene it with winget settings and copy the content there
+    "$schema": "https://aka.ms/winget-settings.schema.json",
+    "installBehavior": {
+        "portablePackageUserRoot": "C:/Tools/",
+        "portablePackageMachineRoot": "C:/Tools/",
+        "defaultInstallRoot": "C:/Tools/"
+    },
+    "telemetry": {
+        "disable": true
+    }
+}
