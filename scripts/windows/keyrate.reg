@@ -1,0 +1,6 @@
+[HKEY_CURRENT_USER\Control Panel\Accessibility\Keyboard Response]
+"AutoRepeatDelay"="200" 
+"AutoRepeatRate"="6" 
+"DelayBeforeAcceptance"="0" 
+"Flags"="59" 
+"BounceTime"="0"
