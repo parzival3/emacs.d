@@ -880,7 +880,7 @@ If there is no selected word, simply start an empty search."
   "Detect if we are using a WSL system or not."
   (if (eq wsl nil)
       system-type
-    'wsl))                              ;
+    'wsl))
 
 (provide 'init)
 ;;; init.el ends here
