@@ -52,6 +52,7 @@
 
 (use-package treesit
   :config
+    (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
@@ -86,8 +87,7 @@
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :config
-   (when (not (eq system-type 'windows-nt))
-    (add-hook 'prog-mode-hook 'copilot-mode))
+    (add-hook 'prog-mode-hook 'copilot-mode)
   (defun toggle-copilot-mode ()
   "Toggle Copilot mode for programming modes."
   (interactive)
@@ -142,17 +142,6 @@
 	      (treesit-install-language-grammar lang)
 	      (message "`%s' parser was installed." lang)
 	      (sit-for 0.75)))))
-
-(use-package groovy-mode
-  :straight t
-  :config
-  (defun groovy-remove-indentation ()
-    ;; remove the electric indentation
-    (add-hook 'hack-local-variable-hook
-              (lambda () (setq indent-line-function #'identity))
-              nil t))
-  :hook
-  (groovy-mode . #'groovy-remove-indentation))
 
 (use-package yaml-mode
   :straight t)
