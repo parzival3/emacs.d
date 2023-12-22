@@ -651,7 +651,20 @@ ARGS: the arguments to the function."
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
   ;; easilly copy to other windows
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
+  (when (eq system-type 'windows-nt)
+    (defun et-dired-look ()
+      (when (derived-mode-p 'dired-mode)
+        (setq-local line-spacing 0.1)
+        (setq-local left-margin-width 1)
+        (setq-local right-margin-width 1)
+        (setq-local word-wrap t)
+        (setq-local truncate-lines nil)
+        (setq-local truncate-partial-width-windows nil)
+        (setq-local wrap-prefix "  ")
+        (setq-local dired-listing-switches "-alh --group-directories-first")
+        (dired-hide-details-mode 1)))
+    (add-hook 'dired-mode-hook #'et-dired-look)))
 
 (use-package compile
   :defer t
