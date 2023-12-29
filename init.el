@@ -53,7 +53,6 @@
   :commands (magit-status)
   :bind
   (("C-x g" . magit-status))
-  :ensure t
   :straight t
   :bind (:map magit-mode-map
               ("D" . #'magit-discard))
@@ -72,7 +71,15 @@
     (interactive "commit message:")
     (let ((magit-commit-ask-to-stage t)
           (magit-commit-show-diff nil))
-      (magit-git "commit" "--all" "-m" commit-message))))
+      (magit-git "commit" "--all" "-m" commit-message)))
+
+  (when (eq system-type `windows-nt)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
 
 (use-package debugger
   :defer t

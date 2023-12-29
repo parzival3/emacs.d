@@ -52,7 +52,7 @@
 
 (use-package treesit
   :config
-    (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
+    (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
@@ -65,6 +65,9 @@
   (setq c-ts-mode-indent-style 'k&r)
   (setq c-ts-mode-indent-offset 4)
   (setq-local indent-tabs-mode nil))
+
+(use-package combobulate
+  :straight t)
 
 (defun c-ts-microsoft-style ()
   (let ((microsoft-style
