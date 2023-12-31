@@ -38,8 +38,11 @@ tab-indent."
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
   (global-set-key (kbd "TAB") #'et-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
+
   (global-set-key (kbd "<f12>")  #'et-format-code-or-region)
-  (global-set-key (kbd "C-x o")  #'et-other-window))
+  (global-set-key (kbd "C-x o")  #'et-other-window)
+  (global-set-key (kbd "C-x C-b") #'ibuffer)
+  (global-set-key (kbd "C-s") #'consult-line))
 
 (use-package meow
   :straight t

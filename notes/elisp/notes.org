@@ -1,6 +1,0 @@
-* CL comparing function
-
-In order to compare string in cl mapping algorithm we can simply use the :test keyword with the function that we want to use for example
-#+begin_src elisp
-(cl-find "C:/Tools/Git/usr/bin/" exec-path :test #'string-match)
-#+end_src
