@@ -50,11 +50,12 @@ tab-indent."
   :config
 
   (set-face 'meow-normal-cursor 'nano-face-header-critical)
-  (set-face 'meow-bacon-cursor  'nano-face-header-critical)
+  (set-face 'meow-beacon-cursor 'nano-face-header-critical)
   (set-face 'meow-insert-cursor 'nano-face-header-critical)
   (set-face 'meow-keypad-cursor 'nano-face-header-critical)
   (set-face 'meow-motion-cursor 'nano-face-header-critical)
   (set-face 'meow-kmacro-cursor 'nano-face-header-critical)
+  (set-face 'meow-unknown-cursor 'nano-face-header-critical)
 
   (defun et-is-current-coding-system (coding-system)
     (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
