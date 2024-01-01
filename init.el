@@ -23,8 +23,9 @@
 (straight-use-package 'use-package)
 (straight-use-package 'org)
 
-
 (use-package emacs
+  :init
+  (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
   :config
   (straight-use-package
     '(nano :type git :host github :repo "rougier/nano-emacs"))
@@ -32,7 +33,6 @@
   (require 'nano)
   (nano-theme-set-dark)
   (call-interactively 'nano-refresh-theme))
-
 
 (use-package debugger
   :defer t
