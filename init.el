@@ -26,6 +26,10 @@
 (use-package emacs
   :init
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
+  (defvar et-system-type (if (eq wsl nil)
+                             system-type
+                           'wsl)
+    "The system type of the current machine.")
   :config
   (straight-use-package
     '(nano :type git :host github :repo "rougier/nano-emacs"))
