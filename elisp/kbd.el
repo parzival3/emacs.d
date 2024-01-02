@@ -126,18 +126,6 @@ tab-indent."
      '("wh" . windmove-left)
      '("wl" . windmove-right)
 
-     ;; Lsp
-     '("a"  . eglot-code-actions)
-
-     ;; Copilot
-     '("."  . copilot-accept-completion)
-     '("["  . copilot-previous-completion)
-     '("]"  . copilot-next-completion)
-
-     ;; Search
-     '("sd" . et-search-for-word-in-directory)
-     '("sf" . find-dired)
-
      ;; Use SPC (0-9) for digit arguments.
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
@@ -151,6 +139,7 @@ tab-indent."
      '("0" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet))
+
     (meow-normal-define-key
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
