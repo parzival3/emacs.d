@@ -78,33 +78,35 @@ tab-indent."
   (defun platform-copy ()
     (interactive)
     (cond
-     ((eq (et-system-type) 'wsl) (call-interactively #'wsl-copy))
-     ((eq (et-system-type) 'darwin) (call-interactively #'meow-clipboard-save))
-     ((eq (et-system-type) 'gnu/linux) (call-interactively #'meow-clipboard-save))
-     ((eq (et-system-type) 'windows-nt) (call-interactively #'meow-clipboard-save))))
+     ((eq et-system-type 'wsl) (call-interactively #'wsl-copy))
+     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-save))
+     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-save))
+     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-save))))
 
   (defun platform-paste ()
     (interactive)
     (cond
-     ((eq (et-system-type) 'wsl) (call-interactively #'wsl-paste))
-     ((eq (et-system-type) 'darwin) (call-interactively #'meow-clipboard-yank))
-     ((eq (et-system-type) 'gnu/linux) (call-interactively #'meow-clipboard-yank))
-     ((eq (et-system-type) 'windows-nt) (call-interactively #'meow-clipboard-yank))))
+     ((eq et-system-type 'wsl) (call-interactively #'wsl-paste))
+     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-yank))
+     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-yank))
+     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-yank))))
 
   (defun platform-cut ()
     (interactive)
     (cond
-     ((eq system-type 'wsl) (call-interactively #'wsl-cut))
-     ((eq system-type 'darwin) (call-interactively #'meow-clipboard-kill))
-     ((eq system-type 'gnu/linux) (call-interactively #'meow-clipboard-kill))
-     ((eq system-type 'windows-nt) (call-interactively #'meow-clipboard-kill))))
+     ((eq et-system-type 'wsl) (call-interactively #'wsl-cut))
+     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-kill))
+     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-kill))
+     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-kill))))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+
     (meow-motion-overwrite-define-key
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore))
+
     (meow-leader-define-key
      '("ff" . et-find-file)
      '("pp" . project-switch-project)
