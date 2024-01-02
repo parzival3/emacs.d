@@ -34,6 +34,15 @@
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
 
+(use-package browse-at-remote
+  :straight t
+  :bind
+  (("C-x v o" . browse-at-remote))
+  :config
+  (add-to-list 'browse-at-remote-remote-type-regexps
+             `(:host ,(rx bol "cd.senncom.com" eol)
+               :type "bitbucket"
+               :actual-host "cd.senncom.com:7990")))
 
 (use-package diminish
   :straight t
