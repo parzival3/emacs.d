@@ -8,30 +8,6 @@ tab-indent."
 
 (use-package emacs
   :config
-  ;; Define a new prefix for only git/vc/magit commands
-  (define-prefix-command 'vc-actions-map nil "prefix for all the vc/magit actions")
-  (global-set-key (kbd "<f1>") 'vc-actions-map)
-  (define-key 'vc-actions-map (kbd "<f1>") #'vc-next-action)
-  (define-key 'vc-actions-map (kbd "<f2>") #'magit-push)
-
-  ;; Define a new prefix for the languages actions
-  (define-prefix-command 'language-actions-map nil "prefix for all the languages actions")
-  (global-set-key (kbd "<f2>") 'language-actions-map)
-  (define-key 'language-actions-map (kbd "<f2>") 'whitespace-mode)
-  (define-key 'language-actions-map (kbd "h") 'hs-hide-all)
-  (define-key 'language-actions-map (kbd "r") 'eglot-rename)
-  (define-key 'language-actions-map (kbd "f") 'eglot-format)
-
-  (define-prefix-command 'org-actions-map nil "prefix for all the org actions")
-  (global-set-key (kbd "<f3>") 'org-actions-map)
-  (define-key 'org-actions-map (kbd "j") #'org-roam-insert-jurnal)
-  (define-key 'org-actions-map (kbd "f") #'org-roam-insert-feeling)
-  (define-key 'org-actions-map (kbd "t") #'org-todo-capture)
-  (define-key 'org-actions-map (kbd "l") #'org-list-of-notes)
-
-  (global-set-key (kbd "M-/") #'copilot-previous-completion)
-  (global-set-key (kbd "M-\\") #'copilot-next-completion)
-
   (global-set-key (kbd "M-<up>") #'enlarge-window)
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
@@ -39,7 +15,6 @@ tab-indent."
   (global-set-key (kbd "TAB") #'et-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
 
-  (global-set-key (kbd "<f12>")  #'et-format-code-or-region)
   (global-set-key (kbd "C-x o")  #'et-other-window)
   (global-set-key (kbd "C-x C-b") #'ibuffer)
   (global-set-key (kbd "C-s") #'consult-line))
