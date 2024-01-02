@@ -14,7 +14,7 @@ tab-indent."
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
   (global-set-key (kbd "TAB") #'et-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
-
+  (global-set-key (kbd "C-c r") #'consult-recent-file)
   (global-set-key (kbd "C-x o")  #'et-other-window)
   (global-set-key (kbd "C-x C-b") #'ibuffer)
   (global-set-key (kbd "C-s") #'consult-line))
