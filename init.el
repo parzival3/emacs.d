@@ -32,7 +32,11 @@
   (setq nano-font-size 12)
   (require 'nano)
   (nano-theme-set-dark)
-  (call-interactively 'nano-refresh-theme))
+  (call-interactively 'nano-refresh-theme)
+
+ (grep-apply-setting
+   'grep-find-command
+   '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
 
 (use-package debugger
   :defer t
