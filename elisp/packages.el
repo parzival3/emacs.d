@@ -122,7 +122,7 @@
            (kill-region (car bounds) (cdr bounds))
            (insert (downcase word))))
 
-  (defun search-and-relace-to-lowecase ()
+  (defun search-and-replace-to-lowecase ()
          (interactive)
          (let ((word (symbol-name (symbol-at-point))))
            ;; save excusion
@@ -138,6 +138,7 @@
   (setq vertico-cycle t)
   :init
   (vertico-mode))
+
 
 (use-package consult
   :defer t
@@ -226,6 +227,7 @@
 
   (setq consult-narrow-key "<"))
 
+
 (use-package embark
   :defer t
   :straight t
@@ -269,6 +271,7 @@
   :straight t
   :after (embark consult))
 
+
 (use-package which-key
   :defer t
   :straight t
@@ -278,6 +281,7 @@
   (setq which-key-side-window-max-height 0.25)
   :init
   (which-key-mode))
+
 
 (defun embark-which-key-indicator ()
   "An embark indicator that displays keymaps using which-key.
@@ -319,6 +323,7 @@ ARGS: the arguments to the function."
 (advice-add #'embark-completing-read-prompter
             :around #'embark-hide-which-key-indicator)
 
+
 (use-package orderless
   :defer t
   :straight t
@@ -327,6 +332,7 @@ ARGS: the arguments to the function."
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion))
                                         (eglot (styles . (orderless flex))))))
+
 
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
@@ -340,6 +346,7 @@ ARGS: the arguments to the function."
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
+
 (use-package corfu
   :straight t
   :custom
@@ -352,6 +359,7 @@ ARGS: the arguments to the function."
   :straight t
   :config
   (global-set-key (kbd "C-x C-.") 'eglot-code-actions)) ;; maybe is better if I create a proper keymap
+
 
 (use-package spacemacs-theme
   :straight t)
