@@ -1,31 +1,35 @@
 
+(use-package emacs
+  :config
+  ;; configuring some environment variables
+  (setenv "PATH" (concat "C:\\Tools\\LLVM\\bin;" (getenv "PATH")))
+  (setenv "PATH" (concat "C:\\Tools\\Git\\bin;" (getenv "PATH")))
+  (setenv "PATH" (concat "C:\\Tools\\Git\\usr\\bin;" (getenv "PATH")))
+
+  (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
+
+  ;; on windows we need to clean the clipboard before pasting
+  (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
+  (advice-add 'yank :around #'et-clean-clipboard-yank)
+
+  (setq find-program "C:\\Tools\\Git\\usr\\bin\\find.exe"))
+
+
 (use-package eglot
   :defer t
-  :straight t
   :config
-  (global-set-key (kbd "C-.") 'eglot-code-actions)
-  (when (eq system-type `windows-nt)
-    (add-to-list 'eglot-server-programs
-                 `(c++-mode . ("c:/Tools/LLVM/bin/clangd.exe")))))
-
-
-  (when (executable-find "git.exe")
-    (setq find-program (prin1-to-string
-                        (concat
-                         (file-name-directory (executable-find "git.exe"))
-                         "../usr/bin/find.exe"))))
-
+  (add-to-list 'eglot-server-programs
+                 `(c++-mode . ("c:/Tools/LLVM/bin/clangd.exe"))))
 
 (use-package tramp
   :defer t
   :config
-  (when (eq system-type 'windows-nt)
-    (setq tramp-use-ssh-controlmaster-options nil)
-    (add-to-list 'tramp-connection-properties
+  (setq tramp-use-ssh-controlmaster-options nil)
+  (add-to-list 'tramp-connection-properties
 	         (list (regexp-quote "/ssh:")
 		       "login-args"
 		       '(("-tt") ("-l" "%u") ("-p" "%p") ("%c")
-		         ("-e" "none") ("%h"))))))
+		         ("-e" "none") ("%h")))))
 
 
 (use-package dired
@@ -43,5 +47,25 @@
         (setq-local dired-listing-switches "-alh --group-directories-first")
         (dired-hide-details-mode 1)))
     (add-hook 'dired-mode-hook #'et-dired-look)))
+
+
+(use-package compile
+  :config
+  (setq compilation-scroll-output 'first-error)
+  (setq compile-command "msbuild"))
+
+
+(use-package magit
+  :defer t
+  :config
+  ;; simplify magit status headers
+  (setq magit-status-headers-hook '(magit-insert-head-branch-header))
+
+  ;; remove some magit status sections
+  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
 
 (provide 'dos)
