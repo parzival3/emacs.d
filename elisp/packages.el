@@ -52,19 +52,6 @@
   (advice-add 'browse-at-remote--get-url-from-remote :around #'et-fix-http-protocol-for-browse-at-remote))
 
 
-(use-package diminish
-  :straight t
-  :config
-  (diminish 'copilot-mode " CoPy")
-  (diminish 'eldoc-mode))
-
-
-(use-package gptel
-  :straight t
-  :bind
-  (("C-c RET" . gptel-send)))
-
-
 (use-package elfeed-protocol
   :straight t
   :after elfeed)
