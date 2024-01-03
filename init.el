@@ -31,6 +31,8 @@
                            'wsl)
     "The system type of the current machine.")
   :config
+
+  ;; install the nano emacs configuration
   (straight-use-package
     '(nano :type git :host github :repo "rougier/nano-emacs"))
   (setq nano-font-size 12)
@@ -38,9 +40,20 @@
   (nano-theme-set-dark)
   (call-interactively 'nano-refresh-theme)
 
- (grep-apply-setting
+  ;; nano disable popup windows, but I want the
+  (setq pop-up-windows t))
+
+
+(use-package grep
+  :defer t
+  :config
+  (setq grep-highlight-matches t)
+  (setq grep-scroll-output t)
+  ;; use rg instead of grep
+  (grep-apply-setting
    'grep-find-command
    '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
+
 
 (use-package debugger
   :defer t
@@ -173,6 +186,8 @@
 
 (load-file (concat et-elisp-dir "utils.el"))
 
+;; Load the operating system specific configuration at the end
+;; so we can override any previous configuration
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
   (load-file (concat et-elisp-dir "unix.el")))
