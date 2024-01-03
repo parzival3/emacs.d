@@ -35,47 +35,21 @@
   :config
   (setq browse-at-remote-use-http '("cd.senncom.com"))
   (add-to-list 'browse-at-remote-remote-type-regexps
-             `(:host ,(rx bol "cd.senncom.com" eol)
-               :type "stash"
-               :actual-host "cd.senncom.com:7990"))
+               `(:host ,(rx bol "cd.senncom.com" eol)
+                       :type "stash"
+                       :actual-host "cd.senncom.com:7990"))
 
-(defun browse-at-remote--get-url-from-remote (remote-url)
-  "Return a plist describing REMOTE-URL."
-  ;; If the protocol isn't specified, git treats it as an SSH URL.
-  (unless (s-contains-p "://" remote-url)
-    (setq remote-url (concat "ssh://" remote-url)))
-  (let* ((parsed (url-generic-parse-url remote-url))
-         (host (url-host parsed))
-         (unresolved-host nil)
-         (port (url-port-if-non-default parsed))
-         (web-proto
-          (if (member host browse-at-remote-use-http)
-              "http"
-            "https"))
-         (web-proto
-          (if (equal (url-type parsed) "http") "http" "https"))
-         (filename (url-filename parsed)))
-    ;; SSH URLs can contain colons in the host part, e.g. ssh://example.com:foo.
-    (when (s-contains-p ":" host)
-      (let ((parts (s-split ":" host)))
-        (setq host (cl-first parts))
-        (when (member host browse-at-remote-use-http)
-          (setq web-proto "http"))
-        (setq filename (concat "/" (cl-second parts) filename))))
-    ;; when protocol is not http(s) port must always be stripped
-    (unless (member (url-type parsed) '("http" "https"))
-      (setq port nil))
-    ;; Drop .git at the end of `remote-url'.
-    (setq filename (s-chop-suffix ".git" filename))
-    ;; Preserve the port.
-    (setq unresolved-host host
-          host (browse-at-remote--resolve-host host))
-    (when port
-      (setq host (format "%s:%d" host port)
-            unresolved-host (format "%s:%d" unresolved-host port)))
-    `(:host ,host
-      :unresolved-host ,unresolved-host
-      :url ,(format "%s://%s%s" web-proto host filename)))))
+  (defun et-fix-http-protocol-for-browse-at-remote (orig-fun &rest args)
+    (let* ((parsed (url-generic-parse-url (car args)))
+           (host (url-host parsed)))
+      (if (member host browse-at-remote-use-http)
+          (progn
+            (let* ((generated-url (apply orig-fun args))
+                   (new-url (string-replace "https://" "http://" (plist-get generated-url :url))))
+              (plist-put generated-url :url new-url)))
+        (apply orig-fun args))))
+
+  (advice-add 'browse-at-remote--get-url-from-remote :around #'et-fix-http-protocol-for-browse-at-remote))
 
 
 (use-package diminish
