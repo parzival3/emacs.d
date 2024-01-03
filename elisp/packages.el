@@ -10,32 +10,23 @@
   :bind (:map magit-mode-map
               ("D" . #'magit-discard))
   :config
-  (defun winnt-get-git-tools-path ()
-     (let ((git-exe-path (shell-command-to-string "where git.exe")))
-         (if (string-match "git" git-exe-path)
-             (let ((git-path  (butlast (file-name-split git-exe-path) 2)))
-               (concat (mapconcat #'identity git-path "/") "/usr/bin/")))))
-
-  (when (eq system-type `windows-nt)
-    (setq exec-path (cons (winnt-get-git-tools-path) exec-path))
-    (setenv "PATH" (concat (getenv "PATH") ";" (winnt-get-git-tools-path))))
-
   (defun magit-commit-fast (commit-message)
     (interactive "commit message:")
     (let ((magit-commit-ask-to-stage t)
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message)))
 
-  (when (eq system-type 'windows-nt)
-    (setq magit-status-headers-hook '(magit-insert-head-branch-header)))
+  (defun et-file-commit-message ()
+    (if-let ((files (magit-staged-files))
+             (file-name (abbreviate-file-name (file-name-sans-extension (car files))))
+             (final-file-name (mapconcat #'identity
+                                         (cl-remove-duplicates (split-string file-name)
+                                                               :test #'string-equal) ":")))
+        (insert (concat final-file-name ": "))
+      (error "No files staged")))
 
-  (when (eq system-type 'windows-nt)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers) ;; test removing some header
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
+  (add-hook 'git-commit-setup-hook #'et-file-commit-message))
+
 
 (use-package browse-at-remote
   :straight t
@@ -349,6 +340,10 @@ ARGS: the arguments to the function."
   (global-corfu-mode))
 
 
+(use-package eglot
+  :straight t
+  :config
+  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)) ;; maybe is better if I create a proper keymap
 
 (use-package spacemacs-theme
   :straight t)
