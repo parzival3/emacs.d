@@ -51,9 +51,6 @@ tab-indent."
         ;; else
        (apply original-yank args)))
 
-  (when (eq system-type 'windows-nt)
-    (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
-    (advice-add 'yank :around #'et-clean-clipboard-yank))
 
   ; wsl-copy
   (defun wsl-copy (start end)
