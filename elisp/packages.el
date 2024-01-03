@@ -26,9 +26,12 @@
           (magit-commit-show-diff nil))
       (magit-git "commit" "--all" "-m" commit-message)))
 
-  (when (eq system-type `windows-nt)
+  (when (eq system-type 'windows-nt)
+    (setq magit-status-headers-hook '(magit-insert-head-branch-header)))
+
+  (when (eq system-type 'windows-nt)
     (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-    (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers)
+    ;; (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers) ;; test removing some header
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
