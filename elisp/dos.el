@@ -5,7 +5,6 @@
   (setenv "PATH" (concat "C:\\Tools\\LLVM\\bin;" (getenv "PATH")))
   (setenv "PATH" (concat "C:\\Tools\\Git\\bin;" (getenv "PATH")))
   (setenv "PATH" (concat "C:\\Tools\\Git\\usr\\bin;" (getenv "PATH")))
-
   (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
 
 
@@ -13,6 +12,7 @@
   (setenv "PLATFORM" "x64")
   (setenv "CONFIGURATION" "Debug")
   (setenv "EposPythonRoot" "c:/Tools/Python3.11/")
+
 
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
