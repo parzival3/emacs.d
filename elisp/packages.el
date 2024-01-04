@@ -365,4 +365,9 @@ ARGS: the arguments to the function."
   :straight t)
 
 
+(use-package gptel
+  :straight t
+  :bind
+  ("C-c RET" . gptel-send))
+
 (provide 'packages)
