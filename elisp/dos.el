@@ -8,10 +8,17 @@
 
   (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
 
+
+  ;; (setenv "PYTHONPATH" "C:/Git/dci_windows/lib/
+  (setenv "PLATFORM" "x64")
+  (setenv "CONFIGURATION" "Debug")
+  (setenv "EposPythonRoot" "c:/Tools/Python3.11/")
+
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
   (advice-add 'yank :around #'et-clean-clipboard-yank)
 
+  ;; TODO copy this command somewhere else msiexec /a "core_d (1).msi" /qb TARGETDIR=C:\Tools\Python3.11
   (setq find-program "C:\\Tools\\Git\\usr\\bin\\find.exe"))
 
 
@@ -66,6 +73,6 @@
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
-  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent))
 
 (provide 'dos)
