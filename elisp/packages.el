@@ -85,9 +85,16 @@
   (diminish 'eldoc-mode))
 
 
+(use-package gptel
+  :straight t
+  :bind
+  (("C-c RET" . gptel-send)))
+
+
 (use-package elfeed-protocol
   :straight t
   :after elfeed)
+
 
 (use-package elfeed
   :straight t
