@@ -13,6 +13,16 @@
   (setenv "CONFIGURATION" "Debug")
   (setenv "EposPythonRoot" "c:/Tools/Python3.11/")
 
+  ;; set zig folder
+  (setenv "ZIG_ROOT" "C:\\Tools\\zig\\")
+  (add-to-list 'exec-path "C:\\Tools\\zig\\")
+  (setenv "PATH" (concat  (getenv "ZIG_ENV") ";" (getenv "PATH")))
+  (eshell/addpath (concat  (getenv "ZIG_ENV")))
+
+  ;; set putty path
+  (setenv "PUTTY" "C:\\Tools\\putty\\")
+  (add-to-list 'exec-path "C:\\Tools\\putty\\")
+  (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
 
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
