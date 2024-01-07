@@ -370,4 +370,28 @@ ARGS: the arguments to the function."
   :bind
   ("C-c RET" . gptel-send))
 
+
+(use-package spray
+  :straight t
+  :init
+  (require 'cl)
+  :config
+  (defun et-spray-region (start end)
+    "Send the selected region to a new temp buffer and activate spray-mode."
+    (interactive "r")  ;; "r" signifies this function uses the region
+    (let ((text (buffer-substring start end))
+          (temp-buffer-name "*Spray Temp*"))
+      ;; Create a new buffer and switch to it
+      (with-current-buffer (get-buffer-create temp-buffer-name)
+        ;; Clear the buffer in case it already exists with contents
+        (erase-buffer)
+        ;; Insert the text from the region
+        (insert text)
+        ;; Activate spray-mode, ensure spray-mode exists
+        (when (fboundp 'spray-mode)
+          (goto-char 0)
+          (spray-mode))
+        ;; Display the buffer
+        (pop-to-buffer (current-buffer))))))
+
 (provide 'packages)
