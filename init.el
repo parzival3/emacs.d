@@ -107,7 +107,7 @@
                  (display-buffer-no-window)))
 
   (add-to-list 'display-buffer-alist
-               '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\)\\*"
+               '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\|Spray Temp\\)\\*"
                  (display-buffer-in-side-window)
                  (window-height . 0.25)
                  (side . bottom)
