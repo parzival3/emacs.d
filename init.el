@@ -126,7 +126,9 @@
         ("j" . meow-up)
         ("k" . meow-down)
         ("x" . meow-line)
-        ("y" . meow-clipboard-save)))
+        ("y" . meow-clipboard-save)
+        ("," . meow-inner-of-thing)
+        ("Q" . meow-goto-line)))
 
 
 (use-package bookmark
