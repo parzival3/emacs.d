@@ -1,6 +1,7 @@
 
 (use-package emacs
   :config
+  (require 'eshell)
   ;; configuring some environment variables
   (setenv "PATH" (concat "C:\\Tools\\LLVM\\bin;" (getenv "PATH")))
   (setenv "PATH" (concat "C:\\Tools\\Git\\bin;" (getenv "PATH")))
@@ -14,9 +15,9 @@
 
   ;; set zig folder
   (setenv "ZIG_ROOT" "C:\\Tools\\zig\\")
-  (add-to-list 'exec-path "C:\\Tools\\zig\\")
-  (setenv "PATH" (concat  (getenv "ZIG_ENV") ";" (getenv "PATH")))
-  (eshell/addpath (concat  (getenv "ZIG_ENV")))
+  (add-to-list 'exec-path (getenv "ZIG_ROOT"))
+  (setenv "PATH" (concat  (getenv "ZIG_ROOT") ";" (getenv "PATH")))
+  (eshell/addpath (concat  (getenv "ZIG_ROOT")))
 
   ;; set putty path
   (setenv "PUTTY" "C:\\Tools\\putty\\")
