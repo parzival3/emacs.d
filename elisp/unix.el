@@ -4,6 +4,13 @@
 (use-package vterm
   :straight t)
 
+(use-package emacs
+  :config
+  (setenv "ZIG_PATH" "~/.local/zig")
+  (setenv "PATH" (concat (getenv "PATH") ":" (getenv "ZIG_PATH")))
+  (setq exec-path (append exec-path (list (expand-file-name "~/.local/zig"))))
+  (eshell/addpath (concat  (getenv "ZIG_PATH"))))
+
 ;; TODO: This should probably live in the wls config and not here
 (use-package project
   :bind (:map project-prefix-map
