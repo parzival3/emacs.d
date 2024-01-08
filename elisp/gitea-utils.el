@@ -36,4 +36,6 @@
                             (message "Repository created successfully.")
                           (message "Failed to create repository."))))
                       (kill-buffer response-buffer))
-                    ))))
+                    )))
+
+(provide 'gitea)
