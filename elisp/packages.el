@@ -373,9 +373,8 @@ ARGS: the arguments to the function."
 
 (use-package spray
   :straight t
-  :init
-  (require 'cl)
   :config
+  (require 'cl-lib)
   (defun et-spray-region (start end)
     "Send the selected region to a new temp buffer and activate spray-mode."
     (interactive "r")  ;; "r" signifies this function uses the region
