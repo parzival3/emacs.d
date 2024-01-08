@@ -6,6 +6,7 @@
 
 (use-package emacs
   :config
+  (require 'eshell)
   (setenv "ZIG_PATH" "~/.local/zig")
   (setenv "PATH" (concat (getenv "PATH") ":" (getenv "ZIG_PATH")))
   (setq exec-path (append exec-path (list (expand-file-name "~/.local/zig"))))
