@@ -7,7 +7,6 @@
   (setenv "PATH" (concat "C:\\Tools\\Git\\usr\\bin;" (getenv "PATH")))
   (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
 
-
   ;; (setenv "PYTHONPATH" "C:/Git/dci_windows/lib/
   (setenv "PLATFORM" "x64")
   (setenv "CONFIGURATION" "Debug")
@@ -23,6 +22,7 @@
   (setenv "PUTTY" "C:\\Tools\\putty\\")
   (add-to-list 'exec-path "C:\\Tools\\putty\\")
   (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
+  (eshell/addpath (concat  (getenv "PUTTY")))
 
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
