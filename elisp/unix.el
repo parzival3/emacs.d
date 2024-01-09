@@ -7,10 +7,11 @@
 (use-package emacs
   :config
   (require 'eshell)
-  (setenv "ZIG_PATH" "~/.local/zig")
-  (setenv "PATH" (concat (getenv "PATH") ":" (getenv "ZIG_PATH")))
+  (setenv "ZIG_ROOT" "~/.local/zig")
+  (setenv "ZIG_SRC" "~/Git/zig")
+  (setenv "PATH" (concat (getenv "PATH") ":" (getenv "ZIG_ROOT")))
   (setq exec-path (append exec-path (list (expand-file-name "~/.local/zig"))))
-  (eshell/addpath (concat  (getenv "ZIG_PATH"))))
+  (eshell/addpath (concat  (getenv "ZIG_ROOT"))))
 
 ;; TODO: This should probably live in the wls config and not here
 (use-package project
