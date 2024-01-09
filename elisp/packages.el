@@ -368,7 +368,9 @@ ARGS: the arguments to the function."
 (use-package gptel
   :straight t
   :bind
-  ("C-c RET" . gptel-send))
+  ("C-c RET" . gptel-send)
+  :config
+  (setq gptel-model "gpt-4-1106-preview"))
 
 
 (use-package spray
