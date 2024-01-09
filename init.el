@@ -154,6 +154,7 @@
   :defer t
   :config
   (setq compilation-scroll-output t)
+  (set-face 'compilation-error 'holiday)
   (setq compilation-auto-jump-to-first-error t))
 
 
