@@ -41,7 +41,19 @@
   (call-interactively 'nano-refresh-theme)
 
   ;; nano disable popup windows, but I want the
-  (setq pop-up-windows t))
+  (setq pop-up-windows t)
+
+  ;; Set file encoding to linux
+  (prefer-coding-system 'utf-8-unix)
+
+  ;; don't hide the line feed type
+  (setq inhibit-eol-conversion t)
+
+  ;; Hide-show minnor mode for code folding
+  (add-hook 'prog-mode-hook #'hs-minor-mode)
+
+  ;; Use window move
+  (windmove-default-keybindings))
 
 
 (use-package grep
