@@ -96,6 +96,14 @@
   (advice-add 'c-ts-mode--indent-styles :around #'add-my-indentation-style)
   (advice-remove 'c-ts-mode--indent-styles #'add-my-indentation-style)
 
+  (defvar et-log-query  '((
+       (function_definition
+          body: (compound_statement
+                 (expression_statement
+                  (call_expression function: (identifier) @func-identifier))))
+        (:match "LOG" @func-identifier)
+        )))
+
   (defun et-ms-cpp-style ()
     `(
       ((node-is "}")
