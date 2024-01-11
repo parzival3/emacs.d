@@ -1,0 +1,15 @@
+# Treesit scripts
+
+#+source
+(setq my--query '((
+        (call_expression function: (identifier) @call)
+        (:match  "LOG_*" @call)
+)))
+
+
+
+(mapcar (lambda (capture)  (treesit-node-text (cdr capture)))  (with-current-buffer "service.cpp"
+   (treesit-query-capture 'cpp my--query)))
+
+(treesit-query-validate 'cpp my--query)
+#-source
