@@ -2,30 +2,38 @@
 
 #+source
 (setq my--query '((
-
-
           (call_expression function: (identifier) @call
                    arguments: (argument_list (call_expression
                                arguments: (argument_list (string_literal) @string)))
                    )
           (:match  "LOG_*" @call)
-)))
+          (:pred check-correct-log-message @call @string)
+          )))
 
-         (alist-get 'call (with-current-buffer "main.cpp" (treesit-query-capture 'cpp my--query)))
+
+
+
+(cdr "\"loool")
 #+begin_src elisp
 #+end_src
 
-(defun check-correct-log-message (node)
-  (if-let* ((
-             query-function '((function_definition declarator:
-                                                   (function_declarator declarator:
-                                                                        [(qualified_identifier) (identifier)] @name))))
-             parent-function (treesit-parent-until node #'(lambda (node)
-                                                            (string= (treesit-node-type (alist-get 'name node) "function_definition")))
-             parent-function-name-string  (treesit-node-text (treesit-query-capture parent-function query-function))
-           )
+(defun check-correct-log-message (function-node log-string-node)
+  (if-let* ((query-function-name '((function_definition
+                                    declarator:
+                                    (function_declarator
+                                     declarator:
+                                     [(qualified_identifier) (identifier)] @name))))
+            (search-parent-function #'(lambda (node)
+                                        (string= (treesit-node-type node) "function_definition")))
+            (parent-function-node (treesit-parent-until function-node search-parent-function))
+            (parent-function-name-string  (treesit-node-text (alist-get 'name (treesit-query-capture parent-function-node query-function-name))))
+            (log-string  (replace-regexp-in-string "[\"]" "" (treesit-node-text  log-string-node)))
+            )
+    (not (s-starts-with? parent-function-name-string log-string))
+    ))
 
-      ))
+(setq list-of-nodes (with-current-buffer "service.cpp" (treesit-query-capture 'cpp my--query)))
+(treesit-node-start (cdadr list-of-nodes))
 (setq matching-functions (mapcar (lambda (capture)
          (treesit-parent-until (cdr capture) #'(lambda (node)
                                                    (string= (treesit-node-type node) "function_definition"))))
