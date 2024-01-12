@@ -6,10 +6,45 @@
         (:match  "LOG_*" @call)
 )))
 
+#+begin_src elisp
+#+end_src
 
+(setq matching-functions (mapcar (lambda (capture)
+         (treesit-parent-until (cdr capture) #'(lambda (node)
+                                                   (string= (treesit-node-type node) "function_definition"))))
+         (with-current-buffer "main.cpp" (treesit-query-capture 'cpp my--query))))
 
-(mapcar (lambda (capture)  (treesit-parent-until (cdr capture)))  (with-current-buffer "service.cpp"
-   (treesit-query-capture 'cpp my--query)))
+(setq my-function-name (treesit-query-capture  (car matching-functions) '(((function_definition declarator:
+  (function_declarator declarator: (identifier) @name))))))
+
+(setq my-function-name-string (treesit-node-text (cdar my-function-name)))
+(setq my-log-function-name  (treesit-node-text (cdar (treesit-query-capture (car matching-functions)
+ '(
+          (string_literal) @content
+          )))))
+(s-starts-with? my-log-function-name my-function-name-string)
+(treesit-query-validate 'cpp '((string_literal " (string_content) " @content)))
+
 
 (treesit-query-validate 'cpp my--query)
 #-source
+
+
+#+begin_quote
+(call_expression arguments: (argument_list (string_literal) @string)))
+#+end_quote
+
+#+begin_quote
+  (function_definition declarator:
+                          (function_declarator declarator: (identifier) @func-name)
+                       body: (compound_statement
+                             (_ . (call_expression function: (identifier) @log-name
+                                                   arguments: (argument_list (call_expression arguments: (argument_list (string_literal) @string))
+                                                   ))
+                                  )
+                             )
+  )
+  )
+
+ (#match? @log-name "LOG"))
+#+end_quote
