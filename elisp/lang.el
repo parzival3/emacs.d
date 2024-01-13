@@ -35,7 +35,7 @@
   :config
 
   (defun zig-add-gptel-directive ()
-    (setq gptel-directives (add-to-list 'gptel-directives '(zig. "You are a large language model and a careful zig programmer. Provide code and explanations about my zig code and suggests enhanced error handling and zig idioms. Use the zig 0.11 standard."))))
+    (setq gptel-directives (add-to-list 'gptel-directives '(zig . "You are a large language model and a careful zig programmer. Provide code and explanations about my zig code and suggests enhanced error handling and zig idioms. Use the zig 0.11 standard."))))
 
   (defun find-in-zig-src ()
     (interactive)
@@ -95,14 +95,6 @@
 
   (advice-add 'c-ts-mode--indent-styles :around #'add-my-indentation-style)
   (advice-remove 'c-ts-mode--indent-styles #'add-my-indentation-style)
-
-  (defvar et-log-query  '((
-       (function_definition
-          body: (compound_statement
-                 (expression_statement
-                  (call_expression function: (identifier) @func-identifier))))
-        (:match "LOG" @func-identifier)
-        )))
 
   (defun et-ms-cpp-style ()
     `(
