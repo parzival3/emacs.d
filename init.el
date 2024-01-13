@@ -194,6 +194,12 @@
 
 (use-package compile
   :defer t
+  :bind (:map compilation-mode-map
+              ("l" . meow-right)
+              ("h" . meow-left)
+              ("y" . platform-copy)
+              ("s" . platform-cut)
+              ("x" . meow-line))
   :config
   (setq compilation-scroll-output t)
   (set-face 'compilation-error 'holiday)
