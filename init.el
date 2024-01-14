@@ -270,6 +270,14 @@
         (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
 
 
+(use-package recentf
+  :config
+  (setq recentf-save-file (concat et-emacs-files-dir "recentf")))
+
+(use-package savehist
+  :config
+  (setq savehist-file (concat et-emacs-files-dir "savehist")))
+
 ;; Load enviroment file for this computer based on the hostname
 (load-file (concat user-emacs-directory "env/" (system-name) ".el"))
 (load-file secrets-file)
