@@ -4,11 +4,8 @@
 (defcustom gitea-url "https://git.haento.info"
   "The url of the gitea server")
 
-(defcustom gitea-token
-    (with-temp-buffer
-        (insert-file-contents "~/.gitea-token")
-        (buffer-string))
-    "The token to use to connect to gitea")
+(defcustom gitea-token gitea-secret
+    "The token to use to connect to gitea, variable is set in secrets.el")
 
 (defun gitea-create-new-repo (repo-name)
   (interactive "sEnter the repository name: ")
