@@ -170,7 +170,9 @@
         ("x" . meow-line)
         ("y" . meow-clipboard-save)
         ("," . meow-inner-of-thing)
-        ("Q" . meow-goto-line)))
+        ("Q" . meow-goto-line))
+  :config
+  (set-face 'shr-text 'nano-face-default))
 
 
 (use-package bookmark
@@ -202,7 +204,7 @@
               ("x" . meow-line))
   :config
   (setq compilation-scroll-output t)
-  (set-face 'compilation-error 'holiday)
+  (set-face 'compilation-error 'nano-face-header-critical)
   (setq compilation-auto-jump-to-first-error t))
 
 
