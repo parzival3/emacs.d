@@ -61,7 +61,7 @@
   :straight t
   :init
   (setq elfeed-use-curl t)
-
+  (setq elfeed-db-directory (concat et-emacs-files-dir  "elfeed"))
   (setq elfeed-protocol-ttrss-maxsize 200) ; bigger than 200 is invalid
   (setq elfeed-protocol-ttrss-fetch-category-as-tag t)
   (setq elfeed-protocol-enabled-protocols '(ttrss))
