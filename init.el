@@ -30,6 +30,8 @@
                              system-type
                            'wsl)
     "The system type of the current machine.")
+  (defvar et-emacs-files-dir  "~/.emacs_files/"
+    "The directory where all the Emacs packages files are stored.")
   :config
 
   ;; install the nano emacs configuration
@@ -53,8 +55,28 @@
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
   ;; Use window move
-  (windmove-default-keybindings))
+  (windmove-default-keybindings)
 
+  ;; custom variables
+  (setq custom-file (concat et-emacs-files-dir "custom.el"))
+  (load custom-file 'noerror)
+
+  ;; backups
+  (setq backup-directory-alist `(("." . ,(concat et-emacs-files-dir "backups"))))
+
+  ;; autosave
+  (setq auto-save-list-file-prefix (concat et-emacs-files-dir "autosave/.saves-"))
+
+  ;; session
+  (setq session-save-file (concat et-emacs-files-dir "session/.session"))
+
+  ;; eln files
+  (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
+  )
+
+(use-package eshell
+  :config
+  (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
 
 (use-package grep
   :defer t
@@ -113,12 +135,29 @@
 
 (use-package project
   :config
+  (setq project-list-file (concat et-emacs-files-dir "projects.el"))
   ;;; add element to project-switch-commands alist
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
   (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m)))
 
+
+(use-package transient
+  :config
+  (setq transient-levels-file (concat et-emacs-files-dir "transient/levels.el"))
+  (setq transient-values-file (concat et-emacs-files-dir "transient/values.el"))
+  (setq transient-history-file (concat et-emacs-files-dir "transient/history.el")))
+
+(use-package tramp
+  :config
+  (setq tramp-histfile-override (concat et-emacs-files-dir "tramp/history"))
+  (setq tramp-compat-temporary-file-directory (concat et-emacs-files-dir "tramp/temp"))
+  (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp")))
+
+(use-package saveplace
+  :config
+  (setq save-place-file (concat et-emacs-files-dir "places")))
 
 (use-package window
   :config
@@ -172,13 +211,24 @@
         ("," . meow-inner-of-thing)
         ("Q" . meow-goto-line))
   :config
-  (set-face 'shr-text 'nano-face-default))
+  (set-face 'shr-text 'nano-face-default)
+  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/")))
+
+
+(use-package url-cookie
+  :config
+  (setq url-cookie-file (concat et-emacs-files-dir "url/cookies")))
+
+
+(use-package url-cache
+  :config
+  (setq url-cache-directory (concat et-emacs-files-dir "url/cache")))
 
 
 (use-package bookmark
   :defer t
   :init
-  (setq bookmark-default-file "~/.emacs_bookmarks"))
+  (setq bookmark-default-file (concat et-emacs-files-dir "emacs_bookmarks")))
 
 
 (use-package dired
