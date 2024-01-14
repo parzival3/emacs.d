@@ -1,5 +1,4 @@
 (defvar git-directory "~/Git/")
-(defvar secrets-file (concat user-emacs-directory "env/secrets.el"))
 
 (defvar et-font-size (let ((geometry (alist-get 'geometry (car (display-monitor-attributes-list)))))
          (if (eq 1440 (caddr geometry))

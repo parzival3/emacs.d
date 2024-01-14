@@ -1,5 +1,3 @@
-
-(defvar secrets-file (concat user-emacs-directory "env/secrets.el"))
 (defvar et-font-size "12")
 (cond
       ((eq system-type 'gnu/linux)
