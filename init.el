@@ -278,11 +278,11 @@
   :config
   (setq savehist-file (concat et-emacs-files-dir "savehist")))
 
-;; Load enviroment file for this computer based on the hostname
-(load-file (concat user-emacs-directory "env/" (system-name) ".el"))
-(load-file secrets-file)
 
 (defvar et-elisp-dir (concat user-emacs-directory "elisp/"))
+;; Load enviroment file for this computer based on the hostname
+(load-file (concat et-elisp-dir "env/" (system-name) ".el"))
+(load-file secrets-file)
 
 ;; Load the keybidings configuration
 (load-file (concat et-elisp-dir "kbd.el"))
