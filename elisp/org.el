@@ -17,9 +17,14 @@
         ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i"))))
 
+(use-package org-id
+  :config
+  (setq org-id-locations-file (concat et-emacs-files-dir "org-id-locations")))
+
 (use-package org-roam
   :straight t
   :init
+  (setq org-roam-db-location (concat et-emacs-files-dir "org-roam.db"))
   (setq org-roam-directory (concat git-directory "notes/org-roam"))
   (setq org-roam-dailies-directory "daily/")
   :config
