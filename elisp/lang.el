@@ -63,7 +63,9 @@
   (setq delete-trailing-lines nil))
 
 (use-package devdocs
-  :straight t)
+  :straight t
+  :config
+  (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
 
 (use-package treesit
   :config
