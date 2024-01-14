@@ -39,7 +39,11 @@
 
   (defun find-in-zig-src ()
     (interactive)
-    (fd-dired (getenv "ZIG_SRC") (read-string "Find in zig src: "))))
+    (fd-dired (getenv "ZIG_SRC") (read-string "Find in zig src: ")))
+
+  (defun et-open-zig-docs ()
+    (interactive)
+    (eww "https://ziglang.org/documentation/0.11.0/")))
 
 (use-package clang-format+
   :defer t
