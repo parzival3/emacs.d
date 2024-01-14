@@ -280,6 +280,8 @@
 
 
 (defvar et-elisp-dir (concat user-emacs-directory "elisp/"))
+(defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
+
 ;; Load enviroment file for this computer based on the hostname
 (load-file (concat et-elisp-dir "env/" (system-name) ".el"))
 (load-file secrets-file)
