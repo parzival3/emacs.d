@@ -43,7 +43,7 @@
 
   (defun et-open-zig-docs ()
     (interactive)
-    (eww "https://ziglang.org/documentation/0.11.0/")))
+    (eww "https://ziglang.org/documentation/0.11.0/" "*zig docs*")))
 
 (use-package clang-format+
   :defer t
