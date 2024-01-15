@@ -27,6 +27,7 @@
   (setq org-roam-db-location (concat et-emacs-files-dir "org-roam.db"))
   (setq org-roam-directory (concat git-directory "notes/org-roam"))
   (setq org-roam-dailies-directory "daily/")
+
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-completion-everywhere t)
