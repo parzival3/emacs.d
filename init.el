@@ -324,7 +324,7 @@
 (load-file (concat et-elisp-dir "lang.el"))
 
 ;; Load the org customization
-(load-file (concat et-elisp-dir "org.el"))
+(load-file (concat et-elisp-dir "org-config.el"))
 
 (load-file (concat et-elisp-dir "packages.el"))
 
