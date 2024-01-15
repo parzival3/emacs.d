@@ -151,9 +151,8 @@
 
 (use-package tramp
   :config
-  (setq tramp-histfile-override (concat et-emacs-files-dir "tramp/history"))
   (setq tramp-compat-temporary-file-directory (concat et-emacs-files-dir "tramp/temp"))
-  (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp")))
+  (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp/tramp")))
 
 (use-package saveplace
   :config
@@ -212,7 +211,14 @@
         ("Q" . meow-goto-line))
   :config
   (set-face 'shr-text 'nano-face-default)
-  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/")))
+  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/"))
+
+  (defun eww--rename-buffer-hook-function (name)
+    "Rename the eww buffer to the title of the page"
+    (let ((function-name (make-symbol (concat "eww--rename-buffer-hook-function-" name))))
+    `(defun ,function-name ()
+        (rename-buffer ,name)
+        (remove-hook 'eww-after-render-hook ',function-name)))))
 
 
 (use-package url-cookie
@@ -230,6 +236,10 @@
   :init
   (setq bookmark-default-file (concat et-emacs-files-dir "emacs_bookmarks")))
 
+
+(use-package server
+  :config
+  (setq server-auth-dir (concat et-emacs-files-dir "server/")))
 
 (use-package dired
   :defer t
