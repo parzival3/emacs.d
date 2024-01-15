@@ -394,4 +394,12 @@ ARGS: the arguments to the function."
         ;; Display the buffer
         (pop-to-buffer (current-buffer))))))
 
+
+(use-package nov
+  :straight t
+  :mode ("\\.epub\\'" . nov-mode)
+  :config
+  (setq nov-text-width 80)
+  (setq nov-save-place-file (concat et-emacs-files-dir "nov-places")))
+
 (provide 'packages)
