@@ -21,7 +21,7 @@
 
   ;; set putty path
   (setenv "PUTTY" "C:\\Tools\\putty\\")
-  (add-to-list 'exec-path (getenv "PUTTY")
+  (add-to-list 'exec-path (getenv "PUTTY"))
   (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
   (eshell/addpath (concat  (getenv "PUTTY")))
 
