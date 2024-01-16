@@ -1,12 +1,17 @@
+
 (use-package wgrep
   :straight t)
 
 ;; Magit
 (use-package magit
+  :straight t
+  :requires (seq transient)
+  :demand t
+
   :commands (magit-status)
   :bind
   (("C-x g" . magit-status))
-  :straight t
+
   :bind (:map magit-mode-map
               ("D" . #'magit-discard))
   :config
