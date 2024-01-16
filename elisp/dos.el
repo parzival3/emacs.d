@@ -12,6 +12,10 @@
   (setenv "PLATFORM" "x64")
   (setenv "CONFIGURATION" "Debug")
   (setenv "EposPythonRoot" "c:/Tools/Python3.11/")
+  (setenv "PATH" (concat (getenv "EposPythonRoot") "Scripts;" (getenv "PATH")))
+  (setenv "PATH" (concat (getenv "EposPythonRoot") ";" (getenv "PATH")))
+  (add-to-list 'exec-path (concat (getenv "EposPythonRoot") "Scripts"))
+  (eshell/addpath (concat (getenv "EposPythonRoot") "Scripts"))
 
   ;; set zig folder
   (setenv "ZIG_ROOT" "C:\\Tools\\zig\\")
@@ -38,6 +42,10 @@
   :config
   (add-to-list 'eglot-server-programs
                  `(c++-mode . ("c:/Tools/LLVM/bin/clangd.exe"))))
+
+(use-package python
+  :config
+  (setq python-shell-interpreter (concat (getenv "EposPythonRoot") "/python.exe")))
 
 (use-package tramp
   :defer t
