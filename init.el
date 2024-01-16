@@ -23,6 +23,12 @@
 (straight-use-package 'use-package)
 (straight-use-package 'org)
 
+;; I use straight here because transient used in Emacs is too old
+;; to support the master version of magit
+(use-package transient
+  :straight t
+  :demand t)
+
 (use-package emacs
   :init
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
@@ -320,13 +326,13 @@
 ;; Load the keybidings configuration
 (load-file (concat et-elisp-dir "kbd.el"))
 
-;; Load the language packages
-(load-file (concat et-elisp-dir "lang.el"))
+(load-file (concat et-elisp-dir "packages.el"))
 
 ;; Load the org customization
 (load-file (concat et-elisp-dir "org-config.el"))
 
-(load-file (concat et-elisp-dir "packages.el"))
+;; Load the language packages
+(load-file (concat et-elisp-dir "lang.el"))
 
 (load-file (concat et-elisp-dir "utils.el"))
 
