@@ -32,6 +32,12 @@
   (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
   (eshell/addpath (concat  (getenv "PUTTY")))
 
+  ;; add 7zip
+  (setenv "7ZIP" "C:\\Program Files\\7-Zip\\")
+  (add-to-list 'exec-path (getenv "7ZIP"))
+  (setenv "PATH" (concat  (getenv "7ZIP") ";" (getenv "PATH")))
+  (eshell/addpath (getenv "7ZIP"))
+
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
   (advice-add 'yank :around #'et-clean-clipboard-yank)
