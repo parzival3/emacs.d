@@ -146,7 +146,8 @@
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
-  (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m)))
+  (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m))
+  (add-to-list 'project-switch-commands '(project-compile "Compile Project" ?c)))
 
 
 (use-package transient
