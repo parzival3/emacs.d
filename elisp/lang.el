@@ -85,6 +85,11 @@
 
   ;; (setq treesit--indent-verbose t) ;; uncomment to debug indentation
 
+  (defun et-update-tags ()
+    (interactive)
+    (let ((default-directory (projectile-project-root)))
+      (shell-command "fd '\.(cpp|h)$' -X ctags -e -a")))
+
   (defvar ms-cpp-style '(((parent-is "compound_statement")
                           standalone-parent 0)
                          ((or (match nil "compound_statement" nil 1 1)
