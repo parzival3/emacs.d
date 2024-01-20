@@ -31,9 +31,6 @@ tab-indent."
   (set-face 'meow-motion-cursor 'nano-face-popout)
   (set-face 'meow-kmacro-cursor 'nano-face-popout)
   (set-face 'meow-unknown-cursor 'nano-face-popout)
-  ;; (set-face 'meow-position-highlight-number 'nano-face-salient)
-  ;; (set-face 'meow-search-indicator 'nano-face-tag-salient)
-  ;; (set-face 'meow-region-cursor-1 'nano-face-tag-salient)
 
   (defun et-is-current-coding-system (coding-system)
     (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
