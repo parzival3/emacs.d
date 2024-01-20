@@ -37,6 +37,12 @@
   (defun zig-add-gptel-directive ()
     (setq gptel-directives (add-to-list 'gptel-directives '(zig . "You are a large language model and a careful zig programmer. Provide code and explanations about my zig code and suggests enhanced error handling and zig idioms. Use the zig 0.11 standard."))))
 
+  (defun zig-ripgrep-search ()
+    (interactive)
+    (let ((zig-projects (list (project-root (project-current))
+                              (getenv "ZIG_SRC"))))
+      (consult-ripgrep zig-projects)))
+
   (defun find-in-zig-src ()
     (interactive)
     (fd-dired (getenv "ZIG_SRC") (read-string "Find in zig src: ")))
