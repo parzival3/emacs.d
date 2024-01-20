@@ -200,6 +200,15 @@
                  (side . bottom)
                  (slot . 0)
                  (window-parameters
+                  (no-delete-other-windows . nil))))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(Warnings\\)\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.09)
+                 (side . bottom)
+                 (slot . 0)
+                 (window-parameters
                   (no-delete-other-windows . nil)))))
 
 
