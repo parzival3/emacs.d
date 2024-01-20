@@ -24,13 +24,13 @@ tab-indent."
   :ensure t
   :config
 
-  (set-face 'meow-normal-cursor 'nano-face-default)
-  (set-face 'meow-beacon-cursor 'nano-face-default)
-  (set-face 'meow-insert-cursor 'nano-face-default)
-  (set-face 'meow-keypad-cursor 'nano-face-default)
-  (set-face 'meow-motion-cursor 'nano-face-default)
-  (set-face 'meow-kmacro-cursor 'nano-face-default)
-  (set-face 'meow-unknown-cursor 'nano-face-default)
+  (set-face 'meow-normal-cursor 'nano-face-popout)
+  (set-face 'meow-beacon-cursor 'nano-face-popout)
+  (set-face 'meow-insert-cursor 'nano-face-popout)
+  (set-face 'meow-keypad-cursor 'nano-face-popout)
+  (set-face 'meow-motion-cursor 'nano-face-popout)
+  (set-face 'meow-kmacro-cursor 'nano-face-popout)
+  (set-face 'meow-unknown-cursor 'nano-face-popout)
   ;; (set-face 'meow-position-highlight-number 'nano-face-salient)
   ;; (set-face 'meow-search-indicator 'nano-face-tag-salient)
   ;; (set-face 'meow-region-cursor-1 'nano-face-tag-salient)
