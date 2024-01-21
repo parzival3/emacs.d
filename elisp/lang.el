@@ -37,19 +37,27 @@
   (defun zig-add-gptel-directive ()
     (setq gptel-directives (add-to-list 'gptel-directives '(zig . "You are a large language model and a careful zig programmer. Provide code and explanations about my zig code and suggests enhanced error handling and zig idioms. Use the zig 0.11 standard."))))
 
+  (defvar zig-projects nil "List of zig projects to search in")
+
   (defun zig-ripgrep-search ()
     (interactive)
-    (let ((zig-projects (list (project-root (project-current))
-                              (getenv "ZIG_SRC"))))
-      (consult-ripgrep zig-projects)))
+    (consult-ripgrep zig-projects))
 
   (defun find-in-zig-src ()
     (interactive)
     (fd-dired (getenv "ZIG_SRC") (read-string "Find in zig src: ")))
 
+
   (defun et-open-zig-docs ()
     (interactive)
-    (eww "https://ziglang.org/documentation/0.11.0/" "*zig docs*")))
+    (let ((zig-docs-buffer-name "*zig docs*"))
+      (if (get-buffer zig-docs-buffer-name)
+          (switch-to-buffer zig-docs-buffer-name)
+          (letrec ((hookfun (lambda ()
+                              (rename-buffer "*zig docs*")
+                              `(remove-hook 'eww-after-render-hook ,hookfun))))
+            (add-hook 'eww-after-render-hook hookfun)
+            (eww "https://ziglang.org/documentation/master/" t))))))
 
 (use-package clang-format+
   :defer t
