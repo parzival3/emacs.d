@@ -291,8 +291,11 @@
 
 
 (use-package compile
-  :defer t
+  :ensure t
   :bind (:map compilation-mode-map
+              ("w" . meow-mark-word)
+              ("e" . meow-next-word)
+              ("b".  meow-back-word)
               ("l" . meow-right)
               ("h" . meow-left)
               ("y" . platform-copy)
