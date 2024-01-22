@@ -93,6 +93,13 @@
 
 (use-package c-ts-mode
   :config
+
+  (dir-locals-set-class-variables 'et-dci-project
+                                  '((c++-ts-mode . ((fill-column . 50)))))
+
+  (dir-locals-set-directory-class
+   (concat et-git-directory "dci_windows") 'et-dci-project)
+
   (setq c-ts-mode-indent-style 'k&r)
   (setq c-ts-mode-indent-offset 4)
   (setq-local indent-tabs-mode nil)
@@ -103,23 +110,6 @@
     (interactive)
     (let ((default-directory (projectile-project-root)))
       (shell-command "fd '\.(cpp|h)$' -X ctags -e -a")))
-
-  (defvar ms-cpp-style '(((parent-is "compound_statement")
-                          standalone-parent 0)
-                         ((or (match nil "compound_statement" nil 1 1)
-                              (match null "compound_statement"))
-                          standalone-parent 0)
-                         ((node-is "compound_statement") standalone-parent 0)
-                         ))
-
-  (defun add-my-indentation-style (orig-fun &rest args)
-    (let* ((style (apply orig-fun args))
-           (bsd-style (alist-get 'bsd style))
-           (ms-style (append bsd-style ms-cpp-style)))
-      (add-to-list 'style `(ms-style . ,ms-style))))
-
-  (advice-add 'c-ts-mode--indent-styles :around #'add-my-indentation-style)
-  (advice-remove 'c-ts-mode--indent-styles #'add-my-indentation-style)
 
   (defun et-ms-cpp-style ()
     `(
