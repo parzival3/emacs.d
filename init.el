@@ -78,21 +78,41 @@
 
   ;; eln files
   (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
-  )
+
+  ;; save windows configuration by default
+  (winner-mode 1))
 
 (use-package eshell
   :config
   (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
 
 (use-package grep
-  :defer t
+  :ensure t
   :config
   (setq grep-highlight-matches t)
   (setq grep-scroll-output t)
   ;; use rg instead of grep
   (grep-apply-setting
-   'grep-find-command
-   '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
+     'grep-command "rg --color=auto --null-data -nH --no-heading -e ")
+    (grep-apply-setting
+     'grep-template "rg --color=auto --null --no-heading -g '!*/' -e <R> <D>")
+    (grep-apply-setting
+     'grep-find-command '("rg --color=auto --null -nH --no-heading -e ''" . 38))
+    (grep-apply-setting
+     'grep-find-template "rg --color=auto --null -nH --no-heading -e <R> <D>"))
+
+(use-package xref
+  :bind (("M-g ." . xref-find-definitions)
+         ("M-g ," . xref-go-back))
+  :init
+  ;; Use faster search tool
+  (when (executable-find "rg")
+    (setq xref-search-program 'ripgrep))
+
+  ;; Select from xref candidates in minibuffer
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read
+        xref-show-xrefs-function #'xref-show-definitions-completing-read))
+
 
 (use-package artist
   :bind
@@ -156,14 +176,17 @@
   (setq transient-values-file (concat et-emacs-files-dir "transient/values.el"))
   (setq transient-history-file (concat et-emacs-files-dir "transient/history.el")))
 
+
 (use-package tramp
   :config
   (setq tramp-compat-temporary-file-directory (concat et-emacs-files-dir "tramp/temp"))
   (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp/tramp")))
 
+
 (use-package saveplace
   :config
   (setq save-place-file (concat et-emacs-files-dir "places")))
+
 
 (use-package window
   :config
