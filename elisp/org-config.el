@@ -12,9 +12,9 @@
     (org-capture nil "t"))
 
   (setq org-capture-templates
-      `(("t" "Todo" entry (file+headline ,(concat git-directory "notes/gtd.org") "Tasks")
+      `(("t" "Todo" entry (file+headline ,(concat et-git-directory "notes/gtd.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
-        ("j" "Journal" entry (file+datetree ,(concat git-directory "notes/journal.org"))
+        ("j" "Journal" entry (file+datetree ,(concat et-git-directory "notes/journal.org"))
          "* %?\nEntered on %U\n  %i"))))
 
 (use-package org-id
@@ -25,7 +25,7 @@
   :straight t
   :init
   (setq org-roam-db-location (concat et-emacs-files-dir "org-roam.db"))
-  (setq org-roam-directory (concat git-directory "notes/org-roam"))
+  (setq org-roam-directory (concat et-git-directory "notes/org-roam"))
   (setq org-roam-dailies-directory "daily/")
 
   :config
@@ -120,7 +120,7 @@
 
 (use-package org
   :config
-  (setq org-notes-folder (concat git-directory "/notes/"))
+  (setq org-notes-folder (concat et-git-directory "/notes/"))
   (defun org-list-of-notes ()
     (interactive)
       (find-file (completing-read "Select org note to open: " (directory-files-recursively org-notes-folder ".org"))))
