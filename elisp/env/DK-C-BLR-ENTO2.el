@@ -1,4 +1,4 @@
-(defvar git-directory "~/Git/")
+(defvar et-git-directory "~/Git/")
 
 (defvar et-font-size "12")
 (cond
