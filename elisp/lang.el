@@ -104,12 +104,16 @@
   (setq c-ts-mode-indent-offset 4)
   (setq-local indent-tabs-mode nil)
 
+  ;; limit xref search to only soruce files
+  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
+
+
   ;; (setq treesit--indent-verbose t) ;; uncomment to debug indentation
 
   (defun et-update-tags ()
     (interactive)
-    (let ((default-directory (projectile-project-root)))
-      (shell-command "fd '\.(cpp|h)$' -X ctags -e -a")))
+    (let ((default-directory (project-root (project-current t))))
+      (shell-command "fd '\\.(cpp\|h)$' -X ctags -e -a")))
 
   (defun et-ms-cpp-style ()
     `(
