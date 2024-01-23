@@ -89,16 +89,19 @@
 (use-package grep
   :ensure t
   :config
-  (setq grep-highlight-matches t)
-  (setq grep-scroll-output t)
+  (setq grep-highlight-matches t
+        grep-scroll-output t)
+
   ;; use rg instead of grep
   (grep-apply-setting
-     'grep-command "rg --color=auto --null-data -nH --no-heading -e ")
-    (grep-apply-setting
+     'grep-use-null-device nil)
+  (grep-apply-setting
+     'grep-command "rg --color=auto --null -nH --no-heading -e ")
+  (grep-apply-setting
      'grep-template "rg --color=auto --null --no-heading -g '!*/' -e <R> <D>")
-    (grep-apply-setting
+  (grep-apply-setting
      'grep-find-command '("rg --color=auto --null -nH --no-heading -e ''" . 38))
-    (grep-apply-setting
+  (grep-apply-setting
      'grep-find-template "rg --color=auto --null -nH --no-heading -e <R> <D>"))
 
 (use-package xref
