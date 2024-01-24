@@ -114,7 +114,9 @@
 
   ;; Select from xref candidates in minibuffer
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read
-        xref-show-xrefs-function #'xref-show-definitions-completing-read))
+        xref-show-xrefs-function #'xref-show-definitions-completing-read)
+
+  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
 
 
 (use-package artist
