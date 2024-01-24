@@ -112,8 +112,9 @@
 
   (defun et-update-tags ()
     (interactive)
-    (let ((default-directory (project-root (project-current t))))
-      (shell-command "fd '\\.(cpp\|h)$' -X ctags -e -a")))
+    (let ((default-directory (project-root (project-current t)))
+          (tag-file (concat et-emacs-files-dir "TAGS")))
+      (shell-command (concat "fd \".(cpp|h|c)$\" -X ctags -e -a -f"  (expand-file-name tag-file)))))
 
   (defun et-ms-cpp-style ()
     `(
