@@ -80,7 +80,10 @@
   (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
 
   ;; save windows configuration by default
-  (winner-mode 1))
+  (winner-mode 1)
+
+  ;; miximum compilation speed for elisp
+  (setq native-comp-speed 3))
 
 (use-package eshell
   :config
@@ -356,6 +359,23 @@
   :config
   (setq savehist-file (concat et-emacs-files-dir "savehist")))
 
+
+(use-package nxml-mode
+  :requires (sgml-mode hideshow)
+  :bind (:map nxml-mode-map
+              ("C-c h" . hs-toggle-hiding))
+
+  :hook ((nxml-mode . hs-minor-mode))
+  :config
+  (add-to-list 'hs-special-modes-alist
+               '(nxml-mode
+                 "<!--\\|<[^/>]*[^/]>"
+                 "-->\\|</[^/>]*[^/]>"
+
+                 "<!--"
+                 sgml-skip-tag-forward
+                 nil))
+  (setq nxml-slash-auto-complete-flag t))
 
 (defvar et-elisp-dir (concat user-emacs-directory "elisp/"))
 (defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
