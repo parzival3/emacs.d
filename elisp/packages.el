@@ -113,6 +113,30 @@
   :straight t
   :config
 
+  (defun et-inflection-word-at-point (inflection-function)
+    (let ((bounds (bounds-of-thing-at-point 'symbol)))
+      (if bounds
+          (progn
+            (buffer-substring-no-properties (car bounds) (cdr bounds))
+            (kill-region (car bounds) (cdr bounds))
+            (insert (funcall inflection-function (car kill-ring-yank-pointer))))
+        (message "No symbol at point")
+        nil)))
+
+  (defun et-to-camel-case ()
+    (interactive)
+    (et-inflection-word-at-point 'string-inflection-camelcase))
+
+  (defun et-to-kebab-case ()
+    (interactive)
+    (et-inflection-word-at-point 'string-inflection-kebab-case))
+
+  (defun et-to-snake-case ()
+    (interactive)
+    (et-inflection-word-at-point 'string-inflection-underscore))
+
+
+
   (defun to-pascal-case ()
          (interactive)
          (let ((word (symbol-name (symbol-at-point)))
