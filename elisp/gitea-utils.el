@@ -5,9 +5,15 @@
   "The url of the gitea server")
 
 (defcustom gitea-token gitea-secret
-    "The token to use to connect to gitea, variable is set in secrets.el")
+  "The token to use to connect to gitea, variable is set in secrets.el")
 
-(defun gitea-create-new-repo (repo-name)
+(defcustom gitea-user "parzival3"
+  "The user to use to connect to gitea")
+
+(defun gitea-get-ssh-url (repo-name)
+  (concat gitea-url ":" gitea-user "/" repo-name ".git"))
+
+(defun gitea-api-create-new-repo (repo-name)
   (interactive "sEnter the repository name: ")
   (unless (project-current t)
     (user-error "Not in a git project"))
@@ -33,6 +39,27 @@
                             (message "Repository created successfully.")
                           (message "Failed to create repository."))))
                       (kill-buffer response-buffer))
-                    )))
+      )))
+
+(defun gitea-create-new-repo (repo-name)
+  (gitea-api-create-new-repo repo-name)
+  (magit-remote-add "gitea" (gitea-get-ssh-url repo-name)))
+
+(defun gitea-mirror-repo ()
+  (unless (project-current t)
+    (user-error "Not in a git project"))
+  (shell-command-to-string "git push gitea '*:*'"))
+
+(defun gitea-mirror-or-create (repo-name)
+  (interactive "sEnter the repository name: ")
+  (unless (project-current t)
+    (user-error "Not in a git project"))
+  (let ((list-of-remotes (shell-command-to-string "git remote -v")))
+    (cond
+     ((string-match "gitea" list-of-remotes) (error "Repository already exists on gitea"))
+     ((string-match "origin" list-of-remotes) (gitea-mirror-repo repo-name))
+     (t (gitea-create-new-repo repo-name)))
+    )
+  )
 
 (provide 'gitea)

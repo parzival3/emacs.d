@@ -9,6 +9,10 @@
   :defer t
   :straight t)
 
+(use-package cider
+  :defer t
+  :straight t)
+
 (use-package carp
   :straight (el-patch :type git :host github :repo "carp-lang/carp-emacs")
   :defer t
@@ -257,8 +261,14 @@
 
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :bind
+  ("TAB" . et-copilot-tab)
+  ("S-TAB" . copilot-accept-completion)
+  ("<backtab>" . copilot-accept-completion) ;; S-TAB is recognized as backtab
+  ("<f10>" . toggle-copilot-mode)
+  :hook
+  (prog-mode . copilot-mode)
   :config
-    (add-hook 'prog-mode-hook 'copilot-mode)
   (defun toggle-copilot-mode ()
   "Toggle Copilot mode for programming modes."
   (interactive)
@@ -270,7 +280,14 @@
     (setq copilot-mode t)
     (add-hook 'prog-mode-hook 'copilot-mode)
     (message "Copilot mode enabled for programming mode")))
-  (global-set-key (kbd "<f10>") #'toggle-copilot-mode))
+
+  (defun et-copilot-tab ()
+  "Tab command that will complet with copilot if a completion is
+available. Otherwise will try company, yasnippet or normal
+tab-indent."
+  (interactive)
+  (or (copilot-accept-completion-by-word)
+      (indent-for-tab-command))))
 
 (use-package powershell
   :straight t

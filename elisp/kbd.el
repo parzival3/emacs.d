@@ -1,10 +1,3 @@
-(defun et-copilot-tab ()
-  "Tab command that will complet with copilot if a completion is
-available. Otherwise will try company, yasnippet or normal
-tab-indent."
-  (interactive)
-  (or (copilot-accept-completion)
-      (indent-for-tab-command)))
 
 (use-package emacs
   :config
@@ -12,7 +5,6 @@ tab-indent."
   (global-set-key (kbd "M-<down>") #'shrink-window)
   (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
   (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
-  (global-set-key (kbd "TAB") #'et-copilot-tab)
   (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
   (global-set-key (kbd "C-c r") #'consult-recent-file)
   (global-set-key (kbd "C-x o")  #'et-other-window)
