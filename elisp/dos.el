@@ -99,6 +99,8 @@
   :config
   ;; simplify magit status headers
   (setq magit-status-headers-hook '(magit-insert-head-branch-header))
+  (when (file-directory-p "C:\\Tools\\Git\\bin")
+    (setq magit-git-executable "C:\\Tools\\Git\\bin\\git.exe"))
 
   ;; remove some magit status sections
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
