@@ -43,7 +43,10 @@
   (advice-add 'yank :around #'et-clean-clipboard-yank)
 
   ;; TODO copy this command somewhere else msiexec /a "core_d (1).msi" /qb TARGETDIR=C:\Tools\Python3.11
-  (setq find-program "C:\\Tools\\Git\\usr\\bin\\find.exe"))
+
+  (when (file-directory-p "C:\\msys64\\user\\bin")
+    (setq find-program "C:\\msys64\\user\\bin\\find.exe"))
+  )
 
 
 (use-package eglot

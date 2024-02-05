@@ -244,7 +244,22 @@
                  (side . bottom)
                  (slot . 0)
                  (window-parameters
-                  (no-delete-other-windows . nil)))))
+                  (no-delete-other-windows . nil))))
+
+
+  ;; convenience functions for splitting windows
+    (defun et-split-window-right-and-move-there-dammit ()
+      "Split window right and move to the new window"
+      (interactive)
+      (split-window-right)
+      (windmove-right))
+
+    (defun et-split-window-below-and-move-there-dammit ()
+      "Split window below and move to the new window"
+      (interactive)
+      (split-window-below)
+      (windmove-down))
+  )
 
 
 (use-package eww
