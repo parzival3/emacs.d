@@ -86,8 +86,45 @@
   (setq native-comp-speed 3)
 
   ;; print message for garbage collection
-  (setq garbage-collection-messages t)
-  )
+  (setq garbage-collection-messages t))
+
+(use-package nano
+  :config
+  (defvar nano-spaceduck-color-red              "#e33400")
+  (defvar nano-spaceduck-color-orange           "#e39400")
+  (defvar nano-spaceduck-color-yellow           "#f2ce00")
+  (defvar nano-spaceduck-color-green            "#5ccc96")
+  (defvar nano-spaceduck-color-cyan             "#00a3cc")
+  (defvar nano-spaceduck-color-blue             "#00a3cc")
+  (defvar nano-spaceduck-color-purple-2         "#7a5ccc")
+  (defvar nano-spaceduck-color-purple           "#b3a1e6")
+  (defvar nano-spaceduck-color-magenta          "#ce6f8f")
+  (defvar nano-spaceduck-color-dark-purple      "#2e3459")
+  (defvar nano-spaceduck-color-dark-purple-2    "#686f9a")
+  (defvar nano-spaceduck-color-background       "#0f111b")
+  (defvar nano-spaceduck-color-foreground       "#ecf0c1")
+  (defvar nano-spaceduck-color-visual-selection "#1b1c36")
+  (defvar nano-spaceduck-color-cursor-line      "#16172d")
+  (defvar nano-spaceduck-color-grey             "#818596")
+  (defvar nano-spaceduck-color-grey-2           "#c1c3cc")
+  (defvar nano-spaceduck-color-pure-white       "#ffffff")
+  (defvar nano-spaceduck-color-pure-black       "#000000")
+
+  (defun nano-theme-set-spaceduck ()
+    (setq frame-background-mode 'dark)
+    (setq nano-color-foreground nano-spaceduck-color-foreground)
+    (setq nano-color-background nano-spaceduck-color-background)
+    (setq nano-color-highlight  nano-spaceduck-color-visual-selection)
+    (setq nano-color-critical   nano-spaceduck-color-red)
+    (setq nano-color-salient    nano-spaceduck-color-green)
+    (setq nano-color-strong     nano-spaceduck-color-yellow)
+    (setq nano-color-popout     nano-spaceduck-color-orange)
+    (setq nano-color-subtle     nano-spaceduck-color-purple-2)
+    (setq nano-color-faded      nano-spaceduck-color-purple))
+
+  (nano-theme-set-spaceduck))
+
+
 
 (use-package eshell
   :config
