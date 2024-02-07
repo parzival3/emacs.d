@@ -5,7 +5,6 @@
   ;; configuring some environment variables
   (setenv "PATH" (concat "C:\\Tools\\LLVM\\bin;" (getenv "PATH")))
   (setenv "PATH" (concat "C:\\Tools\\Git\\bin;" (getenv "PATH")))
-  (setenv "PATH" (concat "C:\\Tools\\Git\\usr\\bin;" (getenv "PATH")))
   (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
 
   ;; (setenv "PYTHONPATH" "C:/Git/dci_windows/lib/
@@ -46,7 +45,9 @@
 
   (when (file-directory-p "C:\\msys64\\user\\bin")
     (setq find-program "C:\\msys64\\user\\bin\\find.exe"))
-  )
+
+  ;; allow mingw shell
+  (add-hook 'comint-output-filter-functions 'comint-osc-process-output))
 
 
 (use-package eglot
