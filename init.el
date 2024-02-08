@@ -88,6 +88,7 @@
   ;; print message for garbage collection
   (setq garbage-collection-messages t))
 
+
 (use-package nano
   :config
   (defvar nano-spaceduck-color-red              "#e33400")
@@ -148,6 +149,7 @@
   (grep-apply-setting
      'grep-find-template "rg --color=auto --null -nH --no-heading -e <R> <D>"))
 
+
 (use-package xref
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
@@ -162,7 +164,7 @@
 
   (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
 
-
+j
 (use-package artist
   :bind
   (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
@@ -193,6 +195,7 @@
 					       ("Trimming" . trimming)
 					       ("Borders" . borders)
 					       ("Spray-chars" . spray-chars)))))))))
+
 
 (use-package debugger
   :defer t
@@ -295,8 +298,7 @@
       "Split window below and move to the new window"
       (interactive)
       (split-window-below)
-      (windmove-down))
-  )
+      (windmove-down)))
 
 
 (use-package eww
@@ -343,6 +345,7 @@
 (use-package server
   :config
   (setq server-auth-dir (concat et-emacs-files-dir "server/")))
+
 
 (use-package dired
   :defer t
