@@ -1,0 +1,1 @@
+C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -c "&{Import-Module """C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"""; Enter-VsDevShell 11ea54a2; $env:MSYSTEM=\"MINGW64\"; $env:MSYS=\"winsymlinks:nativestrict\"; $env:MSYS2_PATH_TYPE=\"inherit\"; $env:PLATFORM=\"x64\"; C:/msys64/usr/bin/bash.exe --login }"
