@@ -331,8 +331,16 @@ tab-indent."
 	      (message "`%s' parser was installed." lang)
 	      (sit-for 0.75)))))
 
+(use-package python
+  :bind
+  ;; remove the default binding for backtab
+  (:map python-ts-mode-map
+        ("<backtab>" . nil)))
+
+
 (use-package yaml-mode
   :straight t)
+
 
 (use-package edebug
   :bind
@@ -340,7 +348,6 @@ tab-indent."
         ("<f10>" . #'edebug-step-mode)
         ("<f11>" . #'edebug-step-in)
         ))
-
 
 
 (defvar et-format-functions-alist
