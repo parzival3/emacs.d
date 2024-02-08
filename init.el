@@ -116,8 +116,8 @@
     (setq nano-color-background nano-spaceduck-color-background)
     (setq nano-color-highlight  nano-spaceduck-color-visual-selection)
     (setq nano-color-critical   nano-spaceduck-color-red)
-    (setq nano-color-salient    nano-spaceduck-color-green)
-    (setq nano-color-strong     nano-spaceduck-color-yellow)
+    (setq nano-color-salient    nano-spaceduck-color-yellow)
+    (setq nano-color-strong     nano-spaceduck-color-green)
     (setq nano-color-popout     nano-spaceduck-color-orange)
     (setq nano-color-subtle     nano-spaceduck-color-purple-2)
     (setq nano-color-faded      nano-spaceduck-color-purple))
@@ -125,10 +125,10 @@
   (nano-theme-set-spaceduck))
 
 
-
 (use-package eshell
   :config
   (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
+
 
 (use-package grep
   :ensure t
