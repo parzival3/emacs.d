@@ -164,7 +164,7 @@
 
   (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
 
-j
+
 (use-package artist
   :bind
   (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
