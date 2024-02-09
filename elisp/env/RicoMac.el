@@ -1,4 +1,4 @@
-(defvar git-directory "~/Git/")
+(defvar et-git-directory "~/Git/")
 
 (defvar et-font-size (let ((geometry (alist-get 'geometry (car (display-monitor-attributes-list)))))
          (if (eq 1440 (caddr geometry))
