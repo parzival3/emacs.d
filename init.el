@@ -301,6 +301,11 @@
       (windmove-down)))
 
 
+(use-package hexl
+  :config
+    (setq hexl-bits 8))
+
+
 (use-package eww
   :bind
   (:map eww-mode-map
