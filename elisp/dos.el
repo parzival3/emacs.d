@@ -98,6 +98,14 @@
   (setq compile-command "msbuild"))
 
 
+(use-package with-editor
+  :defer t
+  :config
+  (when (file-directory-p "C:\\emacs\\bin")
+    ;; on windows the escaping was not working, this is an easy fix
+    (setq with-editor-emacsclient-executable "/emacs/bin/emacsclient.exe")))
+
+
 (use-package magit
   :defer t
   :config
