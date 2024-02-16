@@ -1,4 +1,0 @@
-rem This script to work needs
-rem Install-Module VSSetup -Scope CurrentUser
-
-C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -c "&{$vsinst = Get-VSSetupInstance; $instpath = $vsinst[0].InstallationPath + \"\\Common7\\Tools\Microsoft.VisualStudio.DevShell.dll\"; Import-Module $instpath; Enter-VsDevShell $vsinst[0].InstanceId; $env:MSYSTEM=\"MINGW64\"; $env:MSYS=\"winsymlinks:nativestrict\"; $env:MSYS2_PATH_TYPE=\"inherit\"; $env:PLATFORM=\"x64\"; C:/msys64/usr/bin/bash.exe --login }"
