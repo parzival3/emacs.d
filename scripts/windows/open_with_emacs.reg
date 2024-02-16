@@ -1,0 +1,43 @@
+Windows Registry Editor Version 5.00
+;; -----
+;;  Set up the handler
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile]
+@="Emacs Document"
+"FriendlyTypeName"="Emacs Document"
+"PerceivedType"="Document"
+
+;; -----
+;;  Set up the application details (ApplicationName will appear in "Open with" context menu)
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile\Application]
+@=""
+"ApplicationCompany"="Free Software Foundation, Inc."
+"ApplicationDescription"="Emacs — it might be thought of as a thermonuclear word processor."
+"ApplicationIcon"="C:\\emacs\\bin\\emacsclientw.exe,0"
+"ApplicationName"="Emacs"
+
+;; -----
+;;  Set up the icon
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile\DefaultIcon]
+@="C:\\emacs\\bin\\emacsclientw.exe,0"
+
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile\Shell]
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile\Shell\open]
+@="Open in Emacs"
+
+;; -----
+;; Command responsible for opening Emacs (it will open file in the existing window, or try to create a new one)
+;; If you want to always open files in new window, use this instead:
+;; @="C:\\emacs\\bin\\emacsclientw.exe -n --alternate-editor=\"\" -c -n \"%1\""
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\Emacs.AssocFile\Shell\open\command]
+@="C:\\emacs\\bin\\emacsclientw.exe -n --alternate-editor=\"\" -n \"%1\""
+
+;; -----
+;; Associate file types w/ Emacs (examples below)
+;; -----
+[HKEY_CURRENT_USER\Software\Classes\.el\OpenWithProgids]
+"Emacs.AssocFile"=""

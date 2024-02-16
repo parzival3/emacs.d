@@ -86,7 +86,9 @@
   (setq native-comp-speed 3)
 
   ;; print message for garbage collection
-  (setq garbage-collection-messages t))
+  (setq garbage-collection-messages t)
+
+  (start-server))
 
 
 (use-package nano
