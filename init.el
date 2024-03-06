@@ -88,7 +88,7 @@
   ;; print message for garbage collection
   (setq garbage-collection-messages t)
 
-  (start-server))
+  (server-start))
 
 
 (use-package nano
