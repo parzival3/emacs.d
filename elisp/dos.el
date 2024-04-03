@@ -95,7 +95,7 @@
 (use-package compile
   :config
   (setq compilation-scroll-output 'first-error)
-  (setq compile-command "msbuild"))
+  (setq compile-command "msbuild.exe"))
 
 
 (use-package with-editor
