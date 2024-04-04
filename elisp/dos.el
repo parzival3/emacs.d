@@ -10,7 +10,7 @@
   ;; (setenv "PYTHONPATH" "C:/Git/dci_windows/lib/
   (setenv "PLATFORM" "x64")
   (setenv "CONFIGURATION" "Debug")
-  (setenv "EposPythonRoot" "c:/Tools/Python3.11/")
+  (setenv "EposPythonRoot" "c:/Tools/Python3.9/")
 
   (setenv "PATH" (concat (getenv "EposPythonRoot") ";" (getenv "PATH")))
   (setenv "PATH" (concat (getenv "EposPythonRoot") "Scripts;" (getenv "PATH")))
@@ -96,14 +96,6 @@
   :config
   (setq compilation-scroll-output 'first-error)
   (setq compile-command "msbuild.exe"))
-
-
-(use-package with-editor
-  :defer t
-  :config
-  (when (file-directory-p "C:\\emacs\\bin")
-    ;; on windows the escaping was not working, this is an easy fix
-    (setq with-editor-emacsclient-executable "/emacs/bin/emacsclient.exe")))
 
 
 (use-package magit
