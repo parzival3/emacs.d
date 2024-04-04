@@ -14,7 +14,7 @@ $vsinst = Get-VSSetupInstance
 $instpath = $vsinst[0].InstallationPath + "\\Common7\\Tools\Microsoft.VisualStudio.DevShell.dll"
 
 Import-Module $instpath
-Enter-VsDevShell $vsinst[0].InstanceId
+Enter-VsDevShell -DevCmdArguments " -no_logo" $vsinst[0].InstanceId
 
 $env:MSYSTEM="MINGW64"
 $env:MSYS="winsymlinks:nativestrict"
