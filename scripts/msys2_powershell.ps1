@@ -14,6 +14,8 @@ $vsinst = Get-VSSetupInstance
 $instpath = $vsinst[0].InstallationPath + "\\Common7\\Tools\Microsoft.VisualStudio.DevShell.dll"
 
 Import-Module $instpath
+# The no logo was taken from the following link
+# https://www.powershellgallery.com/packages/VisualStudioShell/0.2.0/Content/Enter-VisualStudioShell.ps1
 Enter-VsDevShell -DevCmdArguments " -no_logo" $vsinst[0].InstanceId
 
 $env:MSYSTEM="MINGW64"
