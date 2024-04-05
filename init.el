@@ -29,6 +29,11 @@
   :straight t
   :demand t)
 
+;; Load org as early as possible to avoid any incompatibilities
+(use-package org
+  :straight t
+  :demant t)
+
 (use-package emacs
   :init
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
