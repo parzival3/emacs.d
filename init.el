@@ -476,5 +476,9 @@
     (load-file (concat et-elisp-dir "dos.el")))
 
 
+(use-package emacs
+  :config
+  (server-start))
+
 (provide 'init)
 ;;; init.el ends here
