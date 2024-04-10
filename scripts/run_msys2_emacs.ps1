@@ -11,4 +11,4 @@ $env:MSYS="winsymlinks:nativestrict"
 $env:MSYS2_PATH_TYPE="inherit"
 $env:PLATFORM="x64"
 
-C:/msys64/usr/bin/bash.exe --login -c "/c/emacs/bin/emacsclient -c -a '/c/emacs/bin/runemacs.exe --fullscreen'"
+C:/msys64/usr/bin/bash.exe --login -c "/c/emacs/bin/emacsclient -c -a '/c/emacs/bin/runemacs.exe'"

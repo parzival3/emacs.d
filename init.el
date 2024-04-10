@@ -32,7 +32,7 @@
 ;; Load org as early as possible to avoid any incompatibilities
 (use-package org
   :straight t
-  :demant t)
+  :demand t)
 
 (use-package emacs
   :init
