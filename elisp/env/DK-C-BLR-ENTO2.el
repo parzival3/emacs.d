@@ -17,3 +17,7 @@
 
 
 
+(use-package with-editor
+  :defer t
+  :config
+  (setq with-editor-emacsclient-executable "/emacs/bin/emacsclient.exe"))
