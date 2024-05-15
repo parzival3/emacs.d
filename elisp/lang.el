@@ -258,27 +258,26 @@
 
 (defun et-indent-style()
   "Override the built-in BSD indentation style with some additional rules"
-  `(;; Here are your custom rules
-    ((node-is ")") parent-bol 0)
+  `(
+    ;; align function arguments to the start of the first one, offset if standalone
     ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-    ((parent-is "argument_list") prev-sibling 0)
+    ((parent-is "argument_list") (nth-sibling 1) 0)
+    ;; same for parameters
     ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-    ((parent-is "parameter_list") prev-sibling 0)
+    ((parent-is "parameter_list") (nth-sibling 1) 0)
+    ;; indent inside case blocks
+    ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
+    ;; do not indent preprocessor statements
+    ((node-is "preproc") column-0 0)
+    ;; namespace
     ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+    ;; append to bsd style
+    ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
-    ;; Append here the indent style you want as base
-   ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
 (use-package c-ts-mode
- :if (treesit-language-available-p 'c)
- :custom
- (c-ts-mode-indent-offset 4)
- (c-ts-mode-indent-style #'et-indent-style)
- :init
- ;; Remap the standard C/C++ modes
- (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
- (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
- (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
+  :config
+  (setq c-ts-mode-indent-style #'et-indent-style))
 
 
 (use-package combobulate
