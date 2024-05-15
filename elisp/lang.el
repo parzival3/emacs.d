@@ -256,6 +256,29 @@
   )
 
 
+(defun et-indent-style()
+  "Override the built-in BSD indentation style with some additional rules"
+  `(;; Here are your custom rules
+    ((node-is ")") parent-bol 0)
+    ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+    ((parent-is "argument_list") prev-sibling 0)
+    ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+    ((parent-is "parameter_list") prev-sibling 0)
+
+    ;; Append here the indent style you want as base
+   ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+
+(use-package c-ts-mode
+ :if (treesit-language-available-p 'c)
+ :custom
+ (c-ts-mode-indent-offset 4)
+ (c-ts-mode-indent-style #'et-indent-style)
+ :init
+ ;; Remap the standard C/C++ modes
+ (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+ (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+ (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
+
 (use-package combobulate
   :straight t)
 
