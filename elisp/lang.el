@@ -332,29 +332,6 @@ tab-indent."
     (let ((default-directory target-directory))
       (shell-command (format "tar -xf %s" download-file)))))
 
-(use-package treesit
-  :commands (treesit-install-language-grammar nf/treesit-install-all-languages)
-  :init
-  (setq treesit-language-source-alist
-   '((PowerShell . ("https://github.com/parzival3/tree-sitter-PowerShell.git"))))
-
-  :config
-  (defvar language-pack-version "0.12.86")
-  (defvar languages-pack-url
-    (format "https://github.com/emacs-tree-sitter/tree-sitter-langs/releases/download/%s/tree-sitter-grammars-windows-%s.tar.gz" language-pack-version language-pack-version)
-    "Url for downloading the treesiter language package (mainly for windows)")
-
-  (defun download-new-languages ()
-    (interactive)
-    (et-download-and-extract-tar-gz languages-pack-url (concat user-emacs-directory "tree-sitter")))
-  (defun et-treesit-install-all-languages ()
-    "Install all languages specified by `treesit-language-source-alist'."
-    (interactive)
-    (let ((languages (mapcar 'car treesit-language-source-alist)))
-      (dolist (lang languages)
-	      (treesit-install-language-grammar lang)
-	      (message "`%s' parser was installed." lang)
-	      (sit-for 0.75)))))
 
 (use-package python
   :bind
