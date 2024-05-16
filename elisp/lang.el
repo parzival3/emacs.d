@@ -337,7 +337,9 @@ tab-indent."
   :bind
   ;; remove the default binding for backtab
   (:map python-ts-mode-map
-        ("<backtab>" . nil)))
+        ("<backtab>" . nil))
+  :hook
+  (python-ts-mode . eglot-ensure))
 
 
 (use-package yaml-mode
