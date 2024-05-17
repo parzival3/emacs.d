@@ -148,3 +148,18 @@
                        :templates `(("d" "default" plain ,content
                                      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                                         "#+title: ${title}\n"))))))
+
+(use-package org-agenda
+  :config
+  (setq org-agenda-files (list (concat et-git-directory "notes/gtd.org")
+                               (concat et-git-directory "notes/journal.org"))))
+
+
+(defun et-org-start-mutagen ()
+  "Start mutagen for the org-roam directory."
+  (interactive)
+  (if (executable-find "mutagen")
+      (start-process "mutagen" "*mutagen*" "mutagen" "daemon" "start")
+    (warn "Mutagen is not installed")))
+
+(et-org-start-mutagen)
