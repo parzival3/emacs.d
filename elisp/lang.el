@@ -119,7 +119,7 @@
     (interactive)
     (let ((default-directory (project-root (project-current t)))
           (tag-file "TAGS"))
-      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file)))))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
 
 
 (defun et-indent-style()

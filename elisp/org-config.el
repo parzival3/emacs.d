@@ -159,7 +159,9 @@
   "Start mutagen for the org-roam directory."
   (interactive)
   (if (executable-find "mutagen")
-      (start-process "mutagen" "*mutagen*" "mutagen" "daemon" "start")
+      (progn
+        (start-process "mutagen" "*mutagen*" "mutagen" "daemon" "start")
+        (message "Mutagen started"))
     (warn "Mutagen is not installed")))
 
 (et-org-start-mutagen)
