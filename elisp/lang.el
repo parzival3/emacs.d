@@ -87,6 +87,9 @@
 
 (use-package treesit
   :config
+  ;; remove .h from the auto-mode-alist
+  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
+  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-mode) auto-mode-alist))
     (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
@@ -109,11 +112,13 @@
   (setq c-ts-mode-indent-offset 4)
   (setq-local indent-tabs-mode nil)
 
+  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
+
   ;; limit xref search to only soruce files
   (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
 
 
-  ;; (setq treesit--indent-verbose t) ;; uncomment to debug indentation
+
 
   (defun et-update-tags ()
     (interactive)
@@ -133,10 +138,11 @@
     ((parent-is "parameter_list") (nth-sibling 1) 0)
     ;; indent inside case blocks
     ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
+    ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
     ;; do not indent preprocessor statements
     ((node-is "preproc") column-0 0)
     ;; namespace
-    ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+    ((and (parent-is "translation_unit") (n-p-gp nil nil "namespace_definition")) grand-parent 0)
     ;; append to bsd style
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
