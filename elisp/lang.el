@@ -179,6 +179,7 @@
     (add-hook 'prog-mode-hook 'copilot-mode)
     (message "Copilot mode enabled for programming mode")))
 
+
   (defun et-copilot-tab ()
   "Tab command that will complet with copilot if a completion is
 available. Otherwise will try company, yasnippet or normal
@@ -187,23 +188,11 @@ tab-indent."
   (or (copilot-accept-completion-by-word)
       (indent-for-tab-command))))
 
+
 (use-package powershell
   :straight t
   :config
   (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
-
-;; TODO: move this function
-(defun et-download-and-extract-tar-gz (url target-directory)
-  "Download a tar.gz file from URL and extract it into TARGET-DIRECTORY."
-  (require 'url)
-  (require 'tar-mode)
-  (let ((download-file (concat temporary-file-directory "downloaded.tar.gz")))
-    (url-copy-file url download-file t)
-    (when (file-exists-p target-directory)
-      (delete-directory target-directory t))
-    (make-directory target-directory t)
-    (let ((default-directory target-directory))
-      (shell-command (format "tar -xf %s" download-file)))))
 
 
 (use-package python

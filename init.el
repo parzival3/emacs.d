@@ -285,7 +285,7 @@
   (add-to-list 'display-buffer-alist
                '("\\*\\(Warnings\\)\\*"
                  (display-buffer-in-side-window)
-                 (window-height . 0.05)
+                 (windowpbr_wan_4_dst_ip_user-height . 0.05)
                  (side . bottom)
                  (slot . 0)
                  (window-parameters
