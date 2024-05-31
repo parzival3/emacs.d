@@ -86,19 +86,21 @@
   (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
 
 (use-package treesit
+  :requires (c-ts-mode)
   :config
   ;; remove .h from the auto-mode-alist
   (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
   (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-mode) auto-mode-alist))
-    (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(mm\\)\\'" . objc-ts-mode)))
 
 (use-package c-ts-mode
   :config
@@ -118,14 +120,12 @@
   ;; limit xref search to only soruce files
   (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
 
-
-
-
   (defun et-update-tags ()
     (interactive)
     (let ((default-directory (project-root (project-current t)))
           (tag-file "TAGS"))
-      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file)))
+      (visit-tags-table tag-file))))
 
 
 (defun et-indent-style()
@@ -150,7 +150,28 @@
 
 (use-package c-ts-mode
   :config
-  (setq c-ts-mode-indent-style #'et-indent-style))
+
+  (dir-locals-set-class-variables 'et-dci-project
+                                  '((c++-ts-mode . ((fill-column . 50)))))
+
+  (dir-locals-set-directory-class
+   (concat et-git-directory "dci_windows") 'et-dci-project)
+
+  (setq c-ts-mode-indent-offset 4)
+  (setq-local indent-tabs-mode nil)
+
+  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
+
+  ;; limit xref search to only soruce files
+  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
+
+  (setq c-ts-mode-indent-style #'et-indent-style)
+
+  (defun et-update-tags ()
+    (interactive)
+    (let ((default-directory (project-root (project-current t)))
+          (tag-file "TAGS"))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
 
 
 (use-package combobulate
