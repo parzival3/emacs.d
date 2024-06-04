@@ -220,11 +220,17 @@
   :config
   (setq project-list-file (concat et-emacs-files-dir "projects.el"))
   ;;; add element to project-switch-commands alist
+
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
   (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m))
-  (add-to-list 'project-switch-commands '(project-compile "Compile Project" ?c)))
+  (add-to-list 'project-switch-commands '(project-compile "Compile Project" ?c))
+
+  (defun project-keep-dir-open (dir)
+    (dired-other-window dir))
+
+  (advice-add 'project-switch-project :after 'project-keep-dir-open))
 
 
 (use-package transient
