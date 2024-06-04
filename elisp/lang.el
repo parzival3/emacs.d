@@ -102,6 +102,13 @@
   (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(mm\\)\\'" . objc-ts-mode)))
 
+(use-package gud
+  :config
+  (when (not (executable-find "gdb"))
+    (gud-def gud-break "b %d%f:%l" "\C-b" "Set breakpoint at current line."))
+  (setq gdb-many-windows t)
+  (setq gdb-show-main t))
+
 (use-package c-ts-mode
   :config
 
@@ -149,7 +156,6 @@
     ((and (parent-is "translation_unit") (n-p-gp nil nil "namespace_definition")) grand-parent 0)
     ;; append to bsd style
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
-
 
 (use-package c-ts-mode
   :config

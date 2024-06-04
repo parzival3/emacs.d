@@ -431,4 +431,8 @@ ARGS: the arguments to the function."
   (setq nov-text-width 80)
   (setq nov-save-place-file (concat et-emacs-files-dir "nov-places")))
 
+
+(use-package eat :straight t)
+(use-package jinx :straight t)
+
 (provide 'packages)

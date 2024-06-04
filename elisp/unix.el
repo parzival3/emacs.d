@@ -1,9 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 ;; Unix specific configuration
 
-(use-package vterm
-  :straight t)
-
 (use-package emacs
   :config
   (require 'eshell)
