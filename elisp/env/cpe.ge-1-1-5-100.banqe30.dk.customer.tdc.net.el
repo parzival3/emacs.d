@@ -17,3 +17,6 @@
 (if (not (display-graphic-p))
     (setq et-theme 'modus-vivendi)
   (setq et-theme 'doom-laserwave))
+
+(setq exec-path (append exec-path '("/Users/ento/tools")))
+(setenv "PATH" (concat (getenv "PATH") ":/Users/ento/tools"))
