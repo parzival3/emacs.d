@@ -253,6 +253,9 @@
 
 (use-package window
   :config
+
+  (defvar et-no-display-buffer "no-display")
+
   (defvar original-display-buffer-alist display-buffer-alist)
 
   ;; Define common parameters
@@ -276,7 +279,7 @@
                  ,@display-buffer-base-params))
 
   (add-to-list 'display-buffer-alist
-               '("\\*no-display\\*"
+               '("\\*\\(no-display\\)\\*"
                  (display-buffer-no-window)))
 
   (add-to-list 'display-buffer-alist

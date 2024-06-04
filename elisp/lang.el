@@ -122,10 +122,13 @@
 
   (defun et-update-tags ()
     (interactive)
-    (let ((default-directory (project-root (project-current t)))
-          (tag-file "TAGS"))
-      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file)))
-      (visit-tags-table tag-file))))
+    (let* ((default-directory (project-root (project-current t)))
+           (tag-file "TAGS")
+           (tag-program (if (eq (shell-command "ctags -e" et-no-display-buffer et-no-display-buffer) 0) "ctags" "etags"))
+           (tag-flags (if (string= tag-program "ctags") "-e -a -f"
+                          "-a --declarations -I -o")))
+      (shell-command (format "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X %s %s %s" tag-program tag-flags (expand-file-name tag-file))
+                     et-no-display-buffer et-no-display-buffer))))
 
 
 (defun et-indent-style()
