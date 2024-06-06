@@ -449,4 +449,9 @@ ARGS: the arguments to the function."
 
 (use-package jinx :straight t)
 
+
+(use-package avy :straight t
+  :bind
+  ("C-:" . avy-goto-char-timer))
+
 (provide 'packages)
