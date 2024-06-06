@@ -432,7 +432,12 @@ ARGS: the arguments to the function."
   (setq nov-save-place-file (concat et-emacs-files-dir "nov-places")))
 
 
-(use-package eat :straight t)
+(use-package eat
+  :straight t
+  :hook
+  (eshell-load . eat-eshell-mode)
+  (eshell-load . eat-eshell-visual-command-mode))
+
 (use-package jinx :straight t)
 
 (provide 'packages)
