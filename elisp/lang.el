@@ -105,7 +105,9 @@
 (use-package gud
   :config
   (when (not (executable-find "gdb"))
-    (gud-def gud-break "b %d%f:%l" "\C-b" "Set breakpoint at current line."))
+    (defun gud-setup-lldb ()
+      (gud-def gud-break "b %d%f:%l" "\C-b" "Set breakpoint at current line."))
+    (add-hook 'gdb-mode-hook 'gud-setup-lldb))
   (setq gdb-many-windows t)
   (setq gdb-show-main t))
 
