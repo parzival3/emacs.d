@@ -273,7 +273,7 @@
                  ,@display-buffer-base-params))
 
   (add-to-list 'display-buffer-alist
-               '("\\*\\(e?shell\\|vterm\\)\\*"
+               '("\\*\\(e?shell\\|vterm\\|eat\\)\\*"
                  (display-buffer-in-side-window)
                  (window-height . 0.33)
                  ,@display-buffer-base-params))
