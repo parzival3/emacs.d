@@ -64,6 +64,9 @@
   (eshell/addpath (concat (getenv "ANDROID_HOME") "/emulator"))
   (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools"))
 
+  ;; DCI
+  (setenv "DCI_REPOSITORY" "c:/Git/dci_windows/")
+
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
   (advice-add 'yank :around #'et-clean-clipboard-yank)
