@@ -43,6 +43,27 @@
   (setenv "PATH" (concat  (getenv "DEBUGGERS") ";" (getenv "PATH")))
   (eshell/addpath (getenv "DEBUGGERS"))
 
+  ;; Android
+  (setenv "ANDROID_CMDLINE_TOOLS" "c:/Tools/android_sdk/cmdline-tools/latest/bin/")
+  (setenv "ANDROID_HOME" "c:/Tools/android_sdk/")
+  (setenv "PATH" (concat (getenv "ANDROID_CMDLINE_TOOLS") ";" (getenv "PATH")))
+  (setenv "PATH" (concat (getenv "ANDROID_HOME") "/tools/bin;" (getenv "PATH")))
+  (setenv "PATH" (concat (getenv "ANDROID_HOME") "/platform-tools;" (getenv "PATH")))
+  (setenv "PATH" (concat (getenv "ANDROID_HOME") "/emulator;" (getenv "PATH")))
+  (setenv "PATH" (concat (getenv "ANDROID_HOME") "/tools;" (getenv "PATH")))
+
+  (add-to-list 'exec-path (getenv "ANDROID_CMDLINE_TOOLS"))
+  (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/tools/bin"))
+  (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/platform-tools"))
+  (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/emulator"))
+  (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/tools"))
+
+  (eshell/addpath (getenv "ANDROID_CMDLINE_TOOLS"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools/bin"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/platform-tools"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/emulator"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools"))
+
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
   (advice-add 'yank :around #'et-clean-clipboard-yank)
