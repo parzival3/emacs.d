@@ -37,6 +37,12 @@
   (setenv "PATH" (concat  (getenv "7ZIP") ";" (getenv "PATH")))
   (eshell/addpath (getenv "7ZIP"))
 
+  ;; Debug tools
+  (setenv "DEBUGGERS" "C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\")
+  (add-to-list 'exec-path (getenv "DEBUGGERS"))
+  (setenv "PATH" (concat  (getenv "DEBUGGERS") ";" (getenv "PATH")))
+  (eshell/addpath (getenv "DEBUGGERS"))
+
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
   (advice-add 'yank :around #'et-clean-clipboard-yank)
@@ -112,5 +118,20 @@
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent))
+
+; (load-library "work/windows/cbd-gud.el")
+
+(use-package gud
+  :config
+  (setq gdb-many-windows t)
+  (setq gdb-show-main t)
+  :bind
+  (:map gud-minor-mode-map
+        ("<f5>"  .  'gud-cont)
+        ("<f7>"  .  'gud-tbreak)
+        ("<f8>"  .  'gud-step)
+        ("<f9>"  .  'gud-break)
+        ("<f10>" .  'gud-next)
+        ("<f11>" .  'gud-finish)))
 
 (provide 'dos)

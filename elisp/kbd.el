@@ -97,6 +97,7 @@
      '("<escape>" . ignore))
 
     (meow-leader-define-key
+     '(";"  . avy-goto-char-timer)
      '("ff" . et-find-file)
      '("pp" . project-switch-project)
      '("pe" . project-eshell)
