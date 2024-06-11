@@ -159,4 +159,16 @@
         ("<f10>" .  'gud-next)
         ("<f11>" .  'gud-finish)))
 
+
+(defun search-msdn-term ()
+  "Search MSDN for the selected term or the term under the cursor."
+  (interactive)
+  (let* ((term (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (thing-at-point 'symbol t)))
+         (query (if term
+                    (url-encode-url term)
+                  (user-error "No term found at point or selected"))))
+    (browse-url (concat "https://learn.microsoft.com/en-us/search/?category=Documentation&terms=" query))))
+
 (provide 'dos)
