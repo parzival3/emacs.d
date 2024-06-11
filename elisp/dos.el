@@ -143,7 +143,7 @@
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent))
 
-(load-file "work/windows/cbd-gud.el")
+(load-file (concat et-elisp-dir "work/windows/cbd-gud.el"))
 
 ;; cdb commands http://www.windbg.info/doc/1-common-cmds.html
 (use-package gud
