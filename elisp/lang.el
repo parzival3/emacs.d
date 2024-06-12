@@ -120,7 +120,6 @@
   (dir-locals-set-directory-class
    (concat et-git-directory "dci_windows") 'et-dci-project)
 
-  (setq c-ts-mode-indent-style 'k&r)
   (setq c-ts-mode-indent-offset 4)
   (setq-local indent-tabs-mode nil)
 
@@ -155,7 +154,8 @@
     ;; do not indent preprocessor statements
     ((node-is "preproc") column-0 0)
     ;; namespace
-    ((and (parent-is "translation_unit") (n-p-gp nil nil "namespace_definition")) grand-parent 0)
+    ((n-p-gp nil "declaration_list" "namespace_definition") parent-bol 0)
+    ((n-p-gp "compound_statement" "for_statement" nil) standalone-parent c-ts-mode-indent-offset)
     ;; append to bsd style
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
