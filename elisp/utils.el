@@ -238,29 +238,6 @@ If there is no selected word, simply start an empty search."
   (interactive "r")
   (message "Number of lines in region: %d" (count-lines start end)))
 
-(defun et-split-compile (command)
-  "Split the current buffer and run an Eshell command in the new buffer."
-  (interactive
-   (let ((default (or compile-command "make -k")))
-     (list (read-string (format "Compile command (default: %s): " default) nil nil default))))
-  (setq compile-command (or command "make -k"))
-  (window-configuration-to-register ?z)
-  (delete-other-windows)
-  (let ((default-eshell "*eshell*")
-        (default-directory (project-root (project-current t))))
-    (unless (get-buffer default-eshell)
-      (eshell))
-    (split-window-right)
-    (other-window 1)
-    (switch-to-buffer default-eshell)
-    (eshell-interrupt-process) ;; kill current process
-    (setq-local run-command command)
-    (run-with-timer 0.5 nil
-                    (lambda ()
-                      (eshell-interrupt-process)
-                      (eshell-return-to-prompt)
-                      (insert run-command)
-                      (eshell-send-input)))))
 
 (global-set-key (kbd "<f13>") 'et-split-compile)
 
@@ -287,15 +264,19 @@ If there is no selected word, simply start an empty search."
   (setq compile-command (or command "make -k"))
   (window-configuration-to-register ?z)
   (delete-other-windows)
+  (save-some-buffers t)
   (let ((default-eshell "*eshell*")
         (default-directory (project-root (project-current t))))
     (unless (get-buffer default-eshell)
-      (eshell))
+      (eshell)
+      (other-window -1))
     (split-window-right)
     (other-window 1)
     (switch-to-buffer default-eshell)
+    (eshell/cd default-directory)
     ;; caputre line
     (eshell-interrupt-process) ;; kill current process
+    (eshell-interrupt-process)
     (setq-local run-command command)
     (run-with-timer 0.5 nil
                     (lambda ()
