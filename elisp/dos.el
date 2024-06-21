@@ -66,6 +66,7 @@
 
   ;; DCI
   (setenv "DCI_REPOSITORY" "c:/Git/dci_windows/")
+  (setenv "VCPKG_ROOT" (concat (getenv "DCI_REPOSITORY") "externals/vcpkg/"))
 
   ;; on windows we need to clean the clipboard before pasting
   (advice-add 'clipboard-yank :around #'et-clean-clipboard-yank)
