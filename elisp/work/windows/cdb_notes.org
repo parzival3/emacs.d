@@ -1,0 +1,24 @@
+* How to handle exceptions
+- Add the source path to the debugger
+  #+begin_quote
+  > .srcpath C:/Git/dci_windows/
+  #+end_quote
+- Run the program and get the code from the exception
+  #+begin_quote
+  > g
+  [....]
+  (5408.3a78): C++ EH exception - code e06d7363 (first chance)
+  #+end_quote
+- Add a handle for the specific exception
+  #+begin_quote
+  > sxe e06d7363
+  #+end_quote
+- Restart the program
+  #+begin_quote
+  > .restart
+  #+end_quote
+- Run with handle exceptions and get the information
+  #+begin_quote
+  > gh (run with handle exceptions)
+  > kn (print stacktrace with frame numbers)
+  #+end_quote
