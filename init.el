@@ -413,7 +413,17 @@
   :config
   (setq compilation-scroll-output t)
   (set-face 'compilation-error 'nano-face-header-critical)
-  (setq compilation-auto-jump-to-first-error t))
+  (setq compilation-auto-jump-to-first-error t)
+  ;; How to debug compilation regex alist
+  ;; (setq compilation-debug 't)
+  ;; And then eval this line in the matching error
+  ;; (car (aref  (car (get-text-property (point) 'compilation-debug)) 1))
+  ;; Add them to the dir-locals, for example flutter
+  ;; ((nil . ((eval . (setq compilation-error-regexp-alist
+  ;;                     (thread-last compilation-error-regexp-alist
+  ;;                                  (remove 'guile-line)
+  ;;                                  (remove 'ada)))))))
+  )
 
 
 (use-package xref
