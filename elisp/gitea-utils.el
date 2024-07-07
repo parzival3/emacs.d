@@ -49,7 +49,7 @@
 (defun gitea-mirror-repo ()
   (unless (project-current t)
     (user-error "Not in a git project"))
-  (unless (eq 0 (shell-command-to-string "git push gitea '*:*'"))
+  (unless (eq 0 (shell-command-to-string "git push gitea -f'*:*'"))
     (error "Failed to mirror repository")))
 
 (defun gitea-mirror-or-create (repo-name)
@@ -59,7 +59,7 @@
   (let ((list-of-remotes (shell-command-to-string "git remote -v")))
     (cond
      ((string-match "gitea" list-of-remotes) (error "Repository already exists on gitea"))
-     ((string-match "origin" list-of-remotes) (gitea-mirror-repo repo-name))
+     ((string-match "origin" list-of-remotes) (gitea-create-new-repo repo-name))
      (t (gitea-create-new-repo repo-name)))))
 
 (provide 'gitea)
