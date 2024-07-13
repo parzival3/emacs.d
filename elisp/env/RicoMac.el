@@ -12,8 +12,14 @@
 (setq eshell-path-env (mapconcat #'identity exec-path ":"))
 (setenv "PATH" eshell-path-env)
 
-(defvar et-theme 'doom-badger)
+(use-package emacs
+  :config
+  (setenv "ANDROID_HOME" "/Users/enrico/.android/sdk")
+  (setenv "NO_PROXY" "127.0.0.1,localhost,::1")
+  (setenv "PATH" (concat (getenv "PATH") ":"
+                         (getenv "ANDROID_HOME") "/" "cmdline-tools" ":"
+                         (getenv "ANDROID_HOME") "/" "cmdline-tools/bin"  ":"
+                         (getenv "ANDROID_HOME") "/" "platform-tools"))
 
-(if (not (display-graphic-p))
-    (setq et-theme 'modus-vivendi)
-  (setq et-theme 'doom-laserwave))
+  ;; For flutter you might also need "flutter config --android-sdk $ANDROID_HOME"
+  )
