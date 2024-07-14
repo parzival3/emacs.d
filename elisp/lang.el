@@ -19,8 +19,9 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
 
-(use-package dart-mode
-  :straight t)
+;; TODO: fix this
+;; (use-package dart-ts-mode
+;;   :load-path "~/emacs.d/straight/repos/dart-ts-mode")
 
 (use-package flutter
   :straight t
