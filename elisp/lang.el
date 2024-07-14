@@ -29,7 +29,7 @@
     (progn (add-to-list 'eglot-server-programs
                             '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart"))))
     ;; make sure eglot doesn't talk to fast to the dart server
-    (setq eglot-sync-connect 10)
+    (setq eglot-sync-connect 2)
     (setq eglot-events-buffer-config '(:size 0 :format nil))
     (setq eldoc-echo-area-prefer-doc-buffer t)
     ))
