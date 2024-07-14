@@ -19,7 +19,12 @@
   (setenv "PATH" (concat (getenv "PATH") ":"
                          (getenv "ANDROID_HOME") "/" "cmdline-tools" ":"
                          (getenv "ANDROID_HOME") "/" "cmdline-tools/bin"  ":"
-                         (getenv "ANDROID_HOME") "/" "platform-tools"))
+                         (getenv "ANDROID_HOME") "/" "platform-tools" ":"
+                         (getenv "ANDROID_HOME") "/" "emulator"))
+  (setenv "ANDROID_EMULATOR" "Andoird_35")
+
+  (defun et-run-emulator ()
+    (async-shell-command "emulator  -avd $ANDROID_EMULATOR -no-snapshot -no-boot-anim -wipe-data"))
 
   ;; For flutter you might also need "flutter config --android-sdk $ANDROID_HOME"
   )
