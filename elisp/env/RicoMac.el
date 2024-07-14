@@ -24,7 +24,7 @@
   (setenv "ANDROID_EMULATOR" "Andoird_35")
 
   (defun et-run-emulator ()
+    (interactive)
     (async-shell-command "emulator  -avd $ANDROID_EMULATOR -no-snapshot -no-boot-anim -wipe-data"))
-
   ;; For flutter you might also need "flutter config --android-sdk $ANDROID_HOME"
   )
