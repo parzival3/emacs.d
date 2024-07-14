@@ -383,10 +383,8 @@ ARGS: the arguments to the function."
   (global-corfu-mode))
 
 
-(use-package eglot
-  :straight t
-  :config
-  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)) ;; maybe is better if I create a proper keymap
+(straight-use-package
+ '(track-changes :type git :host github :repo "emacs-straight/track-changes"))
 
 
 (use-package spacemacs-theme

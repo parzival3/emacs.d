@@ -216,6 +216,14 @@
         ("q" . debugger-quit)))
 
 
+(use-package eglot
+  :straight t
+  :config
+  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)
+  (setq eglot-events-buffer-size 0)
+) ;; maybe is better if I create a proper keymap
+
+
 (use-package project
   :config
   (setq project-list-file (concat et-emacs-files-dir "projects.el"))

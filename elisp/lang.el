@@ -20,8 +20,19 @@
   (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
 
 ;; TODO: fix this
-;; (use-package dart-ts-mode
-;;   :load-path "~/emacs.d/straight/repos/dart-ts-mode")
+(use-package dart-ts-mode
+  :load-path "/Users/enrico/.emacs.d/straight/repos/dart-ts-mode"
+  :init
+  (with-eval-after-load 'eglot
+    ;; (progn (add-to-list 'eglot-server-programs
+    ;;                     '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart" :initializationOptions (:onlyAnalyzeProjectsWithOpenFiles t)))))
+    (progn (add-to-list 'eglot-server-programs
+                            '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart"))))
+    ;; make sure eglot doesn't talk to fast to the dart server
+    (setq eglot-sync-connect 10)
+    (setq eglot-events-buffer-config '(:size 0 :format nil))
+    (setq eldoc-echo-area-prefer-doc-buffer t)
+    ))
 
 (use-package flutter
   :straight t
@@ -95,6 +106,7 @@
   (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
