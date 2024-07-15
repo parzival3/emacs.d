@@ -366,6 +366,11 @@ containing the executable being debugged."
       (kill-buffer gud-comint-buffer)
 	))
 
+(defun project-run-cdb ()
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (call-interactively 'cdb)))
+
 (defun cdb (command-line)
   "Run cdb on program FILE in buffer *gud-FILE*.
 The directory containing FILE becomes the initial working directory

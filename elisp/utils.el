@@ -232,6 +232,11 @@ If there is no selected word, simply start an empty search."
       (message "Hexadecimal representation: %s" hex-representation)
       hex-representation)))
 
+(defun et-print-bits (number)
+  "Print the binary representation of NUMBER."
+  (interactive "nEnter a number: ")
+  (message "Binary representation: %s" (math-format-binary number)))
+
 
 (defun et-count-lines-region (start end)
   "Count the number of lines in the selected region."

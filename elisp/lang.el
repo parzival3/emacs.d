@@ -98,7 +98,6 @@
   (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
 
 (use-package treesit
-  :requires (c-ts-mode)
   :config
   ;; remove .h from the auto-mode-alist
   (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
@@ -246,7 +245,13 @@ tab-indent."
   (:map python-ts-mode-map
         ("<backtab>" . nil))
   :hook
-  (python-ts-mode . eglot-ensure))
+  (python-ts-mode . eglot-ensure)
+  :config
+  (defun et-python-venv (directory)
+    "Activate the python virtual environment in DIRECTORY."
+    (interactive "D")
+    (setenv "PATH" (concat directory "/Scripts;" (getenv "PATH")))
+    (eshell/addpath directory)))
 
 
 (use-package yaml-mode

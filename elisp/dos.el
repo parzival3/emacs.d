@@ -29,7 +29,7 @@
   (setenv "PUTTY" "C:\\Tools\\putty\\")
   (add-to-list 'exec-path (getenv "PUTTY"))
   (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
-  (eshell/addpath (concat  (getenv "PUTTY")))
+  (eshell/addpath (getenv "PUTTY"))
 
   ;; add 7zip
   (setenv "7ZIP" "C:\\Program Files\\7-Zip\\")
