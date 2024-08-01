@@ -19,9 +19,12 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
 
+
+(eval-and-compile (setq dart-ts-mode-path "~/.emacs.d/straight/repos/dart-ts-mode"))
+
 ;; TODO: fix this
 (use-package dart-ts-mode
-  :load-path "/Users/enrico/.emacs.d/straight/repos/dart-ts-mode"
+  :load-path dart-ts-mode-path
   :init
   (with-eval-after-load 'eglot
     ;; (progn (add-to-list 'eglot-server-programs
