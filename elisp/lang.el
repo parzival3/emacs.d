@@ -253,8 +253,22 @@ tab-indent."
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
     (interactive "D")
+    (when (or et--p-venv-exec-path
+              et--p-venv-eshell-path)
+     (error "Previous environment still active"))
+
+    (setq et--p-venv-exec-path exec-path)
+    (setq et--p-venv-eshell-path (eshell-get-path))
+    (add-to-list 'exec-path directory)
+    (eshell-set-path (mapconcat #'identity exec-path path-separator))
     (setenv "PATH" (concat directory "/Scripts;" (getenv "PATH")))
-    (eshell/addpath directory)))
+    (eshell/addpath directory))
+
+  (defun et-python-venv-deactivate ()
+    (setq exec-path et--p-venv-exec-path)
+    (eshell-set-path et--p-venv-eshell-path))
+
+  )
 
 
 (use-package yaml-mode
