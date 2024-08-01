@@ -342,7 +342,6 @@
         ("," . meow-inner-of-thing)
         ("Q" . meow-goto-line))
   :config
-  (set-face 'shr-text 'nano-face-default)
   (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/"))
 
   (defun eww--rename-buffer-hook-function (name)
@@ -383,8 +382,7 @@
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
   ;; easilly copy to other windows
-  (setq dired-dwim-target t)
-  (set-face dired-directory-face 'nano-face-popout))
+  (setq dired-dwim-target t))
 
 
 (use-package replace
@@ -420,7 +418,6 @@
               ("x" . meow-line))
   :config
   (setq compilation-scroll-output t)
-  (set-face 'compilation-error 'nano-face-header-critical)
   (setq compilation-auto-jump-to-first-error t)
   ;; How to debug compilation regex alist
   ;; (setq compilation-debug 't)
@@ -506,6 +503,8 @@
 (use-package emacs
   :config
   (server-start))
+
+(load-file (concat et-elisp-dir "appearance.el"))
 
 
 (provide 'init)

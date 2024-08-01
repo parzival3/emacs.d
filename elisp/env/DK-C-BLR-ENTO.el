@@ -8,8 +8,3 @@
        (defvar et-git-directory "C:/Git/"))
       (t (error "Wrong system type")))
 
-(defvar et-theme 'doom-badger)
-
-(if (not (display-graphic-p))
-    (setq et-theme 'doom-laserwave)
-  (setq et-theme 'spacemacs-dark))

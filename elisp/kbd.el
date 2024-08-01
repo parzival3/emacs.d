@@ -16,14 +16,6 @@
   :ensure t
   :config
 
-  (set-face 'meow-normal-cursor 'nano-face-popout)
-  (set-face 'meow-beacon-cursor 'nano-face-popout)
-  (set-face 'meow-insert-cursor 'nano-face-popout)
-  (set-face 'meow-keypad-cursor 'nano-face-popout)
-  (set-face 'meow-motion-cursor 'nano-face-popout)
-  (set-face 'meow-kmacro-cursor 'nano-face-popout)
-  (set-face 'meow-unknown-cursor 'nano-face-popout)
-
   (defun et-is-current-coding-system (coding-system)
     (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
       (cond
