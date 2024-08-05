@@ -48,7 +48,7 @@
   ;; install the nano emacs configuration
   (straight-use-package
     '(nano :type git :host github :repo "rougier/nano-emacs"))
-  (setq nano-font-size 12)
+  (setq nano-font-size 14)
   (require 'nano)
   (nano-theme-set-dark)
   (call-interactively 'nano-refresh-theme)

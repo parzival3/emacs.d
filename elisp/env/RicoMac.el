@@ -22,6 +22,7 @@
                          (getenv "ANDROID_HOME") "/" "platform-tools" ":"
                          (getenv "ANDROID_HOME") "/" "emulator"))
   (setenv "ANDROID_EMULATOR" "Andoird_35")
+  (setenv "NO_PROXY" "127.0.0.1,localhost,::1")
 
   (defun et-run-emulator ()
     (interactive)
