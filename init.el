@@ -72,6 +72,7 @@
                  '(tool-bar-lines . 0)
                  '(menu-bar-lines . 0))))
 
+
   ;; nano disable popup windows, but I want the
   (setq pop-up-windows t)
 
