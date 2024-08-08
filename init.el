@@ -23,6 +23,14 @@
 (straight-use-package 'use-package)
 (straight-use-package 'org)
 
+
+(remove-hook 'find-file-hooks 'vc-find-file-hook)
+(remove-hook 'find-file-hooks 'vc-refresh-state)
+
+(setq vc-handled-backends '(Git))
+(when (file-directory-p "C:\\Tools\\Git\\bin")
+    (setq vc-git-program "C:\\Tools\\Git\\bin\\git.exe"))
+
 ;; I use straight here because transient used in Emacs is too old
 ;; to support the master version of magit
 (use-package transient
@@ -47,11 +55,22 @@
 
   ;; install the nano emacs configuration
   (straight-use-package
-    '(nano :type git :host github :repo "rougier/nano-emacs"))
-  (setq nano-font-size 14)
-  (require 'nano)
-  (nano-theme-set-dark)
-  (call-interactively 'nano-refresh-theme)
+   '(nano :type git :host github :repo "rougier/nano-emacs"))
+  (load-theme 'modus-vivendi t)
+  ;;(require 'nano-layout)
+  (require 'nano-defaults)
+
+  (setq default-frame-alist
+        (append (list
+                 '(font . "Roboto Mono:style=Light:size=18")
+	             '(min-height . 1) '(height    . 45)
+	             '(min-width  . 1) '(width      . 81)
+                 '(vertical-scroll-bars . nil)
+                 '(internal-border-width . 1)
+                 '(left-fringe    . 24)
+                 '(right-fringe   . 24)
+                 '(tool-bar-lines . 0)
+                 '(menu-bar-lines . 0))))
 
   ;; nano disable popup windows, but I want the
   (setq pop-up-windows t)
@@ -94,44 +113,8 @@
   (setq garbage-collection-messages t))
 
 
-(use-package nano
-  :config
-  (defvar nano-spaceduck-color-red              "#e33400")
-  (defvar nano-spaceduck-color-orange           "#e39400")
-  (defvar nano-spaceduck-color-yellow           "#f2ce00")
-  (defvar nano-spaceduck-color-green            "#5ccc96")
-  (defvar nano-spaceduck-color-cyan             "#00a3cc")
-  (defvar nano-spaceduck-color-blue             "#00a3cc")
-  (defvar nano-spaceduck-color-purple-2         "#7a5ccc")
-  (defvar nano-spaceduck-color-purple           "#b3a1e6")
-  (defvar nano-spaceduck-color-magenta          "#ce6f8f")
-  (defvar nano-spaceduck-color-dark-purple      "#2e3459")
-  (defvar nano-spaceduck-color-dark-purple-2    "#686f9a")
-  (defvar nano-spaceduck-color-background       "#0f111b")
-  (defvar nano-spaceduck-color-foreground       "#ecf0c1")
-  (defvar nano-spaceduck-color-visual-selection "#1b1c36")
-  (defvar nano-spaceduck-color-cursor-line      "#16172d")
-  (defvar nano-spaceduck-color-grey             "#818596")
-  (defvar nano-spaceduck-color-grey-2           "#c1c3cc")
-  (defvar nano-spaceduck-color-pure-white       "#ffffff")
-  (defvar nano-spaceduck-color-pure-black       "#000000")
-
-  (defun nano-theme-set-spaceduck ()
-    (setq frame-background-mode 'dark)
-    (setq nano-color-foreground nano-spaceduck-color-foreground)
-    (setq nano-color-background nano-spaceduck-color-background)
-    (setq nano-color-highlight  nano-spaceduck-color-visual-selection)
-    (setq nano-color-critical   nano-spaceduck-color-red)
-    (setq nano-color-salient    nano-spaceduck-color-yellow)
-    (setq nano-color-strong     nano-spaceduck-color-green)
-    (setq nano-color-popout     nano-spaceduck-color-orange)
-    (setq nano-color-subtle     nano-spaceduck-color-purple-2)
-    (setq nano-color-faded      nano-spaceduck-color-purple))
-
-  (nano-theme-set-spaceduck))
-
-
 (use-package eshell
+  :defer t
   :config
   (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
 
@@ -156,6 +139,7 @@
 
 
 (use-package xref
+  :defer t
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
   :init
@@ -171,6 +155,7 @@
 
 
 (use-package artist
+  :defer t
   :bind
   (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
                         ("C-c C-a C-c" . 'et-select-artist-settings))
@@ -217,14 +202,15 @@
 
 
 (use-package eglot
+  :defer t
   :straight t
   :config
   (global-set-key (kbd "C-x C-.") 'eglot-code-actions)
-  (setq eglot-events-buffer-size 0)
-) ;; maybe is better if I create a proper keymap
+  (setq eglot-events-buffer-size 0))
 
 
 (use-package project
+  :defer t
   :config
   (setq project-list-file (concat et-emacs-files-dir "projects.el"))
   ;;; add element to project-switch-commands alist
@@ -249,12 +235,14 @@
 
 
 (use-package tramp
+  :defer t
   :config
   (setq tramp-compat-temporary-file-directory (concat et-emacs-files-dir "tramp/temp"))
   (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp/tramp")))
 
 
 (use-package saveplace
+  :defer t
   :config
   (setq save-place-file (concat et-emacs-files-dir "places")))
 
@@ -324,11 +312,13 @@
 
 
 (use-package hexl
+  :defer t
   :config
-    (setq hexl-bits 8))
+  (setq hexl-bits 8))
 
 
 (use-package eww
+  :defer t
   :bind
   (:map eww-mode-map
         ("L" . eww-forward-url)
@@ -353,11 +343,13 @@
 
 
 (use-package url-cookie
+  :defer t
   :config
   (setq url-cookie-file (concat et-emacs-files-dir "url/cookies")))
 
 
 (use-package url-cache
+  :defer t
   :config
   (setq url-cache-directory (concat et-emacs-files-dir "url/cache")))
 
@@ -386,6 +378,7 @@
 
 
 (use-package replace
+  :defer t
   :config
   (defun get-buffers-matching-mode (mode)
     "Returns a list of buffers where their major-mode is equal to MODE"
@@ -438,22 +431,26 @@
 
 
 (use-package hippie-exp
+  :defer t
   :config
   (setq hippie-expand-try-functions-list
         (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
 
 
 (use-package recentf
+  :defer t
   :config
   (setq recentf-save-file (concat et-emacs-files-dir "recentf")))
 
 
 (use-package savehist
+  :defer t
   :config
   (setq savehist-file (concat et-emacs-files-dir "savehist")))
 
 
 (use-package nxml-mode
+  :defer t
   :requires (sgml-mode hideshow)
   :bind (:map nxml-mode-map
               ("C-c h" . hs-toggle-hiding))
@@ -504,8 +501,12 @@
   :config
   (server-start))
 
-(load-file (concat et-elisp-dir "appearance.el"))
+;; (load-file (concat et-elisp-dir "appearance.el"))
 
+;; (set-face 'fringe  'nano-face-faded)
+;; (set-face-attribute 'fringe nil
+;;                     :foreground (face-background 'nano-face-subtle)
+;;                     :background (face-background 'default))
 
 (provide 'init)
 ;;; init.el ends here

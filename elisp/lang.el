@@ -1,4 +1,5 @@
 (use-package flyspell
+  :defer t
   :straight t
   :config
   (setq ispell-program-name "aspell")
@@ -24,6 +25,7 @@
 
 ;; TODO: fix this
 (use-package dart-ts-mode
+  :defer t
   :load-path dart-ts-mode-path
   :init
   (with-eval-after-load 'eglot
@@ -38,12 +40,14 @@
     ))
 
 (use-package flutter
+  :defer t
   :straight t
   :config
   (add-hook #'dart-mode-hook #'eglot-ensure)
   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package rust-mode
+  :defer t
   :straight t)
 
 (use-package zig-mode
@@ -92,15 +96,18 @@
             (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
 
 (use-package cc-mode
+  :defer t
   :config
   (setq delete-trailing-lines nil))
 
 (use-package devdocs
+  :defer t
   :straight t
   :config
   (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
 
 (use-package treesit
+  :defer t
   :config
   ;; remove .h from the auto-mode-alist
   (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
@@ -118,6 +125,7 @@
   (add-to-list 'auto-mode-alist '("\\.\\(mm\\)\\'" . objc-ts-mode)))
 
 (use-package gud
+  :defer t
   :config
   (when (not (executable-find "gdb"))
     (defun gud-setup-lldb ()
@@ -127,6 +135,7 @@
   (setq gdb-show-main t))
 
 (use-package c-ts-mode
+  :defer t
   :config
 
   (dir-locals-set-class-variables 'et-dci-project
@@ -175,6 +184,7 @@
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
 (use-package c-ts-mode
+  :defer t
   :config
 
   (dir-locals-set-class-variables 'et-dci-project
@@ -200,19 +210,16 @@
       (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
 
 
-(use-package combobulate
-  :straight t)
-
-
 (use-package copilot
+  :defer t
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :bind
   ("TAB" . et-copilot-tab)
   ("S-TAB" . copilot-accept-completion)
   ("<backtab>" . copilot-accept-completion) ;; S-TAB is recognized as backtab
   ("<f10>" . toggle-copilot-mode)
-  :hook
-  (prog-mode . copilot-mode)
+  ;; :hook
+  ;; (prog-mode . copilot-mode)
   :config
   (defun toggle-copilot-mode ()
   "Toggle Copilot mode for programming modes."
@@ -238,11 +245,13 @@ tab-indent."
 
 (use-package powershell
   :straight t
+  :defer t
   :config
   (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
 
 
 (use-package python
+  :defer t
   :bind
   ;; remove the default binding for backtab
   (:map python-ts-mode-map
@@ -250,6 +259,8 @@ tab-indent."
   :hook
   (python-ts-mode . eglot-ensure)
   :config
+  (setq et--p-venv-exec-path nil)
+  (setq et--p-venv-eshell-path nil)
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
     (interactive "D")
@@ -259,23 +270,29 @@ tab-indent."
 
     (setq et--p-venv-exec-path exec-path)
     (setq et--p-venv-eshell-path (eshell-get-path))
+    (let ((script-dir (concat directory "/Scripts")))
+      (when (file-directory-p script-dir)
+        (add-to-list 'exec-path script-dir)
+        (eshell-set-path (mapconcat #'identity exec-path path-separator))
+        (setenv "PATH" (concat script-dir ";" (getenv "PATH")))))
     (add-to-list 'exec-path directory)
-    (eshell-set-path (mapconcat #'identity exec-path path-separator))
-    (setenv "PATH" (concat directory "/Scripts;" (getenv "PATH")))
-    (eshell/addpath directory))
+    (eshell-set-path (mapconcat #'identity exec-path path-separator)))
 
   (defun et-python-venv-deactivate ()
+    (interactive)
     (setq exec-path et--p-venv-exec-path)
-    (eshell-set-path et--p-venv-eshell-path))
-
-  )
+    (eshell-set-path et--p-venv-eshell-path)
+    (setq et--p-venv-exec-path nil)
+    (setq et--p-venv-eshell-path nil)))
 
 
 (use-package yaml-mode
+  :defer t
   :straight t)
 
 
 (use-package edebug
+  :defer t
   :bind
   (:map edebug-mode-map
         ("<f10>" . #'edebug-step-mode)

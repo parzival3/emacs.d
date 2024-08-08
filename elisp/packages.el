@@ -1,5 +1,6 @@
 
 (use-package wgrep
+  :defer t
   :straight t)
 
 ;; Magit
@@ -34,6 +35,7 @@
 
 
 (use-package browse-at-remote
+  :defer t
   :straight t
   :bind
   (("C-x v o" . browse-at-remote))
@@ -58,11 +60,13 @@
 
 
 (use-package elfeed-protocol
+  :defer t
   :straight t
   :after elfeed)
 
 
 (use-package elfeed
+  :defer t
   :straight t
   :init
   (setq elfeed-use-curl t)
@@ -92,6 +96,7 @@
 
 
 (use-package fd-dired
+  :defer t
   :straight t
   :config
   (defun fd-dired-simple ()
@@ -110,6 +115,7 @@
 
 
 (use-package string-inflection
+  :defer t
   :straight t
   :config
 
@@ -376,6 +382,7 @@ ARGS: the arguments to the function."
 
 
 (use-package corfu
+  :defer t
   :straight t
   :custom
   (corfu-auto t)
@@ -387,11 +394,8 @@ ARGS: the arguments to the function."
  '(track-changes :type git :host github :repo "emacs-straight/track-changes"))
 
 
-(use-package spacemacs-theme
-  :straight t)
-
-
 (use-package gptel
+  :defer t
   :straight t
   :bind
   ("C-c RET" . gptel-send)
@@ -400,6 +404,7 @@ ARGS: the arguments to the function."
 
 
 (use-package spray
+  :defer t
   :straight t
   :config
   (require 'cl-lib)
@@ -423,6 +428,7 @@ ARGS: the arguments to the function."
 
 
 (use-package nov
+  :defer t
   :straight t
   :mode ("\\.epub\\'" . nov-mode)
   :config
@@ -430,9 +436,9 @@ ARGS: the arguments to the function."
   (setq nov-save-place-file (concat et-emacs-files-dir "nov-places")))
 
 
-(use-package jinx :straight t)
-
-(use-package avy :straight t
+(use-package avy
+  :defer t
+  :straight t
   :bind
   ("C-:" . avy-goto-char-timer))
 

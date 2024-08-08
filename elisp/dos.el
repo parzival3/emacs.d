@@ -91,6 +91,7 @@
 
 
 (use-package python
+  :defer t
   :config
   (setq python-shell-interpreter (concat (getenv "EposPythonRoot") "/python.exe")))
 
@@ -107,6 +108,7 @@
 
 
 (use-package dired
+  :defer t
   :config
     (when (eq system-type 'windows-nt)
     (defun et-dired-look ()
@@ -124,6 +126,7 @@
 
 
 (use-package compile
+  :defer t
   :config
   (setq compilation-scroll-output 'first-error)
   (setq compile-command "msbuild.exe"))
@@ -148,6 +151,7 @@
 
 ;; cdb commands http://www.windbg.info/doc/1-common-cmds.html
 (use-package gud
+  :defer t
   :config
   (setq gdb-many-windows t)
   (setq gdb-show-main t)

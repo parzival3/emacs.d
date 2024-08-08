@@ -1,4 +1,5 @@
 (use-package org-capture
+  :defer t
   :config
   ;; TODO I need to improove this
   (defun org-jurnal-capture ()
@@ -18,10 +19,12 @@
          "* %?\nEntered on %U\n  %i"))))
 
 (use-package org-id
+  :defer t
   :config
   (setq org-id-locations-file (concat et-emacs-files-dir "org-id-locations")))
 
 (use-package org-roam
+  :defer t
   :straight t
   :init
   (setq org-roam-db-location (concat et-emacs-files-dir "org-roam.db"))
@@ -119,6 +122,7 @@
        :props '(:finalize find-file)))))
 
 (use-package org
+  :defer t
   :config
   (setq org-notes-folder (concat et-git-directory "/notes/"))
   (defun org-list-of-notes ()
@@ -150,6 +154,7 @@
                                                         "#+title: ${title}\n"))))))
 
 (use-package org-agenda
+  :defer t
   :config
   (setq org-agenda-files (list (concat et-git-directory "notes/gtd.org")
                                (concat et-git-directory "notes/journal.org"))))
