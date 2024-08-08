@@ -239,7 +239,8 @@
 available. Otherwise will try company, yasnippet or normal
 tab-indent."
   (interactive)
-  (or (copilot-accept-completion-by-word)
+  (if (bound-and-true-p copilot-mode)
+      (copilot-accept-completion-by-word)
       (indent-for-tab-command))))
 
 
