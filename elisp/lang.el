@@ -257,10 +257,15 @@ tab-indent."
   (:map python-ts-mode-map
         ("<backtab>" . nil))
   :hook
-  (python-ts-mode . eglot-ensure)
+  (python-ts-mode . et-eglot-python)
   :config
-  (setq et--p-venv-exec-path nil)
-  (setq et--p-venv-eshell-path nil)
+  (defun et-eglot-pyhon ()
+    (unless
+        (string-equal
+         (file-name-extension (buffer-file-name (current-buffer)))
+         "pyi")
+      (eglot-ensure)))
+
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
     (interactive "D")
