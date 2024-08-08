@@ -259,12 +259,16 @@ tab-indent."
   :hook
   (python-ts-mode . et-eglot-python)
   :config
+
   (defun et-eglot-pyhon ()
     (unless
         (string-equal
          (file-name-extension (buffer-file-name (current-buffer)))
          "pyi")
       (eglot-ensure)))
+
+  (setq et--p-venv-exec-path nil)
+  (setq et--p-venv-eshell-path nil)
 
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
@@ -281,7 +285,10 @@ tab-indent."
         (eshell-set-path (mapconcat #'identity exec-path path-separator))
         (setenv "PATH" (concat script-dir ";" (getenv "PATH")))))
     (add-to-list 'exec-path directory)
-    (eshell-set-path (mapconcat #'identity exec-path path-separator)))
+    (eshell-set-path (mapconcat #'identity exec-path path-separator))
+    (setenv "PATH" (concat directory "/Scripts" path-separator (getenv "PATH")))
+    (setenv "PATH" (concat directory "/bin" path-separator (getenv "PATH")))
+    (eshell/addpath directory))
 
   (defun et-python-venv-deactivate ()
     (interactive)

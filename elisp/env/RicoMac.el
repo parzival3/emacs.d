@@ -29,3 +29,11 @@
     (async-shell-command "emulator  -avd $ANDROID_EMULATOR -no-snapshot -no-boot-anim -wipe-data"))
   ;; For flutter you might also need "flutter config --android-sdk $ANDROID_HOME"
   )
+
+
+;; shell commands for fixing the keyboard
+;; defaults write -g ApplePressAndHoldEnabled -bool false
+;; InitialKeyRepeat is the delay before the key repeat, 15 is the default
+;; defaults write -g InitialKeyRepeat -int 10
+;; KeyRepeat is the speed of the key repeat, 2 is the default
+;; defaults write -g KeyRepeat -int 1
