@@ -121,8 +121,7 @@
   (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(mm\\)\\'" . objc-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode)))
 
 (use-package gud
   :defer t
@@ -133,34 +132,6 @@
     (add-hook 'gdb-mode-hook 'gud-setup-lldb))
   (setq gdb-many-windows t)
   (setq gdb-show-main t))
-
-(use-package c-ts-mode
-  :defer t
-  :config
-
-  (dir-locals-set-class-variables 'et-dci-project
-                                  '((c++-ts-mode . ((fill-column . 50)))))
-
-  (dir-locals-set-directory-class
-   (concat et-git-directory "dci_windows") 'et-dci-project)
-
-  (setq c-ts-mode-indent-offset 4)
-  (setq-local indent-tabs-mode nil)
-
-  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
-
-  ;; limit xref search to only soruce files
-  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
-
-  (defun et-update-tags ()
-    (interactive)
-    (let* ((default-directory (project-root (project-current t)))
-           (tag-file "TAGS")
-           (tag-program (if (eq (shell-command "ctags -e" et-no-display-buffer et-no-display-buffer) 0) "ctags" "etags"))
-           (tag-flags (if (string= tag-program "ctags") "-e -a -f"
-                          "-a --declarations -I -o")))
-      (shell-command (format "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X %s %s %s" tag-program tag-flags (expand-file-name tag-file))
-                     et-no-display-buffer et-no-display-buffer))))
 
 
 (defun et-indent-style()
@@ -207,7 +178,7 @@
     (interactive)
     (let ((default-directory (project-root (project-current t)))
           (tag-file "TAGS"))
-      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx|mm)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
 
 
 (use-package copilot
