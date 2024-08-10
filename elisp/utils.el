@@ -289,4 +289,15 @@ If there is no selected word, simply start an empty search."
                       (eshell-return-to-prompt)
                       (insert run-command)
                       (eshell-send-input)))))
+
+
+(defun et-add-directory-to-env (directory &optional error-message)
+  (interactive)
+  (if (not (file-directory-p directory))
+      (and error-message ;; if we have an error, report it to the user
+           (error error-message))
+    (add-to-list 'exec-path directory)
+    (let ((string-path (mapconcat #'identity exec-path path-separator)))
+      (eshell-set-path string-path)
+      (setenv "PATH" string-path))))
 (provide 'utils)

@@ -251,16 +251,10 @@ tab-indent."
 
     (setq et--p-venv-exec-path exec-path)
     (setq et--p-venv-eshell-path (eshell-get-path))
-    (let ((script-dir (concat directory "/Scripts")))
-      (when (file-directory-p script-dir)
-        (add-to-list 'exec-path script-dir)
-        (eshell-set-path (mapconcat #'identity exec-path path-separator))
-        (setenv "PATH" (concat script-dir ";" (getenv "PATH")))))
-    (add-to-list 'exec-path directory)
-    (eshell-set-path (mapconcat #'identity exec-path path-separator))
-    (setenv "PATH" (concat directory "/Scripts" path-separator (getenv "PATH")))
-    (setenv "PATH" (concat directory "/bin" path-separator (getenv "PATH")))
-    (eshell/addpath directory))
+
+    (et-add-directory-to-env directory (format "%s not a directory" directory))
+    (et-add-directory-to-env (concat directory "/Scripts"))
+    (et-add-directory-to-env (concat directory "/bin")))
 
   (defun et-python-venv-deactivate ()
     (interactive)
