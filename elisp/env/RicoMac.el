@@ -37,3 +37,6 @@
 ;; defaults write -g InitialKeyRepeat -int 10
 ;; KeyRepeat is the speed of the key repeat, 2 is the default
 ;; defaults write -g KeyRepeat -int 1
+
+(use-package vterm
+  :straight t)

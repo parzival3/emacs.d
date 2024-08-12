@@ -174,9 +174,12 @@
 
   (setq c-ts-mode-indent-style #'et-indent-style)
 
-  (defun et-update-tags ()
-    (interactive)
-    (let ((default-directory (project-root (project-current t)))
+  (defun et-update-tags (directory)
+    (interactive
+     (list (read-string "Enter directory name: " (if (project-current)
+                                                     (project-root (project-current))
+                                                     default-directory))))
+    (let ((default-directory directory)
           (tag-file "TAGS"))
       (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx|mm)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
 
