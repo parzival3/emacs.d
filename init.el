@@ -1,513 +1,318 @@
-;;; init.el --- Personal Emacs config -*- lexical-binding: t -*-
+;;; init.el --- Init -*- no-byte-compile: t; lexical-binding: t; -*-
+
+;; Author: James Cherti
+;; URL: https://github.com/jamescherti/minimal-emacs.d
+;; Package-Requires: ((emacs "29.1"))
+;; Keywords: maint
+;; Version: 1.0.2
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
-;; My personal init file
+;; This is the main initialization file for Emacs. It configures package
+;; archives, ensures essential packages like `use-package` are installed, and
+;; sets up further package management and customization settings.
 
 ;;; Code:
-;; use streight.el bootstrap
-(defvar bootstrap-version)
-
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Packages
-(straight-use-package 'use-package)
-(straight-use-package 'org)
-
-
-(remove-hook 'find-file-hooks 'vc-find-file-hook)
-(remove-hook 'find-file-hooks 'vc-refresh-state)
-
-(setq vc-handled-backends '(Git))
-(when (file-directory-p "C:\\Tools\\Git\\bin")
-    (setq vc-git-program "C:\\Tools\\Git\\bin\\git.exe"))
-
-;; I use straight here because transient used in Emacs is too old
-;; to support the master version of magit
-(use-package transient
-  :straight t
-  :demand t)
-
-;; Load org as early as possible to avoid any incompatibilities
-(use-package org
-  :straight t
-  :demand t)
-
-(use-package emacs
-  :init
-  (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
-  (defvar et-system-type (if (eq wsl nil)
-                             system-type
-                           'wsl)
-    "The system type of the current machine.")
-  (defvar et-emacs-files-dir  "~/.emacs_files/"
-    "The directory where all the Emacs packages files are stored.")
-  :config
-
-  ;; install the nano emacs configuration
-  (straight-use-package
-   '(nano :type git :host github :repo "rougier/nano-emacs"))
-  (load-theme 'modus-vivendi t)
-  ;;(require 'nano-layout)
-  (require 'nano-defaults)
-
-  (setq default-frame-alist
-        (append (list
-                 '(font . "Roboto Mono:style=Light:size=18")
-	             '(min-height . 1) '(height    . 45)
-	             '(min-width  . 1) '(width      . 81)
-                 '(vertical-scroll-bars . nil)
-                 '(internal-border-width . 1)
-                 '(left-fringe    . 24)
-                 '(right-fringe   . 24)
-                 '(tool-bar-lines . 0)
-                 '(menu-bar-lines . 0))))
-
-
-  ;; nano disable popup windows, but I want the
-  (setq pop-up-windows t)
-
-  ;; Set file encoding to linux
-  (prefer-coding-system 'utf-8-unix)
-
-  ;; don't hide the line feed type
-  (setq inhibit-eol-conversion t)
-
-  ;; Hide-show minnor mode for code folding
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
-
-  ;; Use window move
-  (windmove-default-keybindings)
-
-  ;; custom variables
-  (setq custom-file (concat et-emacs-files-dir "custom.el"))
-  (load custom-file 'noerror)
-
-  ;; backups
-  (setq backup-directory-alist `(("." . ,(concat et-emacs-files-dir "backups"))))
-
-  ;; autosave
-  (setq auto-save-list-file-prefix (concat et-emacs-files-dir "autosave/.saves-"))
-
-  ;; session
-  (setq session-save-file (concat et-emacs-files-dir "session/.session"))
-
-  ;; eln files
-  (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
-
-  ;; save windows configuration by default
-  (winner-mode 1)
-
-  ;; miximum compilation speed for elisp
-  (setq native-comp-speed 3)
-
-  ;; print message for garbage collection
-  (setq garbage-collection-messages t))
-
-
-(use-package eshell
-  :defer t
-  :config
-  (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
-
-
-(use-package grep
-  :ensure t
-  :config
-  (setq grep-highlight-matches t
-        grep-scroll-output t)
-
-  ;; use rg instead of grep
-  (grep-apply-setting
-     'grep-use-null-device nil)
-  (grep-apply-setting
-     'grep-command "rg --color=auto --null -nH --no-heading -e ")
-  (grep-apply-setting
-     'grep-template "rg --color=auto --null --no-heading -g '!*/' -e <R> <D>")
-  (grep-apply-setting
-     'grep-find-command '("rg --color=auto --null -nH --no-heading -e ''" . 38))
-  (grep-apply-setting
-     'grep-find-template "rg --color=auto --null -nH --no-heading -e <R> <D>"))
-
-
-(use-package xref
-  :defer t
-  :bind (("M-g ." . xref-find-definitions)
-         ("M-g ," . xref-go-back))
-  :init
-  ;; Use faster search tool
-  (when (executable-find "rg")
-    (setq xref-search-program 'ripgrep))
-
-  ;; Select from xref candidates in minibuffer
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read
-        xref-show-xrefs-function #'xref-show-definitions-completing-read)
-
-  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
-
-
-(use-package artist
-  :defer t
-  :bind
-  (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
-                        ("C-c C-a C-c" . 'et-select-artist-settings))
-  :config
-     (defun et-select-artist-operation (type)
-     "Use ido to select a drawing operation in artist-mode"
-     (interactive (list (completing-read "Drawing operation: "
-                                             (list "Pen" "Pen Line" "line" "straight line" "rectangle"
-                                                   "square" "poly-line" "straight poly-line" "ellipse"
-                                                   "circle" "text see-thru" "text-overwrite" "spray-can"
-                                                   "erase char" "erase rectangle" "vaporize line" "vaporize lines"
-                                                   "cut rectangle" "cut square" "copy rectangle" "copy square"
-                                                   "paste" "flood-fill"))))
-     (artist-select-operation type))
-     (defun et-select-artist-settings (type)
-     "Use ido to select a setting to change in artist-mode"
-     (interactive (list (completing-read "Setting: "
-                                             (list "Set Fill" "Set Line" "Set Erase" "Spray-size" "Spray-chars"
-                                                   "Rubber-banding" "Trimming" "Borders"))))
-     (if (equal type "Spray-size")
-       (artist-select-operation "spray set size")
-       (call-interactively (artist-fc-get-fn-from-symbol
-			    (cdr (assoc type '(("Set Fill" . set-fill)
-					       ("Set Line" . set-line)
-					       ("Set Erase" . set-erase)
-					       ("Rubber-banding" . rubber-band)
-					       ("Trimming" . trimming)
-					       ("Borders" . borders)
-					       ("Spray-chars" . spray-chars)))))))))
-
-
-(use-package debugger
-  :defer t
-  :config
-  :bind
-  (:map debugger-mode-map
-        ("h" . meow-left)
-        ("l" . meow-right)
-        ("j" . meow-up)
-        ("k" . meow-down)
-        ("x" . meow-line)
-        ("y" . meow-clipboard-save)
-        ("q" . debugger-quit)))
-
-
-(use-package eglot
-  :defer t
-  :straight t
-  :config
-  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)
-  (setq eglot-events-buffer-size 0))
-
-
-(use-package project
-  :defer t
-  :config
-  (setq project-list-file (concat et-emacs-files-dir "projects.el"))
-  ;;; add element to project-switch-commands alist
-
-  (defun project-magit-status ()
-    (interactive)
-    (magit-status (project-root (project-current t))))
-  (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m))
-  (add-to-list 'project-switch-commands '(project-compile "Compile Project" ?c))
-
-  (defun project-keep-dir-open (dir)
-    (dired-other-window dir))
-
-  (advice-add 'project-switch-project :after 'project-keep-dir-open))
-
-
-(use-package transient
-  :config
-  (setq transient-levels-file (concat et-emacs-files-dir "transient/levels.el"))
-  (setq transient-values-file (concat et-emacs-files-dir "transient/values.el"))
-  (setq transient-history-file (concat et-emacs-files-dir "transient/history.el")))
-
-
-(use-package tramp
-  :defer t
-  :config
-  (setq tramp-compat-temporary-file-directory (concat et-emacs-files-dir "tramp/temp"))
-  (setq tramp-persistency-file-name (concat et-emacs-files-dir "tramp/tramp")))
-
-
-(use-package saveplace
-  :defer t
-  :config
-  (setq save-place-file (concat et-emacs-files-dir "places")))
-
-
-(use-package window
-  :config
-
-  (defvar et-no-display-buffer "no-display")
-
-  (defvar original-display-buffer-alist display-buffer-alist)
-
-  ;; Define common parameters
-  (setq display-buffer-base-params
-        '((side . bottom)
-          (slot . -1)
-          (window-parameters
-           (no-delete-other-windows . nil))))
-
-  ;; Add entries using add-to-list
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(Embark Export\\|cider-error\\|Flutter-Runner\\|repl\\)\\*"
-                 (display-buffer-in-side-window)
-                 (window-height . 0.25)
-                 ,@display-buffer-base-params))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(e?shell\\|vterm\\|eat\\)\\*"
-                 (display-buffer-in-side-window)
-                 (window-height . 0.33)
-                 ,@display-buffer-base-params))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(no-display\\)\\*"
-                 (display-buffer-no-window)))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(Backtrace\\|Compile-log\\|Messages\\|Warnings\\|Compilation\\|Spray Temp\\)\\*"
-                 (display-buffer-in-side-window)
-                 (window-height . 0.25)
-                 (side . bottom)
-                 (slot . 0)
-                 (window-parameters
-                  (no-delete-other-windows . nil))))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*\\(Warnings\\)\\*"
-                 (display-buffer-in-side-window)
-                 (windowpbr_wan_4_dst_ip_user-height . 0.05)
-                 (side . bottom)
-                 (slot . 0)
-                 (window-parameters
-                  (no-delete-other-windows . nil))))
-
-
-  ;; convenience functions for splitting windows
-    (defun et-split-window-right-and-move-there-dammit ()
-      "Split window right and move to the new window"
-      (interactive)
-      (split-window-right)
-      (windmove-right))
-
-    (defun et-split-window-below-and-move-there-dammit ()
-      "Split window below and move to the new window"
-      (interactive)
-      (split-window-below)
-      (windmove-down)))
-
-
-(use-package hexl
-  :defer t
-  :config
-  (setq hexl-bits 8))
-
-
-(use-package eww
-  :defer t
-  :bind
-  (:map eww-mode-map
-        ("L" . eww-forward-url)
-        ("H" . eww-back-url)
-        ("l" . meow-right)
-        ("h" . meow-left)
-        ("j" . meow-up)
-        ("k" . meow-down)
-        ("x" . meow-line)
-        ("y" . meow-clipboard-save)
-        ("," . meow-inner-of-thing)
-        ("Q" . meow-goto-line))
-  :config
-  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/"))
-
-  (defun eww--rename-buffer-hook-function (name)
-    "Rename the eww buffer to the title of the page"
-    (let ((function-name (make-symbol (concat "eww--rename-buffer-hook-function-" name))))
-    `(defun ,function-name ()
-        (rename-buffer ,name)
-        (remove-hook 'eww-after-render-hook ',function-name)))))
-
-
-(use-package url-cookie
-  :defer t
-  :config
-  (setq url-cookie-file (concat et-emacs-files-dir "url/cookies")))
-
-
-(use-package url-cache
-  :defer t
-  :config
-  (setq url-cache-directory (concat et-emacs-files-dir "url/cache")))
-
-
-(use-package bookmark
-  :defer t
-  :init
-  (setq bookmark-default-file (concat et-emacs-files-dir "emacs_bookmarks")))
-
-
-(use-package server
-  :config
-  (setq server-auth-dir (concat et-emacs-files-dir "server/")))
-
-
-(use-package dired
-  :defer t
-  :bind
-  (:map dired-mode-map
-   ("-" . dired-up-directory))
-  :config
-  ;; prevent for creating new buffers for each folder.
-  (setf dired-kill-when-opening-new-dired-buffer t)
-  ;; easilly copy to other windows
-  (setq dired-dwim-target t))
-
-
-(use-package replace
-  :defer t
-  :config
-  (defun get-buffers-matching-mode (mode)
-    "Returns a list of buffers where their major-mode is equal to MODE"
-    (let ((buffer-mode-matches '()))
-      (dolist (buf (buffer-list))
-        (with-current-buffer buf
-          (when (eq mode major-mode)
-            (push buf buffer-mode-matches))))
-      buffer-mode-matches))
-
-
-  (defun multi-occur-in-this-mode ()
-    "Show all lines matching REGEXP in buffers with this major mode."
-    (interactive)
-    (multi-occur
-     (get-buffers-matching-mode major-mode)
-     (car (occur-read-primary-args)))))
-
-
-(use-package compile
-  :ensure t
-  :bind (:map compilation-mode-map
-              ("w" . meow-mark-word)
-              ("e" . meow-next-word)
-              ("b".  meow-back-word)
-              ("l" . meow-right)
-              ("h" . meow-left)
-              ("y" . platform-copy)
-              ("s" . platform-cut)
-              ("x" . meow-line))
-  :config
-  (setq compilation-scroll-output t)
-  (setq compilation-auto-jump-to-first-error t)
-  ;; How to debug compilation regex alist
-  ;; (setq compilation-debug 't)
-  ;; And then eval this line in the matching error
-  ;; (car (aref  (car (get-text-property (point) 'compilation-debug)) 1))
-  ;; Add them to the dir-locals, for example flutter
-  ;; ((nil . ((eval . (setq compilation-error-regexp-alist
-  ;;                     (thread-last compilation-error-regexp-alist
-  ;;                                  (remove 'guile-line)
-  ;;                                  (remove 'ada)))))))
-  )
-
-
-(use-package xref
-  :defer t
-  :config
-  (setq xref-search-program 'ripgrep))
-
-
-(use-package hippie-exp
-  :defer t
-  :config
-  (setq hippie-expand-try-functions-list
-        (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
-
-
-(use-package recentf
-  :defer t
-  :config
-  (setq recentf-save-file (concat et-emacs-files-dir "recentf")))
-
-
-(use-package savehist
-  :defer t
-  :config
-  (setq savehist-file (concat et-emacs-files-dir "savehist")))
-
-
-(use-package nxml-mode
-  :defer t
-  :requires (sgml-mode hideshow)
-  :bind (:map nxml-mode-map
-              ("C-c h" . hs-toggle-hiding))
-
-  :hook ((nxml-mode . hs-minor-mode))
-  :config
-  (add-to-list 'hs-special-modes-alist
-               '(nxml-mode
-                 "<!--\\|<[^/>]*[^/]>"
-                 "-->\\|</[^/>]*[^/]>"
-
-                 "<!--"
-                 sgml-skip-tag-forward
-                 nil))
-  (setq nxml-slash-auto-complete-flag t))
-
-(defvar et-elisp-dir (concat user-emacs-directory "elisp/"))
-(defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
-
-;; Load enviroment file for this computer based on the hostname
-(load-file (concat et-elisp-dir "env/" (system-name) ".el"))
-(load-file secrets-file)
-
-;; Load the keybidings configuration
-(load-file (concat et-elisp-dir "kbd.el"))
-
-(load-file (concat et-elisp-dir "packages.el"))
-
-;; Load the org customization
-(load-file (concat et-elisp-dir "org-config.el"))
-
-;; Load the language packages
-(load-file (concat et-elisp-dir "lang.el"))
-
-(load-file (concat et-elisp-dir "utils.el"))
-
-;; Load the operating system specific configuration at the end
-;; so we can override any previous configuration
-(when (or (eq system-type `gnu/linux)
-          (eq system-type 'darwin))
-  (load-file (concat et-elisp-dir "unix.el")))
-
-(when (eq system-type 'windows-nt)
-    (load-file (concat et-elisp-dir "dos.el")))
-
-
-(use-package emacs
-  :config
-  (server-start))
-
-;; (load-file (concat et-elisp-dir "appearance.el"))
-
-;; (set-face 'fringe  'nano-face-faded)
-;; (set-face-attribute 'fringe nil
-;;                     :foreground (face-background 'nano-face-subtle)
-;;                     :background (face-background 'default))
+
+;;; Load pre-init.el
+(minimal-emacs-load-user-init "pre-init.el")
+
+;;; package.el
+
+(require 'package)
+
+(when (version< emacs-version "28")
+  (add-to-list 'package-archives
+               '("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+(customize-set-variable 'package-archive-priorities
+                        '(("gnu"    . 99)
+                          ("nongnu" . 80)
+                          ("stable" . 70)
+                          ("melpa"  . 0)))
+
+(when package-enable-at-startup
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents t)))
+
+;;; use-package
+;; Load use-package for package configuration
+
+;; Ensure the 'use-package' package is installed and loaded
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents t)
+  (package-install 'use-package)
+  (eval-when-compile
+    (require 'use-package)))
+
+(eval-when-compile
+  (require 'use-package))
+
+;;; Minibuffer
+;; Allow nested minibuffers
+(setq enable-recursive-minibuffers t)
+
+;; Keep the cursor out of the read-only portions of the.minibuffer
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face
+                  minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;;; Misc
+
+;; switch-to-buffer runs pop-to-buffer-same-window instead
+(setq switch-to-buffer-obey-display-actions t)
+
+(setq show-paren-delay 0.1
+      show-paren-highlight-openparen t
+      show-paren-when-point-inside-paren t
+      show-paren-when-point-in-periphery t)
+
+(setq whitespace-line-column nil)  ; whitespace-mode
+
+;; I reduced the default value of 9 to simplify the font-lock keyword,
+;; aiming to improve performance. This package helps differentiate
+;; nested delimiter pairs, particularly in languages with heavy use of
+;; parentheses.
+(setq rainbow-delimiters-max-face-count 5)
+
+;; Can be activated with `display-line-numbers-mode'
+(setq-default display-line-numbers-width 3)
+(setq-default display-line-numbers-widen t)
+
+(setq comint-prompt-read-only t)
+(setq comint-buffer-maximum-size 2048)
+
+(setq compilation-always-kill t
+      compilation-ask-about-save nil
+      compilation-scroll-output 'first-error)
+
+(setq truncate-string-ellipsis "…")
+;;; Files
+
+;; Disable the warning "X and Y are the same file". Ignoring this warning is
+;; acceptable since it will redirect you to the existing buffer regardless.
+(setq find-file-suppress-same-file-warnings t)
+
+;; Resolve symlinks when opening files, so that any operations are conducted
+;; from the file's true directory (like `find-file').
+(setq find-file-visit-truename t
+      vc-follow-symlinks t)
+
+;; Skip confirmation prompts when creating a new file or buffer
+(setq confirm-nonexistent-file-or-buffer nil)
+
+(setq uniquify-buffer-name-style 'forward)
+
+(setq mouse-yank-at-point t)
+
+;; Prefer vertical splits over horizontal ones
+(setq split-width-threshold 170
+      split-height-threshold nil)
+
+;; The native border "uses" a pixel of the fringe on the rightmost
+;; splits, whereas `window-divider` does not.
+(setq window-divider-default-bottom-width 1
+      window-divider-default-places t
+      window-divider-default-right-width 1)
+
+(add-hook 'after-init-hook #'window-divider-mode)
+
+;;; Backup files
+
+;; Avoid generating backups or lockfiles to prevent creating world-readable
+;; copies of files.
+(setq create-lockfiles nil)
+(setq make-backup-files nil)
+
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name "backup" user-emacs-directory))))
+(setq tramp-backup-directory-alist backup-directory-alist)
+(setq backup-by-copying-when-linked t)
+(setq backup-by-copying t)  ; Backup by copying rather renaming
+(setq delete-old-versions t)  ; Delete excess backup versions silently
+(setq version-control t)  ; Use version numbers for backup files
+(setq kept-new-versions 5)
+(setq kept-old-versions 5)
+(setq vc-make-backup-files nil)  ; Do not backup version controlled files
+
+;;; Auto save
+;; Enable auto-save to safeguard against crashes or data loss. The
+;; `recover-file' or `recover-session' functions can be used to restore
+;; auto-saved data.
+(setq auto-save-default t)
+
+;; Do not auto-disable auto-save after deleting large chunks of
+;; text. The purpose of auto-save is to provide a failsafe, and
+;; disabling it contradicts this objective.
+(setq auto-save-include-big-deletions t)
+
+(setq auto-save-list-file-prefix
+      (expand-file-name "autosave/" user-emacs-directory))
+(setq tramp-auto-save-directory
+      (expand-file-name "tramp-autosave/" user-emacs-directory))
+
+;; Auto save options
+(setq kill-buffer-delete-auto-save-files t)
+
+;;; Auto revert
+;; Auto-revert in Emacs is a feature that automatically updates the
+;; contents of a buffer to reflect changes made to the underlying file
+;; on disk.
+(setq revert-without-query (list ".")  ; Do not prompt
+      auto-revert-stop-on-user-input nil
+      auto-revert-verbose t)
+
+;; Revert other buffers (e.g, Dired)
+(setq global-auto-revert-non-file-buffers t)
+
+;;; recentf
+;; `recentf' is an Emacs package that maintains a list of recently
+;; accessed files, making it easier to reopen files you have worked on
+;; recently.
+(setq recentf-max-saved-items 300) ; default is 20
+(setq recentf-auto-cleanup 'mode)
+
+;;; saveplace
+;; `save-place-mode` enables Emacs to remember the last location within a file
+;; upon reopening. This feature is particularly beneficial for resuming work at
+;; the precise point where you previously left off.
+(setq save-place-file (expand-file-name "saveplace" user-emacs-directory))
+(setq save-place-limit 600)
+
+;;; savehist
+;; `savehist` is an Emacs feature that preserves the minibuffer history between
+;; sessions. It saves the history of inputs in the minibuffer, such as commands,
+;; search strings, and other prompts, to a file. This allows users to retain
+;; their minibuffer history across Emacs restarts.
+(setq history-length 300)
+(setq savehist-save-minibuffer-history t)  ;; Default
+
+;;; Frames and windows
+
+;; Resizing the Emacs frame can be costly when changing the font. Disable this
+;; to improve startup times with fonts larger than the system default.
+(setq frame-resize-pixelwise t)
+
+;; However, do not resize windows pixelwise, as this can cause crashes in some
+;; cases when resizing too many windows at once or rapidly.
+(setq window-resize-pixelwise nil)
+
+(setq resize-mini-windows 'grow-only)
+
+;;; Smooth scrolling
+;; Enables faster scrolling through unfontified regions. This may result in
+;; brief periods of inaccurate syntax highlighting immediately after scrolling,
+;; which should quickly self-correct.
+(setq fast-but-imprecise-scrolling t)
+
+(setq hscroll-margin 2
+      hscroll-step 1
+      ;; Emacs spends excessive time recentering the screen when the cursor
+      ;; moves more than N lines past the window edges (where N is the value of
+      ;; `scroll-conservatively`). This can be particularly slow in larger files
+      ;; during extensive scrolling. If `scroll-conservatively` is set above
+      ;; 100, the window is never automatically recentered. The default value of
+      ;; 0 triggers recentering too aggressively. Setting it to 10 reduces
+      ;; excessive recentering and only recenters the window when scrolling
+      ;; significantly off-screen.
+      scroll-conservatively 10
+      scroll-margin 0
+      scroll-preserve-screen-position t
+      ;; Reduce cursor lag by preventing automatic adjustments to
+      ;; `window-vscroll' for unusually long lines. Setting
+      ;; `auto-window-vscroll' it to nil also resolves the issue of random
+      ;; half-screen jumps during scrolling.
+      auto-window-vscroll nil
+      ;; Mouse
+      mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
+      mouse-wheel-scroll-amount-horizontal 1)
+
+;;; Cursor
+;; The blinking cursor is distracting and interferes with cursor settings in
+;; some minor modes that try to change it buffer-locally (e.g., Treemacs).
+;; Additionally, it can cause freezing, especially on macOS, for users with
+;; customized and colored cursors.
+(blink-cursor-mode -1)
+
+;; Don't blink the paren matching the one at point, it's too distracting.
+(setq blink-matching-paren nil)
+
+;; Don't stretch the cursor to fit wide characters, it is disorienting,
+;; especially for tabs.
+(setq x-stretch-cursor nil)
+
+;;; Annoyances
+
+;; No beeping or blinking
+(setq visible-bell nil)
+(setq ring-bell-function #'ignore)
+
+;;; Indent and formatting
+(setq-default left-fringe-width  8)
+(setq-default right-fringe-width 8)
+
+;; Do not show an arrow at the top/bottomin the fringe and empty lines
+(setq-default indicate-buffer-boundaries nil)
+(setq-default indicate-empty-lines nil)
+
+;; Continue wrapped lines at whitespace rather than breaking in the
+;; middle of a word.
+(setq-default word-wrap t)
+
+;; Disable wrapping by default due to its performance cost.
+(setq-default truncate-lines t)
+
+;; If enabled and `truncate-lines' is disabled, soft wrapping will not occur
+;; when the window is narrower than `truncate-partial-width-windows' characters.
+(setq truncate-partial-width-windows nil)
+
+;; Prefer spaces over tabs. Spaces offer a more consistent default compared to
+;; 8-space tabs. This setting can be adjusted on a per-mode basis as needed.
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+
+(setq-default tab-always-indent t)
+
+;; We often split terminals and editor windows or place them side-by-side,
+;; making use of the additional horizontal space.
+(setq-default fill-column 80)
+
+;; Disable the obsolete practice of end-of-line spacing from the
+;; typewriter era.
+(setq sentence-end-double-space nil)
+
+;; According to the POSIX, a line is defined as "a sequence of zero or
+;; more non-newline characters followed by a terminating newline".
+(setq require-final-newline t)
+
+;; Remove duplicates from the kill ring to reduce clutter
+(setq kill-do-not-save-duplicates t)
+
+;; Ensures that empty lines within the commented region are also commented out.
+;; This prevents unintended visual gaps and maintains a consistent appearance,
+;; ensuring that comments apply uniformly to all lines, including those that are
+;; otherwise empty.
+(setq comment-empty-lines t)
+
+;;; Mode line
+
+;; Setting `display-time-default-load-average' to nil makes Emacs omit the load
+;; average information from the mode line.
+(setq display-time-default-load-average nil)
+
+;; Display the current line and column numbers in the mode line
+(setq line-number-mode t)
+(setq column-number-mode t)
+
+;;; Load post-init.el
+(minimal-emacs-load-user-init "post-init.el")
 
 (provide 'init)
+
 ;;; init.el ends here
