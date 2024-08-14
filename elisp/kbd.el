@@ -1,15 +1,4 @@
-
-(use-package emacs
-  :config
-  (global-set-key (kbd "M-<up>") #'enlarge-window)
-  (global-set-key (kbd "M-<down>") #'shrink-window)
-  (global-set-key (kbd "M-<left>") #'shrink-window-horizontally)
-  (global-set-key (kbd "M-<right>") #'enlarge-window-horizontally)
-  (global-set-key (kbd "<xterm-paste>") #'scroll-up-command)
-  (global-set-key (kbd "C-c r") #'consult-recent-file)
-  (global-set-key (kbd "C-x o")  #'et-other-window)
-  (global-set-key (kbd "C-x C-b") #'ibuffer)
-  (global-set-key (kbd "C-s") #'consult-line))
+;;; kbd.el --- Meow configuration -*- no-byte-compile: t; lexical-binding: t; -*-
 
 (use-package meow
   :straight t

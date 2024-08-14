@@ -1,3 +1,4 @@
+;;; utils.el --- Collections of utilities -*- no-byte-compile: t; lexical-binding: t; -*-
 ;; Hooks for vc-next-action
 (defun et-commit-filename ()
 "File name to add to the header of a git commit."

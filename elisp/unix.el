@@ -1,5 +1,4 @@
-;; -*- lexical-binding: t; -*-
-;; Unix specific configuration
+;;; unix.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
 (use-package emacs
   :config

@@ -1,3 +1,4 @@
+;;; dos.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
 (use-package emacs
   :config

@@ -1,13 +1,7 @@
 ;;; internal-package-config.el --- Internal Package Config -*- no-byte-compile: t; lexical-binding: t; -*-
 
-(use-package eshell
-  :defer t
-  :config
-  (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
-
-
 (use-package grep
-  :ensure t
+  :ensure nil
   :config
   (setq grep-highlight-matches t
         grep-scroll-output t)
@@ -26,6 +20,7 @@
 
 
 (use-package xref
+  :ensure nil
   :defer t
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
@@ -42,6 +37,7 @@
 
 
 (use-package artist
+  :ensure nil
   :defer t
   :bind
   (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
@@ -75,8 +71,8 @@
 
 
 (use-package debugger
+  :ensure nil
   :defer t
-  :config
   :bind
   (:map debugger-mode-map
         ("h" . meow-left)
@@ -88,20 +84,11 @@
         ("q" . debugger-quit)))
 
 
-(use-package eglot
-  :defer t
-  :straight t
-  :config
-  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)
-  (setq eglot-events-buffer-size 0))
-
-
 (use-package project
+  :ensure nil
   :defer t
   :config
-  (setq project-list-file (concat et-emacs-files-dir "projects.el"))
   ;;; add element to project-switch-commands alist
-
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
@@ -114,36 +101,14 @@
   (advice-add 'project-switch-project :after 'project-keep-dir-open))
 
 
-(use-package transient
-  :config
-  (setq transient-levels-file (concat et-emacs-files-dir "transient/levels.el"))
-  (setq transient-values-file (concat et-emacs-files-dir "transient/values.el"))
-  (setq transient-history-file (concat et-emacs-files-dir "transient/history.el")))
-
-
-(use-package tramp
-  :defer t
-  :init
-  (setq et-tramp-cache-directory (concat et-emacs-files-dir "tramp/temp"))
-  (if (file-directory-p et-tramp-cache-directory)
-      (make-directory et-tramp-cache-directory 't))
-  :config
-  (setq tramp-compat-temporary-file-directory et-tramp-cache-directory)
-  (setq tramp-persistency-file-name et-tramp-cache-directory))
-
-
-(use-package saveplace
-  :defer t
-  :config
-  (setq save-place-file (concat et-emacs-files-dir "places")))
-
-
 (use-package window
+  :ensure nil
   :config
-
-  (defvar et-no-display-buffer "no-display")
-
-  (defvar original-display-buffer-alist display-buffer-alist)
+  (defvar et-no-display-buffer "no-display"
+    "Hidden buffer name")
+  
+  (defvar original-display-buffer-alist display-buffer-alist
+    "Save the original value for debugging")
 
   ;; Define common parameters
   (setq display-buffer-base-params
@@ -189,13 +154,13 @@
 
 
   ;; convenience functions for splitting windows
-    (defun et-split-window-right-and-move-there-dammit ()
+    (defun et-split-window-right ()
       "Split window right and move to the new window"
       (interactive)
       (split-window-right)
       (windmove-right))
 
-    (defun et-split-window-below-and-move-there-dammit ()
+    (defun et-split-window-below ()
       "Split window below and move to the new window"
       (interactive)
       (split-window-below)
@@ -203,12 +168,14 @@
 
 
 (use-package hexl
+  :ensure nil
   :defer t
   :config
   (setq hexl-bits 8))
 
 
 (use-package eww
+  :ensure nil
   :defer t
   :bind
   (:map eww-mode-map
@@ -223,8 +190,6 @@
         ("," . meow-inner-of-thing)
         ("Q" . meow-goto-line))
   :config
-  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/"))
-
   (defun eww--rename-buffer-hook-function (name)
     "Rename the eww buffer to the title of the page"
     (let ((function-name (make-symbol (concat "eww--rename-buffer-hook-function-" name))))
@@ -232,31 +197,8 @@
         (rename-buffer ,name)
         (remove-hook 'eww-after-render-hook ',function-name)))))
 
-
-(use-package url-cookie
-  :defer t
-  :config
-  (setq url-cookie-file (concat et-emacs-files-dir "url/cookies")))
-
-
-(use-package url-cache
-  :defer t
-  :config
-  (setq url-cache-directory (concat et-emacs-files-dir "url/cache")))
-
-
-(use-package bookmark
-  :defer t
-  :init
-  (setq bookmark-default-file (concat et-emacs-files-dir "emacs_bookmarks")))
-
-
-(use-package server
-  :config
-  (setq server-auth-dir (concat et-emacs-files-dir "server/")))
-
-
 (use-package dired
+  :ensure nil
   :defer t
   :bind
   (:map dired-mode-map
@@ -269,6 +211,7 @@
 
 
 (use-package replace
+  :ensure nil
   :defer t
   :config
   (defun get-buffers-matching-mode (mode)
@@ -290,7 +233,7 @@
 
 
 (use-package compile
-  :ensure t
+  :ensure nil
   :bind (:map compilation-mode-map
               ("w" . meow-mark-word)
               ("e" . meow-next-word)
@@ -315,32 +258,16 @@
   )
 
 
-(use-package xref
-  :defer t
-  :config
-  (setq xref-search-program 'ripgrep))
-
-
 (use-package hippie-exp
+  :ensure nil
   :defer t
   :config
   (setq hippie-expand-try-functions-list
         (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
 
 
-(use-package recentf
-  :defer t
-  :config
-  (setq recentf-save-file (concat et-emacs-files-dir "recentf")))
-
-
-(use-package savehist
-  :defer t
-  :config
-  (setq savehist-file (concat et-emacs-files-dir "savehist")))
-
-
 (use-package nxml-mode
+  :ensure nil
   :defer t
   :requires (sgml-mode hideshow)
   :bind (:map nxml-mode-map
