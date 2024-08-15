@@ -64,6 +64,16 @@
 
   (defvar et-elisp-dir (concat minimal-emacs-user-directory "elisp/"))
   (defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
+
+  ;; Load enviroment file for this computer based on the hostname
+  (defvar et-machine-config (or (file-directory-p (concat et-elisp-dir "env/" (system-name) ".el"))
+                                (when (eq system-type 'darwin)
+                                  (concat et-elisp-dir
+                                          "env/"
+                                          (string-trim-right (shell-command-to-string "scutil --get ComputerName"))
+                                          ".el"))
+                                (error "Couldn't determin the machine configuration")))
+
   :bind
   (("M-<up>" . enlarge-window)
    ("M-<down>" . shrink-window)
@@ -131,13 +141,13 @@
   (setq native-comp-speed 3))
 
 ;; Load enviroment file for this computer based on the hostname
-(load-file (concat et-elisp-dir "env/" (system-name) ".el"))
+(load-file et-machine-config)
 (load-file secrets-file)
 
 ;; Configure Emacs packages
-(minimal-emacs-load-user-init "internal-package-config.el")
+(load-file (concat et-elisp-dir "internal-package-config.el"))
 ;; Configure External packages
-(minimal-emacs-load-user-init "minimal-packages.el")
+(load-file (concat et-elisp-dir "minimal-packages.el"))
 
 ;; Load the keybidings configuration
 (load-file (concat et-elisp-dir "kbd.el"))
@@ -151,7 +161,7 @@
 (when (eq system-type 'windows-nt)
     (load-file (concat et-elisp-dir "dos.el")))
 
-(laad-file (concat et-elisp-dir "packages.el")
+(load-file (concat et-elisp-dir "packages.el"))
 (load-file (concat et-elisp-dir "lang.el"))
 (load-file (concat et-elisp-dir "utils.el"))
 

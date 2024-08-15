@@ -1,47 +1,11 @@
 ;;; unix.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
-
-(use-package emacs
-  :config
-  (require 'eshell)
-  (setenv "ZIG_ROOT" "~/.local/zig")
-  (setenv "ZIG_SRC" "~/Git/zig")
-  (setenv "PATH" (concat (getenv "PATH") ":" (getenv "ZIG_ROOT")))
-  (setq exec-path (append exec-path (list (expand-file-name "~/.local/zig"))))
-  (eshell/addpath (concat  (getenv "ZIG_ROOT"))))
-
-;; TODO: This should probably live in the wls config and not here
-(use-package project
-  :bind (:map project-prefix-map
-              ("c" . et-project-compile))
-
-  :config
-  (defun et-project-compile (arg)
-  "Run `compile' in the project root."
-  (interactive "P")
-  (if arg
-      (progn
-        (message "Running on Windows directory")
-        (let* ((project-dir (string-replace "~/Git/"  "/mnt/c/Git/" (project-root (project-current t))))
-               (default-directory project-dir)
-               (compilation-buffer-name-function
-                       (or project-compilation-buffer-name-function
-                           compilation-buffer-name-function)))
-          (call-interactively #'compile)))
-      (call-interactively #'project-compile))))
-
-(straight-use-package
- '(eat :type git
-       :host codeberg
-       :repo "akib/emacs-eat"
-       :files ("*.el" ("term" "term/*.el") "*.texi"
-               "*.ti" ("terminfo/e" "terminfo/e/*")
-               ("terminfo/65" "terminfo/65/*")
-               ("integration" "integration/*")
-               (:exclude ".dir-locals.el" "*-tests.el"))))
-
 (use-package eat
+  :defer t
   :hook
   (eshell-load . eat-eshell-mode)
   (eshell-load . eat-eshell-visual-command-mode))
+
+(use-package vterm
+  :defer t)
 
 (provide 'unix)

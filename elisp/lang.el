@@ -68,43 +68,12 @@
 (use-package clang-format+
   :defer t)
 
-(use-package cc-mode
-  :defer t
-  :config
-  (setq delete-trailing-lines nil))
 
 (use-package devdocs
   :defer t
   :straight t
   :config
   (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
-
-(use-package treesit
-  :defer t
-  :config
-  ;; remove .h from the auto-mode-alist
-  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
-  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-mode) auto-mode-alist))
-  (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode)))
-
-(use-package gud
-  :defer t
-  :config
-  (when (not (executable-find "gdb"))
-    (defun gud-setup-lldb ()
-      (gud-def gud-break "b %d%f:%l" "\C-b" "Set breakpoint at current line."))
-    (add-hook 'gdb-mode-hook 'gud-setup-lldb))
-  (setq gdb-many-windows t)
-  (setq gdb-show-main t))
 
 
 (defun et-indent-style()

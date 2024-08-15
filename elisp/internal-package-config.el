@@ -1,116 +1,7 @@
-;;; init.el --- Personal Emacs config -*- lexical-binding: t -*-
-
-;;; Commentary:
-;; My personal init file
-
-;;; Code:
-;; use streight.el bootstrap
-(defvar bootstrap-version)
-
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Packages
-(straight-use-package 'use-package)
-(straight-use-package 'org)
-
-
-(remove-hook 'find-file-hooks 'vc-find-file-hook)
-(remove-hook 'find-file-hooks 'vc-refresh-state)
-
-(setq vc-handled-backends '(Git))
-(when (file-directory-p "C:\\Tools\\Git\\bin")
-    (setq vc-git-program "C:\\Tools\\Git\\bin\\git.exe"))
-
-;; I use straight here because transient used in Emacs is too old
-;; to support the master version of magit
-(use-package transient
-  :straight t
-  :demand t)
-
-;; Load org as early as possible to avoid any incompatibilities
-(use-package org
-  :straight t
-  :demand t)
-
-(use-package emacs
-  :init
-  (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release))
-  (defvar et-system-type (if (eq wsl nil)
-                             system-type
-                           'wsl)
-    "The system type of the current machine.")
-  (defvar et-emacs-files-dir  "~/.emacs_files/"
-    "The directory where all the Emacs packages files are stored.")
-  :config
-
-  ;; install the nano emacs configuration
-  (straight-use-package
-   '(nano :type git :host github :repo "rougier/nano-emacs"))
-  (load-theme 'modus-vivendi t)
-  ;;(require 'nano-layout)
-  (require 'nano-defaults)
-
-
-
-  ;; nano disable popup windows, but I want the
-  (setq pop-up-windows t)
-
-  ;; Set file encoding to linux
-  (prefer-coding-system 'utf-8-unix)
-
-  ;; don't hide the line feed type
-  (setq inhibit-eol-conversion t)
-
-  ;; Hide-show minnor mode for code folding
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
-
-  ;; Use window move
-  (windmove-default-keybindings)
-
-  ;; custom variables
-  (setq custom-file (concat et-emacs-files-dir "custom.el"))
-  (load custom-file 'noerror)
-
-  ;; backups
-  (setq backup-directory-alist `(("." . ,(concat et-emacs-files-dir "backups"))))
-
-  ;; autosave
-  (setq auto-save-list-file-prefix (concat et-emacs-files-dir "autosave/.saves-"))
-
-  ;; session
-  (setq session-save-file (concat et-emacs-files-dir "session/.session"))
-
-  ;; eln files
-  (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
-
-  ;; save windows configuration by default
-  (winner-mode 1)
-
-  ;; miximum compilation speed for elisp
-  (setq native-comp-speed 3)
-
-  ;; print message for garbage collection
-  (setq garbage-collection-messages t))
-
-
-(use-package eshell
-  :defer t
-  :config
-  (setq eshell-directory-name (concat et-emacs-files-dir "eshell/")))
-
+;;; internal-package-config.el --- Internal Package Config -*- no-byte-compile: t; lexical-binding: t; -*-
 
 (use-package grep
-  :ensure t
+  :ensure nil
   :config
   (setq grep-highlight-matches t
         grep-scroll-output t)
@@ -129,6 +20,7 @@
 
 
 (use-package xref
+  :ensure nil
   :defer t
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
@@ -145,6 +37,7 @@
 
 
 (use-package artist
+  :ensure nil
   :defer t
   :bind
   (:map artist-mode-map ("C-c C-a C-o" . 'et-select-artist-operation)
@@ -178,8 +71,8 @@
 
 
 (use-package debugger
+  :ensure nil
   :defer t
-  :config
   :bind
   (:map debugger-mode-map
         ("h" . meow-left)
@@ -191,20 +84,11 @@
         ("q" . debugger-quit)))
 
 
-(use-package eglot
-  :defer t
-  :straight t
-  :config
-  (global-set-key (kbd "C-x C-.") 'eglot-code-actions)
-  (setq eglot-events-buffer-size 0))
-
-
 (use-package project
+  :ensure nil
   :defer t
   :config
-  (setq project-list-file (concat et-emacs-files-dir "projects.el"))
   ;;; add element to project-switch-commands alist
-
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
@@ -217,36 +101,14 @@
   (advice-add 'project-switch-project :after 'project-keep-dir-open))
 
 
-(use-package transient
-  :config
-  (setq transient-levels-file (concat et-emacs-files-dir "transient/levels.el"))
-  (setq transient-values-file (concat et-emacs-files-dir "transient/values.el"))
-  (setq transient-history-file (concat et-emacs-files-dir "transient/history.el")))
-
-
-(use-package tramp
-  :defer t
-  :init
-  (setq et-tramp-cache-directory (concat et-emacs-files-dir "tramp/temp"))
-  (if (file-directory-p et-tramp-cache-directory)
-      (make-directory et-tramp-cache-directory 't))
-  :config
-  (setq tramp-compat-temporary-file-directory et-tramp-cache-directory)
-  (setq tramp-persistency-file-name et-tramp-cache-directory))
-
-
-(use-package saveplace
-  :defer t
-  :config
-  (setq save-place-file (concat et-emacs-files-dir "places")))
-
-
 (use-package window
+  :ensure nil
   :config
+  (defvar et-no-display-buffer "no-display"
+    "Hidden buffer name")
 
-  (defvar et-no-display-buffer "no-display")
-
-  (defvar original-display-buffer-alist display-buffer-alist)
+  (defvar original-display-buffer-alist display-buffer-alist
+    "Save the original value for debugging")
 
   ;; Define common parameters
   (setq display-buffer-base-params
@@ -292,13 +154,13 @@
 
 
   ;; convenience functions for splitting windows
-    (defun et-split-window-right-and-move-there-dammit ()
+    (defun et-split-window-right ()
       "Split window right and move to the new window"
       (interactive)
       (split-window-right)
       (windmove-right))
 
-    (defun et-split-window-below-and-move-there-dammit ()
+    (defun et-split-window-below ()
       "Split window below and move to the new window"
       (interactive)
       (split-window-below)
@@ -306,12 +168,14 @@
 
 
 (use-package hexl
+  :ensure nil
   :defer t
   :config
   (setq hexl-bits 8))
 
 
 (use-package eww
+  :ensure nil
   :defer t
   :bind
   (:map eww-mode-map
@@ -326,8 +190,6 @@
         ("," . meow-inner-of-thing)
         ("Q" . meow-goto-line))
   :config
-  (setq eww-bookmarks-directory (concat et-emacs-files-dir "eww/"))
-
   (defun eww--rename-buffer-hook-function (name)
     "Rename the eww buffer to the title of the page"
     (let ((function-name (make-symbol (concat "eww--rename-buffer-hook-function-" name))))
@@ -335,31 +197,8 @@
         (rename-buffer ,name)
         (remove-hook 'eww-after-render-hook ',function-name)))))
 
-
-(use-package url-cookie
-  :defer t
-  :config
-  (setq url-cookie-file (concat et-emacs-files-dir "url/cookies")))
-
-
-(use-package url-cache
-  :defer t
-  :config
-  (setq url-cache-directory (concat et-emacs-files-dir "url/cache")))
-
-
-(use-package bookmark
-  :defer t
-  :init
-  (setq bookmark-default-file (concat et-emacs-files-dir "emacs_bookmarks")))
-
-
-(use-package server
-  :config
-  (setq server-auth-dir (concat et-emacs-files-dir "server/")))
-
-
 (use-package dired
+  :ensure nil
   :defer t
   :bind
   (:map dired-mode-map
@@ -372,6 +211,7 @@
 
 
 (use-package replace
+  :ensure nil
   :defer t
   :config
   (defun get-buffers-matching-mode (mode)
@@ -393,7 +233,7 @@
 
 
 (use-package compile
-  :ensure t
+  :ensure nil
   :bind (:map compilation-mode-map
               ("w" . meow-mark-word)
               ("e" . meow-next-word)
@@ -418,32 +258,16 @@
   )
 
 
-(use-package xref
-  :defer t
-  :config
-  (setq xref-search-program 'ripgrep))
-
-
 (use-package hippie-exp
+  :ensure nil
   :defer t
   :config
   (setq hippie-expand-try-functions-list
         (remove 'try-expand-line (remove 'try-expand-list hippie-expand-try-functions-list))))
 
 
-(use-package recentf
-  :defer t
-  :config
-  (setq recentf-save-file (concat et-emacs-files-dir "recentf")))
-
-
-(use-package savehist
-  :defer t
-  :config
-  (setq savehist-file (concat et-emacs-files-dir "savehist")))
-
-
 (use-package nxml-mode
+  :ensure nil
   :defer t
   :requires (sgml-mode hideshow)
   :bind (:map nxml-mode-map
@@ -461,46 +285,95 @@
                  nil))
   (setq nxml-slash-auto-complete-flag t))
 
-(defvar et-elisp-dir (concat user-emacs-directory "elisp/"))
-(defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
 
-;; Load enviroment file for this computer based on the hostname
-(load-file (concat et-elisp-dir "env/" (system-name) ".el"))
-(load-file secrets-file)
-
-;; Load the keybidings configuration
-(load-file (concat et-elisp-dir "kbd.el"))
-
-(load-file (concat et-elisp-dir "packages.el"))
-
-;; Load the org customization
-(load-file (concat et-elisp-dir "org-config.el"))
-
-;; Load the language packages
-(load-file (concat et-elisp-dir "lang.el"))
-
-(load-file (concat et-elisp-dir "utils.el"))
-
-;; Load the operating system specific configuration at the end
-;; so we can override any previous configuration
-(when (or (eq system-type `gnu/linux)
-          (eq system-type 'darwin))
-  (load-file (concat et-elisp-dir "unix.el")))
-
-(when (eq system-type 'windows-nt)
-    (load-file (concat et-elisp-dir "dos.el")))
+(use-package edebug
+  :defer t
+  :bind
+  (:map edebug-mode-map
+        ("<f10>" . edebug-step-mode)
+        ("<f11>" .  edebug-step-in)))
 
 
-(use-package emacs
+(use-package c-ts-mode
+  :defer t
   :config
-  (server-start))
 
-;; (load-file (concat et-elisp-dir "appearance.el"))
+  (dir-locals-set-class-variables 'et-dci-project
+                                  '((c++-ts-mode . ((fill-column . 50)))))
 
-;; (set-face 'fringe  'nano-face-faded)
-;; (set-face-attribute 'fringe nil
-;;                     :foreground (face-background 'nano-face-subtle)
-;;                     :background (face-background 'default))
+  (dir-locals-set-directory-class
+   (concat et-git-directory "dci_windows") 'et-dci-project)
 
-(provide 'init)
-;;; init.el ends here
+  (setq c-ts-mode-indent-offset 4)
+  (setq-local indent-tabs-mode nil)
+
+  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
+
+  ;; limit xref search to only soruce files
+  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
+
+  (setq c-ts-mode-indent-style #'et-indent-style)
+
+  (defun et-update-tags (directory)
+    (interactive
+     (list (read-string "Enter directory name: " (if (project-current)
+                                                     (project-root (project-current))
+                                                     default-directory))))
+    (let ((default-directory directory)
+          (tag-file "TAGS"))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx|mm)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
+
+
+(use-package eglot
+  :ensure nil
+  :defer t
+  :commands (eglot
+             eglot-rename
+             eglot-ensure
+             eglot-rename
+             eglot-format-buffer)
+
+  :custom
+  (eglot-report-progress nil)  ; Prevent minibuffer spam
+
+  :config
+  ;; Optimizations
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq jsonrpc-event-hook nil))
+
+
+(use-package treesit
+  :ensure nil
+  :defer t
+  :config
+  ;; remove .h from the auto-mode-alist
+  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
+  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-mode) auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode)))
+
+(use-package gud
+  :ensure nil
+  :defer t
+  :config
+  (when (not (executable-find "gdb"))
+    (defun gud-setup-lldb ()
+      (gud-def gud-break "b %d%f:%l" "\C-b" "Set breakpoint at current line."))
+    (add-hook 'gdb-mode-hook 'gud-setup-lldb))
+  (setq gdb-many-windows t)
+  (setq gdb-show-main t))
+
+(use-package cc-mode
+  :defer t
+  :config
+  (setq delete-trailing-lines nil))
+
+(provide 'internal-package-config)
