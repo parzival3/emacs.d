@@ -1,7 +1,4 @@
-;; -*- lexical-binding: t -*-
-(require 'json)
-(require 'project)
-
+;;; gitea-utils.el --- Gitea Utils -*- no-byte-compile: t; lexical-binding: t; -*-
 (defcustom gitea-url "https://git.haento.info"
   "The url of the gitea server")
 

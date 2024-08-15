@@ -178,3 +178,5 @@
      '("<escape>" . ignore)))
   (meow-setup)
   (meow-global-mode 1))
+
+(provide 'kbd)

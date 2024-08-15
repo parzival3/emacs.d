@@ -1,25 +1,16 @@
+;;; lang.el --- Programming modes -*- no-byte-compile: t; lexical-binding: t; -*-
 (use-package flyspell
   :defer t
-  :straight t
   :config
   (setq ispell-program-name "aspell")
   :hook
   ((org-mode) . flyspell-mode))
 
 (use-package clojure-mode
-  :defer t
-  :straight t)
+  :defer t)
 
 (use-package cider
-  :defer t
-  :straight t)
-
-(use-package carp
-  :straight (el-patch :type git :host github :repo "carp-lang/carp-emacs")
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.carp\\'" . carp-mode)))
-
+  :defer t)
 
 (eval-and-compile (setq dart-ts-mode-path "~/.emacs.d/straight/repos/dart-ts-mode"))
 
@@ -36,29 +27,21 @@
     ;; make sure eglot doesn't talk to fast to the dart server
     (setq eglot-sync-connect 2)
     (setq eglot-events-buffer-config '(:size 0 :format nil))
-    (setq eldoc-echo-area-prefer-doc-buffer t)
-    ))
+    (setq eldoc-echo-area-prefer-doc-buffer t)))
 
 (use-package flutter
   :defer t
-  :straight t
   :config
   (add-hook #'dart-mode-hook #'eglot-ensure)
   (setq flutter-buffer-name "*Flutter-Runner*"))
 
 (use-package rust-mode
-  :defer t
-  :straight t)
+  :defer t)
 
 (use-package zig-mode
-  :straight t
   :defer t
-  :hook ((zig-mode . eglot-ensure)
-         (gptel-mode . zig-add-gptel-directive))
+  :hook ((zig-mode . eglot-ensure))
   :config
-
-  (defun zig-add-gptel-directive ()
-    (setq gptel-directives (add-to-list 'gptel-directives '(zig . "You are a large language model and a careful zig programmer. Provide code and explanations about my zig code and suggests enhanced error handling and zig idioms. Use the zig 0.11 standard."))))
 
   (defvar zig-projects nil "List of zig projects to search in")
 
@@ -83,17 +66,7 @@
             (eww "https://ziglang.org/documentation/master/" t))))))
 
 (use-package clang-format+
-  :defer t
-  :straight t
-  :config
-  (defun dired-clang-format-thing ()
-    (interactive)
-    (let ((list-of-files (dired-get-marked-files)))
-      (while list-of-files
-        (let ((current-file (pop list-of-files)))
-          (if (file-name-directory current-file)
-              (dired-run-shell-command (format "find %s -iname *.cpp -o -iname *.h | xargs clang-format -i" (file-name-as-directory current-file)))
-            (dired-run-shell-command (format "clang-format -i %s" current-file))))))))
+  :defer t)
 
 (use-package cc-mode
   :defer t
@@ -154,35 +127,6 @@
     ;; append to bsd style
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
-(use-package c-ts-mode
-  :defer t
-  :config
-
-  (dir-locals-set-class-variables 'et-dci-project
-                                  '((c++-ts-mode . ((fill-column . 50)))))
-
-  (dir-locals-set-directory-class
-   (concat et-git-directory "dci_windows") 'et-dci-project)
-
-  (setq c-ts-mode-indent-offset 4)
-  (setq-local indent-tabs-mode nil)
-
-  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
-
-  ;; limit xref search to only soruce files
-  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
-
-  (setq c-ts-mode-indent-style #'et-indent-style)
-
-  (defun et-update-tags (directory)
-    (interactive
-     (list (read-string "Enter directory name: " (if (project-current)
-                                                     (project-root (project-current))
-                                                     default-directory))))
-    (let ((default-directory directory)
-          (tag-file "TAGS"))
-      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx|mm)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
-
 
 (use-package copilot
   :defer t
@@ -216,13 +160,6 @@ tab-indent."
   (if (bound-and-true-p copilot-mode)
       (copilot-accept-completion-by-word)
       (indent-for-tab-command))))
-
-
-(use-package powershell
-  :straight t
-  :defer t
-  :config
-  (define-key powershell-mode-map (kbd "M-'") #'powershell-quote-selection 'remove))
 
 
 (use-package python
@@ -272,15 +209,6 @@ tab-indent."
   :straight t)
 
 
-(use-package edebug
-  :defer t
-  :bind
-  (:map edebug-mode-map
-        ("<f10>" . #'edebug-step-mode)
-        ("<f11>" . #'edebug-step-in)
-        ))
-
-
 (defvar et-format-functions-alist
   '((python-mode blacken-buffer blacken-region)
     (js-mode prettier-js prettier-js-region)
@@ -307,3 +235,5 @@ If START and END are provided, format that region."
       (if buffer-formatter
           (funcall buffer-formatter)
         (indent-region (point-min) (point-max))))))
+
+(provide 'lang)

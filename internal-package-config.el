@@ -106,7 +106,7 @@
   :config
   (defvar et-no-display-buffer "no-display"
     "Hidden buffer name")
-  
+
   (defvar original-display-buffer-alist display-buffer-alist
     "Save the original value for debugging")
 
@@ -284,3 +284,61 @@
                  sgml-skip-tag-forward
                  nil))
   (setq nxml-slash-auto-complete-flag t))
+
+
+(use-package edebug
+  :defer t
+  :bind
+  (:map edebug-mode-map
+        ("<f10>" . edebug-step-mode)
+        ("<f11>" .  edebug-step-in)))
+
+
+(use-package c-ts-mode
+  :defer t
+  :config
+
+  (dir-locals-set-class-variables 'et-dci-project
+                                  '((c++-ts-mode . ((fill-column . 50)))))
+
+  (dir-locals-set-directory-class
+   (concat et-git-directory "dci_windows") 'et-dci-project)
+
+  (setq c-ts-mode-indent-offset 4)
+  (setq-local indent-tabs-mode nil)
+
+  (setq treesit--indent-verbose t) ;; uncomment to debug indentation
+
+  ;; limit xref search to only soruce files
+  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py,js}" "--type" "source"))
+
+  (setq c-ts-mode-indent-style #'et-indent-style)
+
+  (defun et-update-tags (directory)
+    (interactive
+     (list (read-string "Enter directory name: " (if (project-current)
+                                                     (project-root (project-current))
+                                                     default-directory))))
+    (let ((default-directory directory)
+          (tag-file "TAGS"))
+      (shell-command (concat "rm -rf TAGS; fd \".(cpp|h|c|cxx|hxx|mm)$\" -X ctags -e -a -f"  (expand-file-name tag-file))))))
+
+
+(use-package eglot
+  :ensure nil
+  :defer t
+  :commands (eglot
+             eglot-rename
+             eglot-ensure
+             eglot-rename
+             eglot-format-buffer)
+
+  :custom
+  (eglot-report-progress nil)  ; Prevent minibuffer spam
+
+  :config
+  ;; Optimizations
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq jsonrpc-event-hook nil))
+
+(provide 'internal-package-config)

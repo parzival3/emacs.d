@@ -1,3 +1,5 @@
+;;; org-config.el --- Org Mode config -*- no-byte-compile: t; lexical-binding: t; -*-
+
 (use-package org-capture
   :defer t
   :config
@@ -25,7 +27,6 @@
 
 (use-package org-roam
   :defer t
-  :straight t
   :init
   (setq org-roam-db-location (concat et-emacs-files-dir "org-roam.db"))
   (setq org-roam-directory (concat et-git-directory "notes/org-roam"))
@@ -170,3 +171,5 @@
     (warn "Mutagen is not installed")))
 
 (et-org-start-mutagen)
+
+(provide 'org-config)

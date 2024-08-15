@@ -55,7 +55,7 @@
   :init
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release)
     "The only way to easilly distinguish if we are running on WSL or Linux")
-  
+
   (defvar et-system-type (or wsl system-type)
     "The system type of the current machine.")
 
@@ -85,7 +85,7 @@
    ;; savehist is an Emacs feature that preserves the minibuffer history between
    ;; sessions. It saves the history of inputs in the minibuffer, such as commands,
    ;; search strings, and other prompts, to a file. This allows users to retain
-   ;; their minibuffer history across Emacs restarts.   
+   ;; their minibuffer history across Emacs restarts.
    (after-init . savehist-mode)
    ;; save-place-mode enables Emacs to remember the last location within a file
    ;; upon reopening. This feature is particularly beneficial for resuming work at
@@ -151,6 +151,8 @@
 (when (eq system-type 'windows-nt)
     (load-file (concat et-elisp-dir "dos.el")))
 
+(laad-file (concat et-elisp-dir "packages.el")
+(load-file (concat et-elisp-dir "lang.el"))
 (load-file (concat et-elisp-dir "utils.el"))
 
 (server-start)
