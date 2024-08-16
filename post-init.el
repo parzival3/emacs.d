@@ -66,13 +66,22 @@
   (defvar secrets-file (concat et-elisp-dir "env/secrets.el"))
 
   ;; Load enviroment file for this computer based on the hostname
-  (defvar et-machine-config (or (file-directory-p (concat et-elisp-dir "env/" (system-name) ".el"))
-                                (when (eq system-type 'darwin)
-                                  (concat et-elisp-dir
-                                          "env/"
-                                          (string-trim-right (shell-command-to-string "scutil --get ComputerName"))
-                                          ".el"))
-                                (error "Couldn't determin the machine configuration")))
+  (defvar et-machine-config (or
+                             ;; Normally I store the computer specific config based on the hostname
+                             (when-let* ((hostname-config (concat et-elisp-dir "env/" (system-name) ".el"))
+                                        (file-exists? (file-exists-p hostname-config)))
+                               hostname-config)
+                             ;; Check for computer name on macos since at work hostname changes based on the last IP on
+                             ;; on the network
+                             (when-let* ((macos? (eq system-type 'darwin))
+                                         (computer-name-config
+                                          (concat et-elisp-dir
+                                                  "env/"
+                                                  (string-trim-right (shell-command-to-string "scutil --get ComputerName"))
+                                                  ".el"))
+                                         (file-exists? (file-exists-p computer-name-config)))
+                               computer-name-config)
+                             (error "Couldn't determin the machine configuration")))
 
   :bind
   (("M-<up>" . enlarge-window)
@@ -157,6 +166,9 @@
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
   (load-file (concat et-elisp-dir "unix.el")))
+
+(when (eq system-type 'darwin)
+  (load-file (concat et-elisp-dir "macos.el")))
 
 (when (eq system-type 'windows-nt)
     (load-file (concat et-elisp-dir "dos.el")))
