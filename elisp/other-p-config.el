@@ -2,33 +2,6 @@
 (use-package wgrep
   :defer t)
 
-;; Magit
-(use-package magit
-  :demand t
-  :init
-  (defun magit-commit-fast (commit-message)
-    (interactive "commit message:")
-    (let ((magit-commit-ask-to-stage t)
-          (magit-commit-show-diff nil))
-      (magit-git "commit" "--all" "-m" commit-message)))
-
-  (defun et-file-commit-message ()
-    (if-let ((files (magit-staged-files))
-             (file-name (abbreviate-file-name (file-name-sans-extension (car files))))
-             (final-file-name (mapconcat #'identity
-                                         (cl-remove-duplicates (split-string file-name)
-                                                               :test #'string-equal) ":")))
-        (insert (concat final-file-name ": "))
-      (error "No files staged")))
-  :bind
-  (("C-x g" . magit-status)
-   (:map magit-mode-map
-         ("D" . magit-discard)))
-
-  :hook
-  (git-commit-setup . et-file-commit-message))
-
-
 (use-package browse-at-remote
   :defer t
   :bind
@@ -52,7 +25,6 @@
 
   (advice-add 'browse-at-remote--get-url-from-remote :around #'et-fix-http-protocol-for-browse-at-remote))
 
-
 (use-package fd-dired
   :defer t
   :config
@@ -70,7 +42,7 @@
   (:map dired-mode-map
         ("C-x C-d" . fd-dired-simple)))
 
-
+;; TODO: use the `:command` keyword to autoload my functions, and define a custom macro for this functions
 (use-package string-inflection
   :defer t
   :config

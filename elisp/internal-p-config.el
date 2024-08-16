@@ -376,4 +376,11 @@
   :config
   (setq delete-trailing-lines nil))
 
+
+(use-package vc
+  :ensure nil
+  :defer t
+  :init
+  (advice-add 'vc-next-action :around #'et-vc-log-advice))
+
 (provide 'internal-package-config)

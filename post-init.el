@@ -90,7 +90,8 @@
    ("M-<right>" . enlarge-window-horizontally)
    ("<xterm-paste>" . scroll-up-command)
    ("C-x o" . et-other-window)
-   ("C-x C-b" . ibuffer))
+   ("C-x C-b" . ibuffer)
+   ("<f13>" . et-split-compile))
   :hook
   (
    ;; Auto-revert in Emacs is a feature that automatically updates the
@@ -109,7 +110,11 @@
    ;; save-place-mode enables Emacs to remember the last location within a file
    ;; upon reopening. This feature is particularly beneficial for resuming work at
    ;; the precise point where you previously left off.
-   ('after-init . save-place-mode))
+   ('after-init . save-place-mode)
+   ;; proper trimming of white spaces when the encoding of the file is dos
+   ('before-save . et-trim-whitespace-based-on-encoding)
+  ;; Hide-show minnor mode for code folding
+   ('prog-mode . hs-minor-mode))
   :config
   ;; Set default theme
   (load-theme 'modus-vivendi t)
@@ -130,20 +135,11 @@
 
   ;; don't hide the line feed type
   (setq inhibit-eol-conversion t)
-  ;; Hide-show minnor mode for code folding
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
+
   ;; I want pop windows
   (setq pop-up-windows t)
   ;; Use window move
   (windmove-default-keybindings)
-  ;; backups
-  (setq backup-directory-alist `(("." . ,(concat et-emacs-files-dir "backups"))))
-  ;; autosave
-  (setq auto-save-list-file-prefix (concat et-emacs-files-dir "autosave/.saves-"))
-  ;; session
-  (setq session-save-file (concat et-emacs-files-dir "session/.session"))
-  ;; eln files
-  (setq eln-cache-dir (concat et-emacs-files-dir "eln-cache"))
   ;; save windows configuration by default
   (winner-mode 1)
   ;; miximum compilation speed for elisp
@@ -154,28 +150,35 @@
 (load-file secrets-file)
 
 ;; Configure Emacs packages
-(load-file (concat et-elisp-dir "internal-package-config.el"))
+(load-file (concat et-elisp-dir "internal-p-config.el"))
 ;; Configure External packages
-(load-file (concat et-elisp-dir "minimal-packages.el"))
+(load-file (concat et-elisp-dir "minimal-p-config.el"))
 
 ;; Load the keybidings configuration
-(load-file (concat et-elisp-dir "kbd.el"))
+(load-file (concat et-elisp-dir "kbd-p-config.el"))
 
 ;; Load the operating system specific configuration at the end
 ;; so we can override any previous configuration
 (when (or (eq system-type `gnu/linux)
           (eq system-type 'darwin))
-  (load-file (concat et-elisp-dir "unix.el")))
+  (load-file (concat et-elisp-dir "os/unix.el")))
 
 (when (eq system-type 'darwin)
-  (load-file (concat et-elisp-dir "macos.el")))
+  (load-file (concat et-elisp-dir "os/macos.el")))
 
 (when (eq system-type 'windows-nt)
-    (load-file (concat et-elisp-dir "dos.el")))
+    (load-file (concat et-elisp-dir "os/dos.el")))
 
-(load-file (concat et-elisp-dir "packages.el"))
-(load-file (concat et-elisp-dir "lang.el"))
-(load-file (concat et-elisp-dir "utils.el"))
+(load-file (concat et-elisp-dir "other-p-config.el"))
+(load-file (concat et-elisp-dir "lang-p-config.el"))
+
+(eval-and-compile
+  (defun utils-site-load-path ()
+    (directory-files (concat et-elisp-dir "/utils") t "el")))
+
+(use-package utils
+  :defer t
+  :load-path (lambda () (utils-site-load-path)))
 
 (server-start)
 (provide 'post-init)

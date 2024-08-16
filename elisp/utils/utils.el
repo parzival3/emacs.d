@@ -1,4 +1,5 @@
-;;; utils.el --- Collections of utilities -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; utils.el --- Collections of utilities -*- lexical-binding: t; -*-
+
 ;; Hooks for vc-next-action
 (defun et-commit-filename ()
 "File name to add to the header of a git commit."
@@ -29,14 +30,13 @@ of 'vc-next-action'."
     (apply orig-fun args)
     (et-insert-preamble preamble)))
 
-;; Advicing vc-next-action
-(advice-add 'vc-next-action :around #'et-vc-log-advice)
-
+;;;###autoload
 (defun et-open-config ()
   "Open this configuration."
   (interactive)
   (find-file (concat user-emacs-directory "init.el")))
 
+;;;###autoload
 (defun et-dos2unix ()
   "Convert a DOS formatted text buffer to UNIX format."
   (interactive)
@@ -47,6 +47,7 @@ of 'vc-next-action'."
     (format-replace-strings '(("\0" . ""))))
   (set-buffer-file-coding-system 'undecided-unix nil))
 
+;;;###autoload
 (defun et-unix2dos ()
   "Convert a UNIX formatted text buffer to DOS format."
   (interactive)
@@ -56,6 +57,7 @@ of 'vc-next-action'."
     (while (re-search-forward "\n" nil t)
       (replace-match "\r\n"))))
 
+;;;###autoload
 (defun et-trim-whitespace-based-on-encoding ()
   "Trim trailing whitespace based on the buffer's encoding."
   (interactive)
@@ -69,8 +71,7 @@ of 'vc-next-action'."
       (if (string-match "unix" coding-system)
         (delete-trailing-whitespace)))))
 
-(add-hook 'before-save-hook 'et-trim-whitespace-based-on-encoding)
-
+;;;###autoload
 (defun set-file-coding-if-crlf ()
   "Check for ^M characters (Windows line endings) in the current buffer.
    If found, set the file's encoding to utf-8-dos."
@@ -81,6 +82,7 @@ of 'vc-next-action'."
       (set-buffer-file-coding-system 'utf-8-dos)
       (message "File encoding set to utf-8-dos due to Windows line endings (^M)."))))
 
+;;;###autoload
 (defun et-make-unix-dir (dir)
   "Find all non hidden files in DIR and convert their line ending into unix."
   (interactive)
@@ -103,6 +105,7 @@ of 'vc-next-action'."
 (put 'project-run-cmd 'safe-local-variable 'string-or-null-p)
 (put 'project-test-cmd 'safe-local-variable 'string-or-null-p)
 
+;;;###autoload
 (defun et-project-run-tests ()
   "Run test in the current project."
   (interactive)
@@ -111,6 +114,7 @@ of 'vc-next-action'."
                             compile-command)))
     (call-interactively #'compile)))
 
+;;;###autoload
 (defun et-project-run ()
   "Run test in the current project."
   (interactive)
@@ -120,10 +124,12 @@ of 'vc-next-action'."
       (minibuffer-with-setup-hook #'prompt-text
           (call-interactively #'project-async-shell-command)))))
 
+;;;###autoload
 (defun et-reload-init-file ()
   (interactive)
   (load-file user-init-file))
 
+;;;###autoload
 (defun et-search-for-word-in-directory (dir-to-search)
   "Search for current word inside the DIR-TO-SEARCH.
 If there is no selected word, simply start an empty search."
@@ -132,6 +138,7 @@ If there is no selected word, simply start an empty search."
                      (buffer-substring (region-beginning) (region-end)) "")))
     (consult-grep dir-to-search string-to-search)))
 
+;;;###autoload
 (defun et-find-file ()
   (interactive)
   ;; Project current check if we are inside a project otherwise uses the normal find
@@ -139,6 +146,7 @@ If there is no selected word, simply start an empty search."
     (project-find-file)
     (call-interactively 'find-file)))
 
+;;;###autoload
 (defun file-metadata ()
   (interactive)
     (let* ((fname (if (eq major-mode 'dired-mode)
@@ -159,6 +167,7 @@ If there is no selected word, simply start an empty search."
   Mode: %s"
      fname access mod change size mode)))
 
+;;;###autoload
 (defun et-other-window ()
   "Switch to the next window in a cyclic manner, including side windows."
   (interactive)
@@ -173,6 +182,7 @@ If there is no selected word, simply start an empty search."
                          (car windows)
                        (next-window)))))))
 
+;;;###autoload
 (defun et-set-msdos-file-type ()
   "Set the file type as MSDOS (CRLF line endings)."
   (interactive)
@@ -182,7 +192,7 @@ If there is no selected word, simply start an empty search."
 
 (load-file (concat et-elisp-dir "gitea-utils.el"))
 
-
+;;;###autoload
 (defun et-reset-custom-variable (variable)
   "Reset the VARIABLE to its default value."
   (interactive
@@ -204,7 +214,6 @@ If there is no selected word, simply start an empty search."
     (let ((default-directory target-directory))
       (shell-command (format "tar -xf %s" download-file)))))
 
-
 (defmacro define-search-function (name url)
   "Define a search function NAME that searches URL for the selected term or the term under the cursor."
   `(defun ,(intern (concat "search-in-" (symbol-name name))) (&optional term)
@@ -219,10 +228,12 @@ If there is no selected word, simply start an empty search."
                      (user-error "No term found at point or selected"))))
        (browse-url (concat ,url query)))))
 
+;;;###autoload (autoload 'search-in-msdn "utils")
 (define-search-function msdn "https://learn.microsoft.com/en-us/search/?category=Documentation&terms=")
+;;;###autoload (autoload 'search-in-source-graph "utils")
 (define-search-function source-graph "https://sourcegraph.com/search?q=")
 
-
+;;;###autoload
 (defun et-decimal-to-hex-signed-16bit (decimal-number)
   "Convert a negative decimal number to its 16-bit signed hexadecimal representation and display it."
   (interactive "nEnter a decimal number: ")
@@ -233,20 +244,19 @@ If there is no selected word, simply start an empty search."
       (message "Hexadecimal representation: %s" hex-representation)
       hex-representation)))
 
+;;;###autoload
 (defun et-print-bits (number)
   "Print the binary representation of NUMBER."
   (interactive "nEnter a number: ")
   (message "Binary representation: %s" (math-format-binary number)))
 
-
+;;;###autoload
 (defun et-count-lines-region (start end)
   "Count the number of lines in the selected region."
   (interactive "r")
   (message "Number of lines in region: %d" (count-lines start end)))
 
-
-(global-set-key (kbd "<f13>") 'et-split-compile)
-
+;;;###autoload
 (defun search-for-word-in-buffer (word)
   "Search for word in the current buffer in reverse order and save the line containing the word."
 (interactive "sSearch for word: ")
@@ -261,7 +271,7 @@ If there is no selected word, simply start an empty search."
       (message "Found: %s" line)
     (message "Not found"))))
 
-
+;;;###autoload
 (defun et-split-compile (command)
   "Split the current buffer and run an Eshell command in the new buffer."
   (interactive
@@ -291,7 +301,7 @@ If there is no selected word, simply start an empty search."
                       (insert run-command)
                       (eshell-send-input)))))
 
-
+;;;###autoload
 (defun et-add-directory-to-env (directory &optional error-message)
   (interactive)
   (if (not (file-directory-p directory))
@@ -301,4 +311,6 @@ If there is no selected word, simply start an empty search."
     (let ((string-path (mapconcat #'identity exec-path path-separator)))
       (eshell-set-path string-path)
       (setenv "PATH" string-path))))
+
 (provide 'utils)
+;; utils.el ends here

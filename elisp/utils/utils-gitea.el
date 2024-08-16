@@ -1,4 +1,4 @@
-;;; gitea-utils.el --- Gitea Utils -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; utils-gitea.el --- Gitea Utils -*- lexical-binding: t; -*-
 (defcustom gitea-url "https://git.haento.info"
   "The url of the gitea server")
 
@@ -11,6 +11,7 @@
 (defun gitea-get-ssh-url (repo-name)
     (concat "git@git.haento.info:" gitea-user "/" repo-name ".git"))
 
+;;;###autoload
 (defun gitea-api-create-new-repo (repo-name default-branch auto-init &optional callback)
     (interactive "sEnter the repository name: \nsDefault branch: \nSAuto Init: ")
     (unless (project-current t)
@@ -59,6 +60,7 @@
                   ))
         (gitea-api-create-new-repo repo-name branch-name nil callback)))
 
+;;;###autoload
 (defun gitea-mirror-repo (repo-name)
     (interactive (list (read-string "Enter repository name: " (project-name (project-current t)))))
     (unless (project-current t)
@@ -70,3 +72,4 @@
             (t (gitea-create-new-repo repo-name)))))
 
 (provide 'gitea)
+;;; utils-gitea.el ends here
