@@ -276,6 +276,7 @@
   :hook ((nxml-mode . hs-minor-mode))
   :config
   (add-to-list 'hs-special-modes-alist
+
                '(nxml-mode
                  "<!--\\|<[^/>]*[^/]>"
                  "-->\\|</[^/>]*[^/]>"

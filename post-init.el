@@ -89,9 +89,7 @@
    ("M-<left>" . shrink-window-horizontally)
    ("M-<right>" . enlarge-window-horizontally)
    ("<xterm-paste>" . scroll-up-command)
-   ("C-x o" . et-other-window)
-   ("C-x C-b" . ibuffer)
-   ("<f13>" . et-split-compile))
+   ("C-x C-b" . ibuffer))
   :hook
   (
    ;; Auto-revert in Emacs is a feature that automatically updates the
@@ -113,7 +111,7 @@
    ('after-init . save-place-mode)
    ;; proper trimming of white spaces when the encoding of the file is dos
    ('before-save . et-trim-whitespace-based-on-encoding)
-  ;; Hide-show minnor mode for code folding
+   ;; Hide-show minnor mode for code folding
    ('prog-mode . hs-minor-mode))
   :config
   ;; Set default theme
@@ -173,12 +171,22 @@
 (load-file (concat et-elisp-dir "lang-p-config.el"))
 
 (eval-and-compile
-  (defun utils-site-load-path ()
+  (defvar utils-package-files
     (directory-files (concat et-elisp-dir "/utils") t "el")))
 
 (use-package utils
+  :preface
+  (unless (seq-contains-p utils-package-files ".*autoloads.el$"
+                          (lambda (elem regex) (string-match regex elem nil t)))
+    (when-let ((package-directory (file-name-directory (car utils-package-files))))
+      (loaddefs-generate package-directory
+                         (concat package-directory "/utils-autoloads.el")
+                         nil
+                         "(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))"
+                         )))
   :defer t
-  :load-path (lambda () (utils-site-load-path)))
-
-(server-start)
-(provide 'post-init)
+  :load-path utils-package-files
+  :commands (et-other-window)
+  :bind
+  (("C-x o" . et-other-window)
+   ("<f13>" . et-split-compile)))
