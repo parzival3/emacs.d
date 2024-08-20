@@ -2,13 +2,11 @@
 
 (use-package emacs
   :config
-  (require 'eshell)
   ;; configuring some environment variables
   (setenv "PATH" (concat "C:\\Tools\\LLVM\\bin;" (getenv "PATH")))
   (setenv "PATH" (concat "C:\\Tools\\Git\\bin;" (getenv "PATH")))
   (add-to-list 'exec-path "C:\\Tools\\LLVM\\bin")
 
-  ;; (setenv "PYTHONPATH" "C:/Git/dci_windows/lib/
   (setenv "PLATFORM" "x64")
   (setenv "CONFIGURATION" "Debug")
   (setenv "EposPythonRoot" "c:/Tools/Python3.9/")
@@ -17,32 +15,31 @@
   (setenv "PATH" (concat (getenv "EposPythonRoot") "Scripts;" (getenv "PATH")))
   (add-to-list 'exec-path (getenv "EposPythonRoot"))
   (add-to-list 'exec-path (concat (getenv "EposPythonRoot") "Scripts"))
-  (eshell/addpath (concat (getenv "EposPythonRoot") "Scripts"))
-  (eshell/addpath (getenv "EposPythonRoot"))
+
 
   ;; set zig folder
   (setenv "ZIG_ROOT" "C:\\Tools\\zig\\")
   (add-to-list 'exec-path (getenv "ZIG_ROOT"))
   (setenv "PATH" (concat  (getenv "ZIG_ROOT") ";" (getenv "PATH")))
-  (eshell/addpath (concat  (getenv "ZIG_ROOT")))
+
 
   ;; set putty path
   (setenv "PUTTY" "C:\\Tools\\putty\\")
   (add-to-list 'exec-path (getenv "PUTTY"))
   (setenv "PATH" (concat  (getenv "PUTTY") ";" (getenv "PATH")))
-  (eshell/addpath (getenv "PUTTY"))
+
 
   ;; add 7zip
   (setenv "7ZIP" "C:\\Program Files\\7-Zip\\")
   (add-to-list 'exec-path (getenv "7ZIP"))
   (setenv "PATH" (concat  (getenv "7ZIP") ";" (getenv "PATH")))
-  (eshell/addpath (getenv "7ZIP"))
+
 
   ;; Debug tools
   (setenv "DEBUGGERS" "C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\")
   (add-to-list 'exec-path (getenv "DEBUGGERS"))
   (setenv "PATH" (concat  (getenv "DEBUGGERS") ";" (getenv "PATH")))
-  (eshell/addpath (getenv "DEBUGGERS"))
+
 
   ;; Android
   (setenv "ANDROID_CMDLINE_TOOLS" "c:/Tools/android_sdk/cmdline-tools/latest/bin/")
@@ -59,12 +56,6 @@
   (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/emulator"))
   (add-to-list 'exec-path (concat (getenv "ANDROID_HOME") "/tools"))
 
-  (eshell/addpath (getenv "ANDROID_CMDLINE_TOOLS"))
-  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools/bin"))
-  (eshell/addpath (concat (getenv "ANDROID_HOME") "/platform-tools"))
-  (eshell/addpath (concat (getenv "ANDROID_HOME") "/emulator"))
-  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools"))
-
   ;; DCI
   (setenv "DCI_REPOSITORY" "c:/Git/dci_windows/")
   (setenv "VCPKG_ROOT" (concat (getenv "DCI_REPOSITORY") "externals/vcpkg/"))
@@ -79,10 +70,37 @@
     (setq find-program "C:\\msys64\\user\\bin\\find.exe"))
 
   ;; allow mingw shell
-  (add-hook 'comint-output-filter-functions 'comint-osc-process-output))
+  (add-hook 'comint-output-filter-functions 'comint-osc-process-output)
+
+  ;; remove vc hooks, this will give a huge performance boost on windows
+  (remove-hook 'find-file-hooks 'vc-find-file-hook)
+  (remove-hook 'find-file-hooks 'vc-refresh-state))
+
+
+(use-package eshell
+  :ensure nil
+  :defer t
+  :config
+  (eshell/addpath (concat (getenv "EposPythonRoot") "Scripts"))
+  (eshell/addpath (getenv "EposPythonRoot"))
+
+  (eshell/addpath (getenv "ANDROID_CMDLINE_TOOLS"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools/bin"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/platform-tools"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/emulator"))
+  (eshell/addpath (concat (getenv "ANDROID_HOME") "/tools"))
+
+  (eshell/addpath (getenv "DEBUGGERS"))
+
+  (eshell/addpath (getenv "7ZIP"))
+
+  (eshell/addpath (getenv "PUTTY"))
+
+  (eshell/addpath (concat  (getenv "ZIG_ROOT"))))
 
 
 (use-package eglot
+  :ensure nil
   :defer t
   :config
   (add-to-list 'eglot-server-programs
@@ -98,6 +116,7 @@
 
 
 (use-package tramp
+  :ensure nil
   :defer t
   :config
   (setq tramp-use-ssh-controlmaster-options nil)
@@ -109,6 +128,7 @@
 
 
 (use-package dired
+  :ensure nil
   :defer t
   :config
     (when (eq system-type 'windows-nt)
@@ -127,6 +147,7 @@
 
 
 (use-package compile
+  :ensure nil
   :defer t
   :config
   (setq compilation-scroll-output 'first-error)
@@ -152,6 +173,7 @@
 
 ;; cdb commands http://www.windbg.info/doc/1-common-cmds.html
 (use-package gud
+  :ensure nil
   :defer t
   :config
   (setq gdb-many-windows t)

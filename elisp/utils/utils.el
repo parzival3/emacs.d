@@ -190,7 +190,7 @@ If there is no selected word, simply start an empty search."
   (message "File type set to MSDOS (CRLF line endings)."))
 
 
-(load-file (concat et-elisp-dir "gitea-utils.el"))
+;; (load-file (concat et-elisp-dir "gitea-utils.el"))
 
 ;;;###autoload
 (defun et-reset-custom-variable (variable)

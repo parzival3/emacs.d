@@ -171,21 +171,17 @@
 (load-file (concat et-elisp-dir "lang-p-config.el"))
 
 (eval-and-compile
-  (defvar utils-package-files
-    (directory-files (concat et-elisp-dir "/utils") t "el")))
+  (defvar utils-package-dir (concat et-elisp-dir "utils")))
 
 (use-package utils
   :preface
-  (unless (seq-contains-p utils-package-files ".*autoloads.el$"
-                          (lambda (elem regex) (string-match regex elem nil t)))
-    (when-let ((package-directory (file-name-directory (car utils-package-files))))
-      (loaddefs-generate package-directory
-                         (concat package-directory "/utils-autoloads.el")
-                         nil
-                         "(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))"
-                         )))
+  (unless (seq-contains-p
+            (directory-files utils-package-dir t "el")
+            ".*autoloads.el$"
+            (lambda (elem regex) (string-match regex elem nil t)))
+    (package-generate-autoloads "utils" utils-package-dir))
   :defer t
-  :load-path utils-package-files
+  :load-path utils-package-dir
   :commands (et-other-window)
   :bind
   (("C-x o" . et-other-window)
