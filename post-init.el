@@ -3,10 +3,6 @@
 ;; I use straight here because transient used in Emacs is too old
 ;; to support the master version of magit
 (straight-use-package 'use-package)
-(straight-use-package 'org)
-(straight-use-package 'transient)
-(straight-use-package
-   '(nano :type git :host github :repo "rougier/nano-emacs"))
 
 (use-package transient
   :straight t
@@ -25,12 +21,13 @@
 ;; with large files.
 (use-package gcmh
   :straight t
-  :ensure t
-  :hook (after-init . gcmh-mode)
+  :defer 60
   :custom
   (gcmh-idle-delay 'auto)
   (gcmh-auto-idle-delay-factor 10)
-  (gcmh-low-cons-threshold minimal-emacs-gc-cons-threshold))
+  (gcmh-low-cons-threshold minimal-emacs-gc-cons-threshold)
+  :config
+  (add-hook 'after-init-hook  #'gcmh-mode))
 
 ;; The auto-compile package automates the byte-compilation of Emacs Lisp files,
 ;; ensuring that your code runs more efficiently by converting it to byte-code.
@@ -41,7 +38,7 @@
 ;; eliminating the need for manual compilation and minimizing potential
 ;; issues caused by outdated byte-code.
 (use-package auto-compile
-  :demand t
+  :defer 30
   :custom
   (auto-compile-check-parens nil)
   (auto-compile-display-buffer nil)

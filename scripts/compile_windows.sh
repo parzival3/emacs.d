@@ -10,30 +10,28 @@ mkdir build; cd build
 
 (cd $source; ./autogen.sh)
 
-# export PKG_CONFIG_PATH=/mingw64/lib/pkgconfig
+export PKG_CONFIG_PATH=/mingw64/lib/pkgconfig
 
-export CFLAGS='
-    -I/mingw64/include/noX
-    -O3
-    -fno-math-errno
-    -funsafe-math-optimizations
-    -fno-finite-math-only
-    -fno-trapping-math
-    -freciprocal-math
-    -fno-rounding-math
-    -fno-signaling-nans
-    -fassociative-math
-    -fno-signed-zeros
-    -frename-registers
-    -funroll-loops
-    -mtune=native
-    -march=native
-    -fomit-frame-pointer
-    -fallow-store-data-races
-    -fno-semantic-interposition
-    -floop-parallelize-all
-    -ftree-parallelize-loops=4
-'
+CFLAGS+=" -I/mingw64/include/noX"
+CFLAGS+=" -O3"
+CFLAGS+=" -fno-math-errno" \
+CFLAGS+=" -funsafe-math-optimizations"
+CFLAGS+=" -fno-finite-math-only"
+CFLAGS+=" -fno-trapping-math"
+CFLAGS+=" -freciprocal-math"
+CFLAGS+=" -fno-rounding-math"
+CFLAGS+=" -fno-signaling-nans"
+CFLAGS+=" -fassociative-math"
+CFLAGS+=" -fno-signed-zeros"
+CFLAGS+=" -frename-registers"
+CFLAGS+=" -funroll-loops"
+CFLAGS+=" -mtune=native"
+CFLAGS+=" -march=native"
+CFLAGS+=" -fomit-frame-pointer"
+CFLAGS+=" -fallow-store-data-races"
+CFLAGS+=" -fno-semantic-interposition"
+CFLAGS+=" -floop-parallelize-all"
+CFLAGS+=" -ftree-parallelize-loops=4"
 
 $source/configure \
     --build=x86_64-w64-mingw32 \
