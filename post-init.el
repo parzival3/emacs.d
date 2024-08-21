@@ -21,13 +21,14 @@
 ;; with large files.
 (use-package gcmh
   :straight t
-  :defer 60
+  :defer 10
   :custom
   (gcmh-idle-delay 'auto)
   (gcmh-auto-idle-delay-factor 10)
   (gcmh-low-cons-threshold minimal-emacs-gc-cons-threshold)
   :config
-  (add-hook 'after-init-hook  #'gcmh-mode))
+  ;; manually activating it instead of the :hook keyworkd, because I want to defer the loading to a 30 seconds delay
+  (gcmh-mode 1))
 
 ;; The auto-compile package automates the byte-compilation of Emacs Lisp files,
 ;; ensuring that your code runs more efficiently by converting it to byte-code.
@@ -38,7 +39,7 @@
 ;; eliminating the need for manual compilation and minimizing potential
 ;; issues caused by outdated byte-code.
 (use-package auto-compile
-  :defer 30
+  :defer 10
   :custom
   (auto-compile-check-parens nil)
   (auto-compile-display-buffer nil)
