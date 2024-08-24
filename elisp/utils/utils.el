@@ -34,7 +34,7 @@ of 'vc-next-action'."
 (defun et-open-config ()
   "Open this configuration."
   (interactive)
-  (find-file (concat user-emacs-directory "init.el")))
+  (find-file (concat minimal-emacs-user-directory "init.el")))
 
 ;;;###autoload
 (defun et-dos2unix ()

@@ -153,6 +153,8 @@
 ;; Load the keybidings configuration
 (load-file (concat et-elisp-dir "kbd-p-config.el"))
 
+(load-file (concat et-elisp-dir "casual-p-config.el"))
+
 ;; Load the operating system specific configuration at the end
 ;; so we can override any previous configuration
 (when (or (eq system-type `gnu/linux)

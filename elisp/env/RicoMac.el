@@ -9,6 +9,7 @@
 
 (add-to-list 'exec-path "/opt/homebrew/bin/")
 (add-to-list 'exec-path "/opt/homebrew/sbin/")
+(add-to-list 'exec-path "/Users/ento/Library/Python/3.9/bin")
 (setq eshell-path-env (mapconcat #'identity exec-path ":"))
 (setenv "PATH" eshell-path-env)
 
