@@ -14,7 +14,7 @@
 
 (use-package casual-avy
   :ensure nil
-  :bind ("M-g" . casual-avy-tmenu))
+  :bind ("M-o" . casual-avy-tmenu))
 
 (use-package casual-isearch
   :ensure nil

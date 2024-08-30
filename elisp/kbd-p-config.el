@@ -5,6 +5,10 @@
   :ensure t
   :config
 
+  ;; In terminal mode esc is interpreted as a keycode command
+  (when (not (display-graphic-p))
+    (setq meow-esc-delay 0.01))
+
   (defun et-is-current-coding-system (coding-system)
     (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
       (cond
@@ -23,7 +27,6 @@
                (apply original-yank args)))
         ;; else
        (apply original-yank args)))
-
 
   ; wsl-copy
   (defun wsl-copy (start end)
@@ -78,6 +81,7 @@
      '("<escape>" . ignore))
 
     (meow-leader-define-key
+     '("."  . embark-act)
      '(";"  . avy-goto-char-timer)
      '("ff" . et-find-file)
      '("pp" . project-switch-project)
