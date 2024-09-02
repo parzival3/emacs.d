@@ -145,7 +145,10 @@
 (load-file et-machine-config)
 (load-file secrets-file)
 
-;; Configure Emacs packages
+;; HACK: Fix problems of signatures
+;; (setq package-check-signature nil)
+
+;;Configure Emacs packages
 (load-file (concat et-elisp-dir "internal-p-config.el"))
 ;; Configure External packages
 (load-file (concat et-elisp-dir "minimal-p-config.el"))
