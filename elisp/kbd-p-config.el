@@ -1,10 +1,8 @@
 ;;; kbd.el --- Meow configuration -*- no-byte-compile: t; lexical-binding: t; -*-
 
 (use-package meow
-  :straight t
   :ensure t
   :config
-
   ;; In terminal mode esc is interpreted as a keycode command
   (when (not (display-graphic-p))
     (setq meow-esc-delay 0.01))
@@ -160,12 +158,12 @@
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
-     '("p" . platform-paste)
+     '("p" . meow-yank)
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
      '("R" . meow-swap-grab)
-     '("s" . platform-cut)
+     '("s" . meow-kill)
      '("t" . meow-till)
      '("u" . meow-undo)
      '("U" . meow-undo-in-selection)
@@ -174,7 +172,7 @@
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
      '("X" . meow-goto-line)
-     '("y" . platform-copy)
+     '("y" . meow-save)
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("'" . repeat)

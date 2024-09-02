@@ -119,7 +119,11 @@
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+   ("C-h B" . embark-bindings)  ;; alternative for `describe-bindings'
+   (:map embark-general-map
+         ("C-; c" . platform-copy)
+         ("C-; p" . platform-paste)
+         ("C-; x" . platform-cut)))
 
   :init
   (setq prefix-help-command #'embark-prefix-help-command)

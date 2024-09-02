@@ -54,7 +54,7 @@
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release)
     "The only way to easilly distinguish if we are running on WSL or Linux")
 
-  (defvar et-system-type (or 'wsl system-type)
+  (defvar et-system-type (or (when wsl 'wsl) system-type)
     "The system type of the current machine.")
 
   (defvar et-emacs-files-dir  "~/.emacs_files/"
