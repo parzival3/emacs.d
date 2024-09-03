@@ -70,10 +70,7 @@
 
 
 (use-package devdocs
-  :defer t
-  :straight t
-  :config
-  (setq devdocs-data-dir (concat et-emacs-files-dir "devdocs")))
+  :defer t)
 
 
 (defun et-indent-style()

@@ -1,5 +1,6 @@
 ;;; dos.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
+;;; rewrite based on https://lists.gnu.org/archive/html/help-gnu-emacs/2022-02/msg00221.html
 (use-package emacs
   :config
   ;; configuring some environment variables
@@ -187,5 +188,11 @@
         ("<f10>" .  'gud-next)
         ("<f11>" .  'gud-finish)))
 
+
+(use-package marginalia
+  :ensure nil
+  :config
+  (setq marginalia-annotator-registry
+      (assq-delete-all 'file marginalia-annotator-registry)))
 
 (provide 'dos)
