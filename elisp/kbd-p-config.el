@@ -94,8 +94,8 @@
      '("bm" . consult-bookmark)
 
      ;; Windows movements
-     '("ws" . et-split-window-below-and-move-there-dammit)
-     '("wv" . et-split-window-right-and-move-there-dammit)
+     '("ws" . et-split-window-below)
+     '("wv" . et-split-window-right)
      '("wk" . windmove-up)
      '("wj" . windmove-down)
      '("wh" . windmove-left)

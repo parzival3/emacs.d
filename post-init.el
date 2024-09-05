@@ -185,7 +185,10 @@
     (package-generate-autoloads "utils" utils-package-dir))
   :defer t
   :load-path utils-package-dir
-  :commands (et-other-window)
+  :commands (et-other-window
+             et-find-file
+             et-split-compile
+             et-open-config)
   :bind
   (("C-x o" . et-other-window)
    ("<f13>" . et-split-compile)))
