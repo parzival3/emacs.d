@@ -21,3 +21,6 @@
 (when (not (display-graphic-p))
     (setq interprogram-cut-function 'paste-to-osx)
     (setq interprogram-paste-function 'copy-from-osx))
+
+;; Show time in the modeline since on macos when full scree one cannot see the time
+(display-time-mode)

@@ -137,8 +137,12 @@
   (setq native-comp-speed 3)
 
   ;; Set lisp indentation
-  (setq lisp-indent-offset 2))
+  (setq lisp-indent-offset 2)
 
+  ;; Enhance scrool
+  (pixel-scroll-precision-mode))
+
+(load-file (concat et-elisp-dir "init-banner.el"))
 ;; Load enviroment file for this computer based on the hostname
 (load-file et-machine-config)
 (load-file secrets-file)
