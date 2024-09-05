@@ -94,9 +94,11 @@
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
 
+(unless (file-directory-p (concat package-user-dir "/copilot"))
+  (package-vc-install '(copilot
+                        :url "https://github.com/copilot-emacs/copilot.el.git")))
 (use-package copilot
   :defer t
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :bind
   ("TAB" . et-copilot-tab)
   ("S-TAB" . copilot-accept-completion)
@@ -105,19 +107,6 @@
   ;; :hook
   ;; (prog-mode . copilot-mode)
   :config
-  (defun toggle-copilot-mode ()
-  "Toggle Copilot mode for programming modes."
-  (interactive)
-  (if (bound-and-true-p copilot-mode)
-      (progn
-        (remove-hook 'prog-mode-hook 'copilot-mode)
-        (setq copilot-mode nil)
-        (message "Copilot mode disabled for programming mode"))
-    (setq copilot-mode t)
-    (add-hook 'prog-mode-hook 'copilot-mode)
-    (message "Copilot mode enabled for programming mode")))
-
-
   (defun et-copilot-tab ()
   "Tab command that will complet with copilot if a completion is
 available. Otherwise will try company, yasnippet or normal
@@ -171,9 +160,7 @@ tab-indent."
 
 
 (use-package yaml-mode
-  :defer t
-  :straight t)
-
+  :defer t)
 
 (defvar et-format-functions-alist
   '((python-mode blacken-buffer blacken-region)

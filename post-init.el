@@ -2,15 +2,11 @@
 
 ;; I use straight here because transient used in Emacs is too old
 ;; to support the master version of magit
-(straight-use-package 'use-package)
-
 (use-package transient
-  :straight t
   :demand t)
 
 ;; Load org as early as possible to avoid any incompatibilities
 (use-package org
-  :straight t
   :demand t)
 
 ;; The Garbage Collector Magic Hack (gcmh-mode) optimizes
@@ -20,7 +16,6 @@
 ;; interruptions, especially during intensive tasks or when working
 ;; with large files.
 (use-package gcmh
-  :straight t
   :defer 10
   :custom
   (gcmh-idle-delay 'auto)
@@ -139,7 +134,10 @@
   ;; save windows configuration by default
   (winner-mode 1)
   ;; miximum compilation speed for elisp
-  (setq native-comp-speed 3))
+  (setq native-comp-speed 3)
+
+  ;; Set lisp indentation
+  (setq lisp-indent-offset 2))
 
 ;; Load enviroment file for this computer based on the hostname
 (load-file et-machine-config)

@@ -92,7 +92,6 @@
 
 (use-package gptel
   :defer t
-  :straight t
   :bind
   ("C-c RET" . gptel-send)
   :config
@@ -101,7 +100,6 @@
 
 (use-package avy
   :defer t
-  :straight t
   :bind
   ("C-:" . avy-goto-char-timer))
 

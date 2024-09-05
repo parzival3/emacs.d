@@ -15,43 +15,41 @@
 ;;; Code:
 
 ;;; Load pre-init.el
+;;; init.el --- Init -*- no-byte-compile: t; lexical-binding: t; -*-
+
+;; Author: James Cherti
+;; URL: https://github.com/jamescherti/minimal-emacs.d
+;; Package-Requires: ((emacs "29.1"))
+;; Keywords: maint
+;; Version: 1.0.2
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
+;;; Commentary:
+;; The minimal-emacs.d starter kit provides improved Emacs defaults and
+;; optimized startup, intended to serve as a solid foundation for your vanilla
+;; Emacs configuration and enhance your overall Emacs experience.
+
+;;; Code:
+
+;;; Load pre-init.el
 (minimal-emacs-load-user-init "pre-init.el")
 
 ;;; package.el
-
-(require 'package)
-
-(when (version< emacs-version "28")
-  (add-to-list 'package-archives
-               '("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-
-(customize-set-variable 'package-archive-priorities
-                        '(("gnu"    . 99)
-                          ("nongnu" . 80)
-                          ("melpa-stable" . 70)
-                          ("melpa"  . 0)))
-
-(when package-enable-at-startup
+(when (bound-and-true-p minimal-emacs-package-initialize-and-refresh)
+  ;; Initialize and refresh package contents again if needed
   (package-initialize)
   (unless package-archive-contents
-    (package-refresh-contents t)))
+    (package-refresh-contents))
 
-;;; use-package
-;; Load use-package for package configuration
+  ;; Install use-package if necessary
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
 
-;; Ensure the 'use-package' package is installed and loaded
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents t)
-  (package-install 'use-package)
+  ;; Ensure use-package is available at compile time
   (eval-when-compile
     (require 'use-package)))
 
-(eval-when-compile
-  (require 'use-package))
+;; Ensure the 'use-package' package is installed and loaded
 
 ;;; Minibuffer
 ;; Allow nested minibuffers
@@ -93,6 +91,13 @@
       compilation-scroll-output 'first-error)
 
 (setq truncate-string-ellipsis "…")
+
+;; Configure Emacs to ask for confirmation before exiting
+(setq confirm-kill-emacs 'y-or-n-p)
+
+;; Delete by moving to trash in interactive mode
+(setq delete-by-moving-to-trash (not noninteractive))
+
 ;;; Files
 
 ;; Disable the warning "X and Y are the same file". Ignoring this warning is
@@ -205,11 +210,25 @@
 
 (setq resize-mini-windows 'grow-only)
 
-;;; Smooth scrolling
+;;; Scrolling
 ;; Enables faster scrolling through unfontified regions. This may result in
 ;; brief periods of inaccurate syntax highlighting immediately after scrolling,
 ;; which should quickly self-correct.
 (setq fast-but-imprecise-scrolling t)
+
+;; Move point to top/bottom of buffer before signaling a scrolling error.
+(setq scroll-error-top-bottom t)
+
+;; Keeps screen position if the scroll command moved it vertically out of the
+;; window.
+(setq scroll-preserve-screen-position t)
+
+;;; Mouse
+
+;; Emacs 29
+(when (memq 'context-menu minimal-emacs-ui-features)
+  (when (and (display-graphic-p) (fboundp 'context-menu-mode))
+    (add-hook 'after-init-hook #'context-menu-mode)))
 
 (setq hscroll-margin 2
       hscroll-step 1
@@ -253,6 +272,11 @@
 (setq visible-bell nil)
 (setq ring-bell-function #'ignore)
 
+;; This controls how long Emacs will blink to show the deleted pairs with
+;; `delete-pair'. A longer delay can be annoying as it causes a noticeable pause
+;; after each deletion, disrupting the flow of editing.
+(setq delete-pair-blink-delay 0.03)
+
 ;;; Indent and formatting
 (setq-default left-fringe-width  8)
 (setq-default right-fringe-width 8)
@@ -277,7 +301,13 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-(setq-default tab-always-indent t)
+;; Enable indentation and completion using the TAB key
+(setq-default tab-always-indent nil)
+
+;; Enable multi-line commenting which ensures that `comment-indent-new-line'
+;; properly continues comments onto new lines, which is useful for writing
+;; longer comments or docstrings that span multiple lines.
+(setq comment-multi-line t)
 
 ;; We often split terminals and editor windows or place them side-by-side,
 ;; making use of the additional horizontal space.
@@ -300,6 +330,9 @@
 ;; otherwise empty.
 (setq comment-empty-lines t)
 
+;; Eliminate delay before highlighting search matches
+(setq lazy-highlight-initial-delay 0)
+
 ;;; Mode line
 
 ;; Setting `display-time-default-load-average' to nil makes Emacs omit the load
@@ -309,6 +342,29 @@
 ;; Display the current line and column numbers in the mode line
 (setq line-number-mode t)
 (setq column-number-mode t)
+
+;;; Filetype
+
+;; Do not notify the user each time Python tries to guess the indentation offset
+(setq python-indent-guess-indent-offset-verbose nil)
+
+(setq sh-indent-after-continuation 'always)
+
+(setq dired-clean-confirm-killing-deleted-buffers nil
+      dired-recursive-deletes 'top
+      dired-recursive-copies  'always
+      dired-create-destination-dirs 'ask)
+
+;;; Font / Text scale
+
+;; Avoid automatic frame resizing when adjusting settings.
+(setq global-text-scale-adjust-resizes-frames nil)
+
+;;; Ediff
+
+;; Configure Ediff to use a single frame and split windows horizontally
+(setq ediff-window-setup-function #'ediff-setup-windows-plain
+      ediff-split-window-function #'split-window-horizontally)
 
 ;;; Load post-init.el
 (minimal-emacs-load-user-init "post-init.el")
