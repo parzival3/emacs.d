@@ -307,7 +307,7 @@ If there is no selected word, simply start an empty search."
   (if (not (file-directory-p directory))
       (and error-message ;; if we have an error, report it to the user
            (error error-message))
-    (add-to-list 'exec-path directory)
+    (add-to-list 'exec-path (expand-file-name directory))
     (let ((string-path (mapconcat #'identity exec-path path-separator)))
       (eshell-set-path string-path)
       (setenv "PATH" string-path))))

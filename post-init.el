@@ -143,6 +143,7 @@
   (pixel-scroll-precision-mode))
 
 (load-file (concat et-elisp-dir "init-banner.el"))
+
 ;; Load enviroment file for this computer based on the hostname
 (load-file et-machine-config)
 (load-file secrets-file)
@@ -154,12 +155,10 @@
 (load-file (concat et-elisp-dir "internal-p-config.el"))
 ;; Configure External packages
 (load-file (concat et-elisp-dir "minimal-p-config.el"))
-
 ;; Load the keybidings configuration
 (load-file (concat et-elisp-dir "kbd-p-config.el"))
-
+;; Transient menu for some modes (calc, dired ...)
 (load-file (concat et-elisp-dir "casual-p-config.el"))
-
 ;; Load the operating system specific configuration at the end
 ;; so we can override any previous configuration
 (when (or (eq system-type `gnu/linux)

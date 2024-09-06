@@ -68,10 +68,8 @@
 (use-package clang-format+
   :defer t)
 
-
 (use-package devdocs
   :defer t)
-
 
 (defun et-indent-style()
   "Override the built-in BSD indentation style with some additional rules"
@@ -97,6 +95,7 @@
 (unless (file-directory-p (concat package-user-dir "/copilot"))
   (package-vc-install '(copilot
                         :url "https://github.com/copilot-emacs/copilot.el.git")))
+
 (use-package copilot
   :defer t
   :bind
@@ -117,6 +116,23 @@ tab-indent."
       (indent-for-tab-command))))
 
 
+(unless (file-directory-p (concat package-user-dir "/dart-ts-mode"))
+  (package-vc-install '(dart-ts-mode
+                         :url "https://github.com/50ways2sayhard/dart-ts-mode.git")))
+
+(use-package dart-ts-mode
+  :defer t
+  :config
+  ;; (progn (add-to-list 'eglot-server-programs
+  ;;                     '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart" :initializationOptions (:onlyAnalyzeProjectsWithOpenFiles t)))))
+  (progn (add-to-list 'eglot-server-programs
+           '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart"))))
+  ;; make sure eglot doesn't talk to fast to the dart server
+  (setq eglot-sync-connect 2)
+  (setq eglot-events-buffer-config '(:size 0 :format nil))
+  (setq eldoc-echo-area-prefer-doc-buffer t))
+
+
 (use-package python
   :defer t
   :bind
@@ -124,28 +140,37 @@ tab-indent."
   (:map python-ts-mode-map
         ("<backtab>" . nil))
   :hook
-  (python-ts-mode . et-eglot-python)
+  (python-ts-mode . eglot-ensure)
+  :init
+  (add-to-list 'eglot-workspace-configuration
+    `(:pylsp (:plugins
+               (;; Fix imports and syntax using `eglot-format-buffer`
+                 :isort (:enabled t)
+                 :autopep8 (:enabled t)
+
+                 ;; Syntax checkers (works with Flymake)
+                 :pylint (:enabled t)
+                 :pycodestyle (:enabled t)
+                 :flake8 (:enabled t)
+                 :pyflakes (:enabled t)
+                 :pydocstyle (:enabled t)
+                 :mccabe (:enabled t)
+
+                 :yapf (:enabled :json-false)
+                 :rope_autoimport (:enabled :json-false)))))
   :config
-
-  (defun et-eglot-pyhon ()
-    (unless
-        (string-equal
-         (file-name-extension (buffer-file-name (current-buffer)))
-         "pyi")
-      (eglot-ensure)))
-
-  (setq et--p-venv-exec-path nil)
-  (setq et--p-venv-eshell-path nil)
+  (setq-default et--p-venv-exec-path nil)
+  (setq-default et--p-venv-eshell-path nil)
 
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
     (interactive "D")
     (when (or et--p-venv-exec-path
               et--p-venv-eshell-path)
-     (error "Previous environment still active"))
+      (error "Previous environment still active"))
 
-    (setq et--p-venv-exec-path exec-path)
-    (setq et--p-venv-eshell-path (eshell-get-path))
+    (setq-default et--p-venv-exec-path exec-path)
+    (setq-default et--p-venv-eshell-path (eshell-get-path))
 
     (et-add-directory-to-env directory (format "%s not a directory" directory))
     (et-add-directory-to-env (concat directory "/Scripts"))
@@ -155,9 +180,8 @@ tab-indent."
     (interactive)
     (setq exec-path et--p-venv-exec-path)
     (eshell-set-path et--p-venv-eshell-path)
-    (setq et--p-venv-exec-path nil)
-    (setq et--p-venv-eshell-path nil)))
-
+    (setq-default et--p-venv-exec-path nil)
+    (setq-default et--p-venv-eshell-path nil)))
 
 (use-package yaml-mode
   :defer t)

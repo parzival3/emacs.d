@@ -24,3 +24,6 @@
 
 ;; Show time in the modeline since on macos when full scree one cannot see the time
 (display-time-mode)
+
+;; On macos ls doesn't support --dired
+(setq-default dired-use-ls-dred nil)
