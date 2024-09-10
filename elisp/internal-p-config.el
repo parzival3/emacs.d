@@ -25,23 +25,18 @@
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
   :config
+  (defvar xref-rg-command "rg <C> --null -nH --no-heading --no-messages -g '!*/' -g 'TAGS' -e <R>")
+  (defvar xargs-max-chars (if (memq system-type '(windows-nt ms-dos)) "-s 10000 " ""))
+
   ;; Use faster search tool but don't searg in the TAGS file
-  (when-let* ((has-rg? (executable-find "rg"))
-               (xargs-max-chars
-                 (if (memq system-type '(windows-nt ms-dos))
-                   "-s 10000 " ""))
-               (rg-command-arguments (concat "xargs -0 "
-                                       xargs-max-chars
-                                       "rg <C> --null -nH --no-heading --no-messages -g '!*/' -g 'TAGS' -e <R>")))
-    ;; (add-to-list 'xref-search-program-alist `(ripgrep .  ,rg-command-arguments))
+  (when-let ((has-rg? (executable-find "rg"))
+             (et-xref-rg-command (concat "xargs -0 "xargs-max-chars xref-rg-command)))
+    (add-to-list 'xref-search-program-alist `(ripgrep .  ,et-xref-rg-command))
     (setq xref-search-program 'ripgrep))
 
   ;; Select from xref candidates in minibuffer
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read
-        xref-show-xrefs-function #'xref-show-definitions-completing-read)
-
-  ;; This is not working but I'll keep it here for how to define sources in rg
-  (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
+        xref-show-xrefs-function #'xref-show-definitions-completing-read))
 
 
 (use-package artist
