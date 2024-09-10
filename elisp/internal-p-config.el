@@ -26,14 +26,15 @@
          ("M-g ," . xref-go-back))
   :config
   ;; Use faster search tool but don't searg in the TAGS file
-  (when-let ((has-rg? (executable-find "rg"))
-             (xargs-max-chars
-               (if (memq system-type '(windows-nt ms-dos))
-                 "-s 10000 " "")))
-    (setq xref-search-program
-      (concat "xargs -0 "
-        xargs-max-chars
-        "rg <C> --null -nH --no-heading --no-messages -g '!*/' -g 'TAGS' -e <R>")))
+  (when-let* ((has-rg? (executable-find "rg"))
+               (xargs-max-chars
+                 (if (memq system-type '(windows-nt ms-dos))
+                   "-s 10000 " ""))
+               (rg-command-arguments (concat "xargs -0 "
+                                       xargs-max-chars
+                                       "rg <C> --null -nH --no-heading --no-messages -g '!*/' -g 'TAGS' -e <R>")))
+    ;; (add-to-list 'xref-search-program-alist `(ripgrep .  ,rg-command-arguments))
+    (setq xref-search-program 'ripgrep))
 
   ;; Select from xref candidates in minibuffer
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read
