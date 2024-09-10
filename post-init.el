@@ -142,7 +142,6 @@
   ;; Enhance scrool
   (pixel-scroll-precision-mode))
 
-(load-file (concat et-elisp-dir "init-banner.el"))
 
 ;; Load enviroment file for this computer based on the hostname
 (load-file et-machine-config)
@@ -187,9 +186,14 @@
   :defer t
   :load-path utils-package-dir
   :commands (et-other-window
-             et-find-file
-             et-split-compile
-             et-open-config)
+              et-find-file
+              et-split-compile
+              et-open-config
+              et-add-directory-to-env)
   :bind
   (("C-x o" . et-other-window)
-   ("<f13>" . et-split-compile)))
+    ("<f13>" . et-split-compile)))
+
+(eval-and-compile
+  (load-file (concat utils-package-dir "/utils-banner.el"))
+  (setq initial-buffer-choice (setup-ascii-banner)))

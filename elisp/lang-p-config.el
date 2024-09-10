@@ -18,7 +18,7 @@
 (use-package dart-ts-mode
   :defer t
   :load-path dart-ts-mode-path
-  :init
+  :config
   (with-eval-after-load 'eglot
     ;; (progn (add-to-list 'eglot-server-programs
     ;;                     '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart" :initializationOptions (:onlyAnalyzeProjectsWithOpenFiles t)))))
@@ -142,35 +142,39 @@ tab-indent."
   :hook
   (python-ts-mode . eglot-ensure)
   :init
-  (add-to-list 'eglot-workspace-configuration
-    `(:pylsp (:plugins
-               (;; Fix imports and syntax using `eglot-format-buffer`
-                 :isort (:enabled t)
-                 :autopep8 (:enabled t)
+  ;; (unless (boundp 'eglot-workspace-configuration)
+  ;;   (setq-default eglot-workspace-configuration nil))
+  ;; (add-to-list 'eglot-workspace-configuration
+  ;;   `(:pylsp (:plugins
+  ;;              (;; Fix imports and syntax using `eglot-format-buffer`
+  ;;                :isort (:enabled t)
+  ;;                :autopep8 (:enabled t)
+  ;;
+  ;;                ;; Syntax checkers (works with Flymake)
+  ;;                :pylint (:enabled t)
+  ;;                :pycodestyle (:enabled t)
+  ;;                :flake8 (:enabled t)
+  ;;                :pyflakes (:enabled t)
+  ;;                :pydocstyle (:enabled t)
+  ;;                :mccabe (:enabled t)
+  ;;
+  ;;                :yapf (:enabled :json-false)
+  ;;                :rope_autoimport (:enabled :json-false)))))
 
-                 ;; Syntax checkers (works with Flymake)
-                 :pylint (:enabled t)
-                 :pycodestyle (:enabled t)
-                 :flake8 (:enabled t)
-                 :pyflakes (:enabled t)
-                 :pydocstyle (:enabled t)
-                 :mccabe (:enabled t)
-
-                 :yapf (:enabled :json-false)
-                 :rope_autoimport (:enabled :json-false)))))
+  :commands (et-python-venv et-python-venv-deactivate)
   :config
   (setq-default et--p-venv-exec-path nil)
-  (setq-default et--p-venv-eshell-path nil)
+  (setq-default et--p-venv-dir nil)
 
   (defun et-python-venv (directory)
     "Activate the python virtual environment in DIRECTORY."
     (interactive "D")
-    (when (or et--p-venv-exec-path
-              et--p-venv-eshell-path)
+    (when (and (not (string= directory et--p-venv-dir))
+               et--p-venv-exec-path)
       (error "Previous environment still active"))
 
     (setq-default et--p-venv-exec-path exec-path)
-    (setq-default et--p-venv-eshell-path (eshell-get-path))
+    (setq-default et--p-venv-dir directory)
 
     (et-add-directory-to-env directory (format "%s not a directory" directory))
     (et-add-directory-to-env (concat directory "/Scripts"))
@@ -179,9 +183,9 @@ tab-indent."
   (defun et-python-venv-deactivate ()
     (interactive)
     (setq exec-path et--p-venv-exec-path)
-    (eshell-set-path et--p-venv-eshell-path)
+    (eshell-set-path exec-path)
     (setq-default et--p-venv-exec-path nil)
-    (setq-default et--p-venv-eshell-path nil)))
+    (setq-default et--p-venv-dir nil)))
 
 (use-package yaml-mode
   :defer t)

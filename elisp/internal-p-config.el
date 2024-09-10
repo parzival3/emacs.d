@@ -24,15 +24,22 @@
   :defer t
   :bind (("M-g ." . xref-find-definitions)
          ("M-g ," . xref-go-back))
-  :init
-  ;; Use faster search tool
-  (when (executable-find "rg")
-    (setq xref-search-program 'ripgrep))
+  :config
+  ;; Use faster search tool but don't searg in the TAGS file
+  (when-let ((has-rg? (executable-find "rg"))
+             (xargs-max-chars
+               (if (memq system-type '(windows-nt ms-dos))
+                 "-s 10000 " "")))
+    (setq xref-search-program
+      (concat "xargs -0 "
+        xargs-max-chars
+        "rg <C> --null -nH --no-heading --no-messages -g '!*/' -g 'TAGS' -e <R>")))
 
   ;; Select from xref candidates in minibuffer
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read
         xref-show-xrefs-function #'xref-show-definitions-completing-read)
 
+  ;; This is not working but I'll keep it here for how to define sources in rg
   (setq xref-ripgrep-args '("--type-add" "source=*.{c,cpp,py}" "--type" "source")))
 
 
@@ -381,7 +388,7 @@
 (use-package vc
   :ensure nil
   :defer t
-  :init
+  :config
   (advice-add 'vc-next-action :around #'et-vc-log-advice))
 
 (provide 'internal-package-config)

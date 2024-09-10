@@ -26,4 +26,4 @@
 (display-time-mode)
 
 ;; On macos ls doesn't support --dired
-(setq-default dired-use-ls-dred nil)
+(setq-default dired-use-ls-dired nil)

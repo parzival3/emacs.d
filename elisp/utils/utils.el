@@ -304,6 +304,7 @@ If there is no selected word, simply start an empty search."
 ;;;###autoload
 (defun et-add-directory-to-env (directory &optional error-message)
   (interactive)
+  (require 'esh-util)
   (if (not (file-directory-p directory))
       (and error-message ;; if we have an error, report it to the user
            (error error-message))
