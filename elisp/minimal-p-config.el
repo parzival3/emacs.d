@@ -179,6 +179,8 @@
 ;; Magit
 (use-package magit
   :demand t
+  :custom
+  (magit-clone-default-directory et-git-directory "Set the default git clone directory")
   :init
   (defun magit-commit-fast (commit-message)
     (interactive "commit message:")
