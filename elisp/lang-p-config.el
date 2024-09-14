@@ -29,6 +29,7 @@
     (setq eglot-events-buffer-config '(:size 0 :format nil))
     (setq eldoc-echo-area-prefer-doc-buffer t)))
 
+
 (use-package flutter
   :defer t
   :config
@@ -65,11 +66,14 @@
             (add-hook 'eww-after-render-hook hookfun)
             (eww "https://ziglang.org/documentation/master/" t))))))
 
+
 (use-package clang-format+
   :defer t)
 
+
 (use-package devdocs
   :defer t)
+
 
 (defun et-indent-style()
   "Override the built-in BSD indentation style with some additional rules"

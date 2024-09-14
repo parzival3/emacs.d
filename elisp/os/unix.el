@@ -13,4 +13,13 @@
 (use-package vterm
   :defer t)
 
+
+(use-package eglot
+  :defer t
+  :config
+  (when (executable-find "guix")
+    (add-to-list 'eglot-server-programs
+      '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("guix" "shell" "clang-toolchain" "glibc" "binutils" "coreutils" "-C" "--" "clangd")))))
+
+
 (provide 'unix)
