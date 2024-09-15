@@ -12,24 +12,6 @@
 (use-package cider
   :defer t)
 
-(eval-and-compile (setq dart-ts-mode-path "~/.emacs.d/straight/repos/dart-ts-mode"))
-
-;; TODO: fix this
-(use-package dart-ts-mode
-  :defer t
-  :load-path dart-ts-mode-path
-  :config
-  (with-eval-after-load 'eglot
-    ;; (progn (add-to-list 'eglot-server-programs
-    ;;                     '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart" :initializationOptions (:onlyAnalyzeProjectsWithOpenFiles t)))))
-    (progn (add-to-list 'eglot-server-programs
-                            '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart"))))
-    ;; make sure eglot doesn't talk to fast to the dart server
-    (setq eglot-sync-connect 2)
-    (setq eglot-events-buffer-config '(:size 0 :format nil))
-    (setq eldoc-echo-area-prefer-doc-buffer t)))
-
-
 (use-package flutter
   :defer t
   :config
@@ -53,7 +35,6 @@
   (defun find-in-zig-src ()
     (interactive)
     (fd-dired (getenv "ZIG_SRC") (read-string "Find in zig src: ")))
-
 
   (defun et-open-zig-docs ()
     (interactive)
