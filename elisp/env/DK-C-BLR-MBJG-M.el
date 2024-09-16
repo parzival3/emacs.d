@@ -20,3 +20,6 @@
 
 (setq exec-path (append exec-path '("/Users/ento/tools")))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/ento/tools"))
+
+(setenv "RUSTUP_HOME" (concat (getenv "HOME") "/development/rust/rustp"))
+(setenv "CARGO_HOME"  (concat (getenv "HOME") "/development/rust/cargo"))

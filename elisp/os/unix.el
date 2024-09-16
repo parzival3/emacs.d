@@ -13,7 +13,6 @@
 (use-package vterm
   :defer t)
 
-
 (use-package eglot
   :defer t
   :config
@@ -21,5 +20,10 @@
     (add-to-list 'eglot-server-programs
       '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("guix" "shell" "clang-toolchain" "glibc" "binutils" "coreutils" "-C" "--" "clangd")))))
 
+(use-package jinx
+  :defer t
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
 
 (provide 'unix)
