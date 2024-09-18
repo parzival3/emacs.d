@@ -18,13 +18,18 @@
   :config
   (when (executable-find "guix")
     (add-to-list 'eglot-server-programs
-      '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("guix" "shell" "clang-toolchain" "glibc" "binutils" "coreutils" "-C" "--" "clangd")))))
+      '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("guix" "shell" "clang-toolchain" "glibc" "binutils" "coreutils" "eudev" "-C" "--" "clangd")))))
 
 (use-package jinx
   :defer t
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
+          ("C-M-$" . jinx-languages)))
+
+(use-package dired
+  :ensure nil
+  :custom
+  (dired-listing-switches "-alh"))
 
 
 (use-package geiser
