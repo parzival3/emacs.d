@@ -26,4 +26,14 @@
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
 
+
+(use-package geiser
+  :defer t
+  :ensure nil)
+
+
+(use-package geiser-guile
+  :defer t
+  :ensure nil)
+
 (provide 'unix)
