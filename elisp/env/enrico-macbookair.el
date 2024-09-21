@@ -6,5 +6,3 @@
     (setq et-theme 'modus-vivendi)
   (setq et-theme 'doom-laserwave))
 
-
-(add-to-list 'default-frame-alist '(font . "Roboto Mono:style=Regular:size=28"))

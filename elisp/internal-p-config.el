@@ -1,5 +1,52 @@
 ;;; internal-package-config.el --- Internal Package Config -*- no-byte-compile: t; lexical-binding: t; -*-
 
+(use-package info
+  :ensure nil
+  :bind ((:map Info-mode-map
+           ("-" . Info-up)
+           ("n" . Info-history-next)
+           ("p" . Info-history-prev)
+           ("[" . meow-beginning-of-thing)
+           ("]" . meow-end-of-thing)
+           ("b" . meow-back-word)
+           ("B" . meow-back-symbol)
+           ("e" . meow-next-word)
+           ("E" . meow-next-symbol)
+           ("f" . meow-find)
+           ("g" . meow-cancel-selection)
+           ("G" . meow-grab)
+           ("h" . meow-left)
+           ("H" . meow-left-expand)
+           ("I" . meow-open-above)
+           ("j" . meow-next)
+           ("J" . meow-next-expand)
+           ("k" . meow-prev)
+           ("K" . meow-prev-expand)
+           ("l" . meow-right)
+           ("L" . meow-right-expand)
+           ("m" . meow-join)
+           ("o" . meow-block)
+           ("O" . meow-to-block)
+           ("q" . meow-quit)
+           ("Q" . meow-goto-line)
+           ("r" . meow-replace)
+           ("R" . meow-swap-grab)
+           ("s" . meow-kill)
+           ("t" . meow-till)
+           ("u" . meow-undo)
+           ("U" . meow-undo-in-selection)
+           ("v" . meow-visit)
+           ("w" . meow-mark-word)
+           ("W" . meow-mark-symbol)
+           ("x" . meow-line)
+           ("X" . meow-goto-line)
+           ("y" . meow-save)
+           ("Y" . meow-sync-grab)
+           ("z" . meow-pop-selection)
+           ("'" . repeat)
+           ("`" . consult-imenu))))
+
+
 (use-package grep
   :ensure nil
   :config
