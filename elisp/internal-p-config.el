@@ -393,13 +393,8 @@
   (setq jsonrpc-event-hook nil))
 
 
-(use-package treesit
-  :ensure nil
-  :defer t
+(use-package emacs
   :config
-  ;; remove .h from the auto-mode-alist
-  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-ts-mode) auto-mode-alist))
-  (setq auto-mode-alist (delete '("\\.h\\'" . c-or-c++-mode) auto-mode-alist))
   (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
