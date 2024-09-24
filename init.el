@@ -4,30 +4,13 @@
 ;; URL: https://github.com/jamescherti/minimal-emacs.d
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: maint
-;; Version: 1.0.2
+;; Version: 1.1.0
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
-;; This is the main initialization file for Emacs. It configures package
-;; archives, ensures essential packages like `use-package` are installed, and
-;; sets up further package management and customization settings.
-
-;;; Code:
-
-;;; Load pre-init.el
-;;; init.el --- Init -*- no-byte-compile: t; lexical-binding: t; -*-
-
-;; Author: James Cherti
-;; URL: https://github.com/jamescherti/minimal-emacs.d
-;; Package-Requires: ((emacs "29.1"))
-;; Keywords: maint
-;; Version: 1.0.2
-;; SPDX-License-Identifier: GPL-3.0-or-later
-
-;;; Commentary:
-;; The minimal-emacs.d starter kit provides improved Emacs defaults and
-;; optimized startup, intended to serve as a solid foundation for your vanilla
-;; Emacs configuration and enhance your overall Emacs experience.
+;; The minimal-emacs.d project is a customizable base that provides better Emacs
+;; defaults and optimized startup, intended to serve as a solid foundation for
+;; your vanilla Emacs configuration.
 
 ;;; Code:
 

@@ -4,19 +4,19 @@
 ;; URL: https://github.com/jamescherti/minimal-emacs.d
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: maint
-;; Version: 1.0.2
+;; Version: 1.1.0
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
-;; The minimal-emacs.d starter kit provides improved Emacs defaults and
-;; optimized startup, intended to serve as a solid foundation for your vanilla
-;; Emacs configuration and enhance your overall Emacs experience.
+;; The minimal-emacs.d project is a customizable base that provides better Emacs
+;; defaults and optimized startup, intended to serve as a solid foundation for
+;; your vanilla Emacs configuration.
 
 ;;; Code:
 
 ;;; Variables
 
-(defvar minimal-emacs-ui-features '(context-menu)
+(defvar minimal-emacs-ui-features '()
   "List of user interface features to disable in minimal Emacs setup.
 
 This variable holds a list Emacs UI features that can be enabled:
@@ -142,32 +142,40 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
               101))
 
   (unless noninteractive
-    (progn
-      ;; Disable mode-line-format during init
+    (unless minimal-emacs-debug
+      ;; Suppress redisplay and redraw during startup to avoid delays and
+      ;; prevent flashing an unstyled Emacs frame.
+      (setq-default inhibit-redisplay t
+                    inhibit-message t)
+
+      ;; Reset the above variables to prevent Emacs from appearing frozen or
+      ;; visually corrupted after startup or if a startup error occurs.
       (defun minimal-emacs--reset-inhibited-vars-h ()
         (setq-default inhibit-redisplay nil
-                      ;; Inhibiting `message' only prevents redraws and
                       inhibit-message nil)
-        (redraw-frame))
+        (remove-hook 'post-command-hook #'minimal-emacs--reset-inhibited-vars-h))
+      (add-hook 'post-command-hook #'minimal-emacs--reset-inhibited-vars-h -100)
 
-      (defvar minimal-emacs--default-mode-line-format mode-line-format
-        "Default value of `mode-line-format'.")
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (setq mode-line-format nil)))
+
+      (put 'mode-line-format 'initial-value
+           (default-toplevel-value 'mode-line-format))
       (setq-default mode-line-format nil)
 
       (defun minimal-emacs--startup-load-user-init-file (fn &rest args)
         "Advice for startup--load-user-init-file to reset mode-line-format."
-        (let (init)
-          (unwind-protect
-              (progn
-                (apply fn args)  ; Start up as normal
-                (setq init t))
-            (unless init
-              ;; If we don't undo inhibit-{message, redisplay} and there's an
-              ;; error, we'll see nothing but a blank Emacs frame.
-              (minimal-emacs--reset-inhibited-vars-h))
-            (unless (default-toplevel-value 'mode-line-format)
-              (setq-default mode-line-format
-                            minimal-emacs--default-mode-line-format)))))
+        (unwind-protect
+            (progn
+              ;; Start up as normal
+              (apply fn args))
+          ;; If we don't undo inhibit-{message, redisplay} and there's an
+          ;; error, we'll see nothing but a blank Emacs frame.
+          (setq-default inhibit-message nil)
+          (unless (default-toplevel-value 'mode-line-format)
+            (setq-default mode-line-format
+                          (get 'mode-line-format 'initial-value)))))
 
       (advice-add 'startup--load-user-init-file :around
                   #'minimal-emacs--startup-load-user-init-file))
@@ -262,9 +270,10 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
       ;; running during the initial stages of startup
       (advice-add #'tool-bar-setup :override #'ignore)
       (define-advice startup--load-user-init-file
-          (:before (&rest _) minimal-emacs-setup-toolbar)
+          (:after (&rest _) minimal-emacs-setup-toolbar)
         (advice-remove #'tool-bar-setup #'ignore)
-        (tool-bar-setup)))))
+        (when tool-bar-mode
+          (tool-bar-setup))))))
 (unless (memq 'tool-bar minimal-emacs-ui-features)
   (push '(tool-bar-lines . 0) default-frame-alist)
   (setq tool-bar-mode nil))
@@ -303,9 +312,6 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
                                                       ("nongnu" . 80)
                                                       ("stable" . 70)
                                                       ("melpa"  . 0)))
-
-;; Ensure that some built-in (e.g., org-mode) are always up to date
-(setq package-install-upgrade-built-in t)
 
 ;;; Load post-early-init.el
 (minimal-emacs-load-user-init "post-early-init.el")
