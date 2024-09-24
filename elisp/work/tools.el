@@ -21,5 +21,36 @@
                             :limit 100
                             :filename "dci-web-tickets")))
   :config
+
+  (defun jira:jql:project->epics (project)
+    `(:jql ,(concat "project = " project " and issuetype = Epic")
+       :limit 50
+       :filename ,(concat project "-epics")))
+
   (unless (file-directory-p org-jira-working-dir)
     (make-directory org-jira-working-dir)))
+
+
+(use-package experiments-jira
+  :defer t
+  :ensure nil
+  :config
+  ;; create a buffer with all the epics
+  (org-jira-get-issues-from-custom-jql (list (jira:jql:project->epics "SECDCI")))
+
+  (defun epic-and-tag ()
+    (interactive)
+    (let (epics
+           (has-sibiling t))
+      (while has-sibiling
+
+        (add-to-list 'epics (cons (car (org-get-tags))
+                              (org-get-heading t t t t)))
+        (setq has-sibiling (org-get-next-sibling)))
+      (message "%s" epics)))
+  )
+
+
+(provide 'tools)
+
+;;; tools.el ends here
