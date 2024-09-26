@@ -393,9 +393,24 @@
   (setq jsonrpc-event-hook nil))
 
 
+(use-package ibuffer
+  :ensure nil
+  :defer t
+  :custom
+  (ibuffer-saved-filter-groups '(("work"
+                                   ("TINMAN"
+                                     (filename . "Git/thetinman"))
+                                   ("DCI"
+                                     (filename . "Git/dci"))
+                                   ("MOTOMOTO"
+                                     (filename . "motomoto"))
+                                   ("ORG-MODE"
+                                     (mode . org-mode))))))
+
+
 (use-package emacs
   :config
-  (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-ts-mode))

@@ -118,6 +118,11 @@ tab-indent."
   (setq eldoc-echo-area-prefer-doc-buffer t))
 
 
+(use-package groovy-mode
+  :defer t
+  :ensure nil)
+
+
 (use-package python
   :defer t
   :bind

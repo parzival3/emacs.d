@@ -15,7 +15,8 @@
   :ensure nil
   :custom
   (org-jira-working-dir (concat user-emacs-directory "org-jira"))
-  (org-jira-project-filename-alist (list "SECDCI" "DCI"))
+  (org-jira-project-filename-alist ())
+  (org-jira-default-jql "(assignee = 'ento' or summary ~ 'ento' or description ~ 'ento' or comment ~ 'ento' ) and resolution = Unresolved ORDER BY updatedDate DESC ")
   (org-jira-custom-jqls (list
                           '(:jql "project = SECDCI and ('Epic Link'  = SECDCI-3523 or 'Epic Link'  = SECDCI-3210) and status != Closed  order by created DESC"
                             :limit 100
