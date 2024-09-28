@@ -35,6 +35,9 @@
 (use-package geiser
   :defer t
   :ensure nil)
+  ;; :init
+  ;; (with-eval-after-load 'geiser-guile
+  ;;   (add-to-list 'geiser-guile-load-path "~/Git/guix")))
 
 
 (use-package geiser-guile

@@ -4,8 +4,8 @@
   :ensure nil
   :bind ((:map Info-mode-map
            ("-" . Info-up)
-           ("n" . Info-history-next)
-           ("p" . Info-history-prev)
+           ("n" . Info-next)
+           ("p" . Info-prev)
            ("[" . meow-beginning-of-thing)
            ("]" . meow-end-of-thing)
            ("b" . meow-back-word)
