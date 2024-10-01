@@ -160,11 +160,12 @@
 (load-file (concat et-elisp-dir "casual-p-config.el"))
 ;; Load the operating system specific configuration at the end
 ;; so we can override any previous configuration
-(when (or (eq system-type `gnu/linux)
-          (eq system-type 'darwin))
-  (load-file (concat et-elisp-dir "os/unix.el")))
+(when (eq system-type `gnu/linux)
+  (load-file (concat et-elisp-dir "os/unix.el"))
+  (load-file (concat et-elisp-dir "os/linux.el")))
 
 (when (eq system-type 'darwin)
+  (load-file (concat et-elisp-dir "os/unix.el"))
   (load-file (concat et-elisp-dir "os/macos.el")))
 
 (when (eq system-type 'windows-nt)

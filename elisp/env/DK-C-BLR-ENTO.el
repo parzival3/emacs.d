@@ -1,10 +1,12 @@
 (defvar et-font-size "12")
 (cond
       ((eq system-type 'gnu/linux)
-       (defvar et-font (concat "Fira Code-" et-font-size))
-       (defvar et-git-directory "~/Git/"))
+        (defvar et-git-directory (expand-file-name "~/Git/"))
+        (setenv "FLUTTER_HOME" (concat et-git-directory "flutter"))
+        (add-to-list 'exec-path (concat (getenv "FLUTTER_HOME") "/bin"))
+        (setq eshell-path-env (mapconcat #'identity exec-path path-separator))
+        (setenv "PATH" eshell-path-env))
       ((eq system-type 'windows-nt)
        (defvar et-font (concat "FiraCode NFM-" et-font-size))
        (defvar et-git-directory "C:/Git/"))
       (t (error "Wrong system type")))
-

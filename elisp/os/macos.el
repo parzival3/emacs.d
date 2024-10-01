@@ -27,3 +27,5 @@
 
 ;; On macos ls doesn't support --dired
 (setq-default dired-use-ls-dired nil)
+
+(provide 'macos)
