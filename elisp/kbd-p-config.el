@@ -181,8 +181,8 @@
       '("/" . meow-keypad-describe-key)
       '("?" . meow-cheatsheet))
 
-    (apply 'meow-normal-define-key `(,@meow-normal-movement ,@meow-normal-actions))
+    (apply 'meow-normal-define-key `(,@meow-normal-movement ,@meow-normal-actions)))
     (meow-setup)
-    (meow-global-mode 1)))
+    (meow-global-mode 1))
 
 (provide 'kbd)
