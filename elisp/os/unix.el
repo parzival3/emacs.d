@@ -1,9 +1,5 @@
 ;;; unix.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
-;;; Key repeat
-;;; on linux in order to increase the key repeat one can use
-;;; xset r rate 200 130
-
 (use-package eat
   :defer t
   :hook
@@ -38,7 +34,6 @@
   ;; :init
   ;; (with-eval-after-load 'geiser-guile
   ;;   (add-to-list 'geiser-guile-load-path "~/Git/guix")))
-
 
 (use-package geiser-guile
   :defer t

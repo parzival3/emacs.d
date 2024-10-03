@@ -1,4 +1,8 @@
-;;; linux.el --- Optimizations for Linux -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; linux.el --- Linux config -*- no-byte-compile: t; lexical-binding: t; -*-
+
+;;; Key repeat
+;;; on linux in order to increase the key repeat one can use
+;;; xset r rate 200 130
 
 (use-package guix-emacs
   :defer t
