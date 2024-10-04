@@ -107,11 +107,13 @@ tab-indent."
 
 (use-package dart-ts-mode
   :defer t
+  :hook
+  (eglot-mode . dart-ts-eglot-server)
   :config
-  ;; (progn (add-to-list 'eglot-server-programs
-  ;;                     '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart" :initializationOptions (:onlyAnalyzeProjectsWithOpenFiles t)))))
-  (progn (add-to-list 'eglot-server-programs
-           '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart"))))
+  (defun dart-ts-eglot-server ()
+    (unless (alist-get 'dart-ts-mode eglot-server-programs)
+      (add-to-list 'eglot-server-programs
+               '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart")))))
   ;; make sure eglot doesn't talk to fast to the dart server
   (setq eglot-sync-connect 2)
   (setq eglot-events-buffer-config '(:size 0 :format nil))
