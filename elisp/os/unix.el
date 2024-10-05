@@ -30,7 +30,11 @@
 
 (use-package geiser
   :defer t
-  :ensure nil)
+  :ensure nil
+  :config
+  ;; I can't use :bind here since it runs a compile time
+  (eval-and-compile `(bind-keys :map geiser-debug-mode-map ,@meow-normal-movement)))
+
   ;; :init
   ;; (with-eval-after-load 'geiser-guile
   ;;   (add-to-list 'geiser-guile-load-path "~/Git/guix")))

@@ -103,4 +103,8 @@
   :bind
   ("C-:" . avy-goto-char-timer))
 
+
+(use-package paredit
+  :defer t)
+
 (provide 'packages)
