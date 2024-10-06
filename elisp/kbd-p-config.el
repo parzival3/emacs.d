@@ -2,74 +2,7 @@
 
 (use-package meow
   :ensure t
-  :config
-  ;; In terminal mode esc is interpreted as a keycode command
-  (when (not (display-graphic-p))
-    (setq meow-esc-delay 0.01))
-
-  (defun et-is-current-coding-system (coding-system)
-    (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
-      (cond
-       ((eq coding-system 'dos) (string-equal eol-type-memonic eol-mnemonic-dos))
-       ((eq coding-system 'unix) (string-equal eol-type-memonic eol-mnemonic-unix)))))
-
-  (defun et-clean-clipboard-yank (original-yank &rest args)
-    "Remove extra carriage returns from the clipboard before yanking only if the buffer is unix
-     or we don't have a file (which means we are trying to debug something or playing with the scratch
-     buffer."
-    (if (or (not buffer-file-name) (et-is-current-coding-system 'unix))
-        ;; sanitize
-        (progn
-          (let ((cleaned-clip (replace-regexp-in-string "\r" "" (current-kill 0))))
-               (kill-new cleaned-clip)
-               (apply original-yank args)))
-        ;; else
-       (apply original-yank args)))
-
-  ; wsl-copy
-  (defun wsl-copy (start end)
-    (interactive "r")
-    (shell-command-on-region start end "/mnt/c/Windows/System32/clip.exe")
-    (kill-ring-save start end)
-    (deactivate-mark))
-
-  (defun wsl-paste ()
-    (interactive)
-    (let ((clipboard
-           (shell-command-to-string "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'")))
-      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
-      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
-      (insert clipboard)))
-
-  (defun wsl-cut (start end)
-    (interactive "r")
-    (wsl-copy start end)
-    (delete-region start end))
-
-  (defun platform-copy ()
-    (interactive)
-    (cond
-     ((eq et-system-type 'wsl) (call-interactively #'wsl-copy))
-     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-save))
-     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-save))
-     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-save))))
-
-  (defun platform-paste ()
-    (interactive)
-    (cond
-     ((eq et-system-type 'wsl) (call-interactively #'wsl-paste))
-     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-yank))
-     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-yank))
-     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-yank))))
-
-  (defun platform-cut ()
-    (interactive)
-    (cond
-     ((eq et-system-type 'wsl) (call-interactively #'wsl-cut))
-     ((eq et-system-type 'darwin) (call-interactively #'meow-clipboard-kill))
-     ((eq et-system-type 'gnu/linux) (call-interactively #'meow-clipboard-kill))
-     ((eq et-system-type 'windows-nt) (call-interactively #'meow-clipboard-kill))))
-
+  :init
   (defvar meow-normal-movement
     '(("0" . meow-expand-0)
        ("9" . meow-expand-9)
@@ -135,6 +68,55 @@
        ("r" . meow-replace)
        ("R" . meow-swap-grab)
        ("s" . meow-kill)))
+
+  :config
+  ;; In terminal mode esc is interpreted as a keycode command
+  (when (not (display-graphic-p))
+    (setq meow-esc-delay 0.01))
+
+  (defun et-is-current-coding-system (coding-system)
+    (let ((eol-type-memonic (coding-system-eol-type-mnemonic buffer-file-coding-system)))
+      (cond
+        ((eq coding-system 'dos) (string-equal eol-type-memonic eol-mnemonic-dos))
+        ((eq coding-system 'unix) (string-equal eol-type-memonic eol-mnemonic-unix)))))
+
+  ; wsl-copy
+  (defun wsl-copy (start end)
+    (interactive "r")
+    (shell-command-on-region start end "/mnt/c/Windows/System32/clip.exe")
+    (kill-ring-save start end)
+    (deactivate-mark))
+
+  (defun wsl-paste ()
+    (interactive)
+    (let ((clipboard
+           (shell-command-to-string "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'")))
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (insert clipboard)))
+
+  (defun wsl-cut (start end)
+    (interactive "r")
+    (wsl-copy start end)
+    (delete-region start end))
+
+  (defun platform-copy ()
+    (interactive)
+    (or
+      (and (eq et-system-type 'wsl) (call-interactively #'wsl-copy))
+      (call-interactively #'meow-clipboard-save)))
+
+  (defun platform-paste ()
+    (interactive)
+    (or
+     (and (eq et-system-type 'wsl) (call-interactively #'wsl-paste))
+     (call-interactively #'meow-clipboard-yank)))
+
+  (defun platform-cut ()
+    (interactive)
+    (or
+     (and (eq et-system-type 'wsl) (call-interactively #'wsl-cut))
+     (call-interactively #'meow-clipboard-kill)))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

@@ -27,7 +27,6 @@
   :custom
   (dired-listing-switches "-alh"))
 
-
 (use-package geiser
   :defer t
   :ensure nil
