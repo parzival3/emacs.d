@@ -51,8 +51,10 @@
 (use-package clang-format+
   :defer t)
 
-
 (use-package devdocs
+  :defer t)
+
+(use-package dash-docs
   :defer t)
 
 

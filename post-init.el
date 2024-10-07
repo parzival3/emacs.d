@@ -108,7 +108,7 @@
    ('prog-mode . hs-minor-mode))
   :config
   ;; Set default theme
-  (load-theme 'modus-vivendi t)
+  (load-theme 'modus-vivendi-tinted t)
 
   ;; Need to check theese parameters
   (setq default-frame-alist

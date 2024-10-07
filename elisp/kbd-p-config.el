@@ -102,21 +102,29 @@
 
   (defun platform-copy ()
     (interactive)
-    (or
-      (and (eq et-system-type 'wsl) (call-interactively #'wsl-copy))
+    (if (eq et-system-type 'wsl)
+      (call-interactively #'wsl-copy)
       (call-interactively #'meow-clipboard-save)))
 
   (defun platform-paste ()
     (interactive)
-    (or
-     (and (eq et-system-type 'wsl) (call-interactively #'wsl-paste))
-     (call-interactively #'meow-clipboard-yank)))
+    (if (eq et-system-type 'wsl)
+      (call-interactively #'wsl-paste)
+      (call-interactively #'meow-clipboard-yank)))
 
   (defun platform-cut ()
     (interactive)
-    (or
-     (and (eq et-system-type 'wsl) (call-interactively #'wsl-cut))
-     (call-interactively #'meow-clipboard-kill)))
+    (if (eq et-system-type 'wsl)
+     (call-interactively #'wsl-cut)
+      (call-interactively #'meow-clipboard-kill)))
+
+  (defun to-clipboard ()
+    (interactive)
+    (if-let ((direct-copy (or (eq last-command 'meow-save)
+                            (eq last-command 'kill-ring-save)))
+              (text (car kill-ring)))
+      (gui-set-selection 'CLIPBOARD text)
+      (gui-set-selection 'CLIPBOARD (read-from-kill-ring "Copy from kill-ring: "))))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
