@@ -313,5 +313,29 @@ If there is no selected word, simply start an empty search."
       (eshell-set-path string-path)
       (setenv "PATH" string-path))))
 
+
+(defun et-get-scratch-buffer-create (scratch-name major-mode)
+  "Return the *scratch* buffer, creating a new one if needed."
+  (or (get-buffer scratch-name)
+    (let ((scratch (get-buffer-create scratch-name)))
+        ;; Don't touch the buffer contents or mode unless we know that
+        ;; we just created it.
+        (with-current-buffer scratch
+          (when initial-scratch-message
+            (insert (substitute-command-keys initial-scratch-message))
+            (set-buffer-modified-p nil))
+          (funcall major-mode))
+      scratch)))
+
+;;;###autoload
+(defun et-create-scratch (arg)
+  (interactive "P")
+  (let* ((prefix (and arg (format "-%d" arg)))
+          (scratch-name (format "*scratch%s*" prefix))
+          (major-mode (or (and arg 'emacs-lisp-mode)
+                        initial-major-mode)))
+  (pop-to-buffer-same-window
+    (et-get-scratch-buffer-create scratch-name major-mode))))
+
 (provide 'utils)
 ;; utils.el ends here
