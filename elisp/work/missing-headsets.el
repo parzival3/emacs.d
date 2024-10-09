@@ -67,3 +67,38 @@
           (erase-buffer)
           (insert "DCI source code name,vid,pid,vid(decimal),pid(decimal),Product Name,Friendly Name\n"))
         (mapcar #'print-missing mcaptures)))))
+
+
+(defun save-dci-pids (b-name treesit-match)
+  (defun insert-entry (capture)
+    (let* ((name (treesit-node-text (cdar capture)))
+            (pid (treesit-node-text (cdadr capture)))
+            (pid (cl-parse-integer pid :start 2 :radix 16 :junk-allowed t))
+            (vid #x1395)
+            (recovery-pid (logior #x8000 pid)))
+      (unless (or (s-contains? "lenovo" name t)
+                (s-contains? "amz" name t)
+                (s-contains? "gsp" name t)
+                (s-contains? "gsa" name t)
+                (s-contains? "gtw" name t)
+                (s-contains? "gts" name t)
+                (s-contains? "gaming" name t)
+                (s-contains? "mask" name t)
+                (s-starts-with? "h3" name t)
+                (s-starts-with? "yku" name t)
+                (s-starts-with? "pid" name t)
+                (s-starts-with? "ac" name t)
+                (s-contains? "recovery" name t)
+                (s-contains? "dummy" name t)
+                (s-starts-with? "vid" name t))
+        (insert (format "%s,0x%04x,0x%04x,%d,%d\n" name vid pid vid pid))
+        (insert (format "%s (recovery),0x%04x,0x%04x,%d,%d\n" name vid recovery-pid vid recovery-pid)))))
+
+  (with-current-buffer (get-buffer-create b-name)
+    (save-mark-and-excursion
+      (save-match-data
+        (erase-buffer)
+        (insert "DCI source code name,vid,pid,vid(decimal),pid(decimal)\n")
+        (mapcar #'insert-entry treesit-match)))))
+
+(save-dci-pids "List of DCI PIDs (EPOS).csv" mcaptures)
