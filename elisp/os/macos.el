@@ -28,4 +28,25 @@
 ;; On macos ls doesn't support --dired
 (setq-default dired-use-ls-dired nil)
 
+(defun macos-get-resolution ()
+  "Get the resolution of the main display in order to adapt the font based on laptop / laptop docked"
+  (let ((command "system_profiler SPDisplaysDataType"))
+    (with-temp-buffer
+      (save-match-data
+        (shell-command command (current-buffer))
+        (goto-char (point-min))
+        (re-search-forward "Main Display:[[:space:]]+Yes")
+        (re-search-backward "Resolution:[[:space:]]+\\([[:digit:]]+\\)[[:space:]]+x[[:space:]]+\\([[:digit:]]+\\)")
+        (cons (string-to-number (match-string 1)) (string-to-number (match-string 2)))))))
+
+;; If I'm using just the laptop set the font to 14 instead of 18
+(when (> (car (macos-get-resolution)) 1080)
+  (add-to-list 'default-frame-alist '(font . "Roboto Mono:style=Light:size=14")))
+
+(use-package modus-themes
+  :ensure t)
+
+(custom-set-variables
+  '(custom-safe-themes
+       ("8d146df8bd640320d5ca94d2913392bc6f763d5bc2bb47bed8e14975017eea91" "e410458d3e769c33e0865971deb6e8422457fad02bf51f7862fa180ccc42c032" default)))
 (provide 'macos)

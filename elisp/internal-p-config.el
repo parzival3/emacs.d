@@ -12,6 +12,12 @@
   :config
   (eval `(bind-keys :map Info-mode-map ,@meow-normal-movement)))
 
+(use-package debug
+  :ensure nil
+  :defer t
+  :config
+  (eval `(bind-keys :map debugger-mode-map ,@meow-normal-movement)))
+
 (use-package grep
   :ensure nil
   :config
