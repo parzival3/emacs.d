@@ -380,6 +380,8 @@
 
 
 (use-package emacs
+  :bind
+  ("<f1>" . read-only-mode)
   :config
   (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
