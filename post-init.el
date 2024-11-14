@@ -46,6 +46,7 @@
 (use-package emacs
   :ensure nil
   :init
+  (put 'list-timers 'disabled nil)
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release)
     "The only way to easilly distinguish if we are running on WSL or Linux")
 
@@ -113,7 +114,7 @@
   ;; Need to check theese parameters
   (setq default-frame-alist
         (append (list
-                 '(font . "Roboto Mono:style=Light:size=18")
+                 '(font . "RobotoMono Nerd Font Mono:style=Light:size=18")
 	             '(min-height . 1) '(height    . 45)
 	             '(min-width  . 1) '(width      . 81)
                  '(vertical-scroll-bars . nil)

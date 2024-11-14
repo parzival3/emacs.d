@@ -8,10 +8,11 @@
   (("C-x v o" . browse-at-remote))
   :config
   (setq browse-at-remote-use-http '("cd.senncom.com"))
-  (add-to-list 'browse-at-remote-remote-type-regexps
-               `(:host ,(rx bol "cd.senncom.com" eol)
-                       :type "stash"
-                       :actual-host "cd.senncom.com:7990"))
+  ;; (add-to-list 'browse-at-remote-remote-type-regexps
+  ;;              `(:host ,(rx bol "cd.senncom.com" eol)
+  ;;                      :type "stash"
+  ;;                 :actual-host "cd.senncom.com:7990"))
+  (add-to-list 'browse-at-remote-remote-type-domains '("cd.senncom.com" . "stash"))
 
   (defun et-fix-http-protocol-for-browse-at-remote (orig-fun &rest args)
     (let* ((parsed (url-generic-parse-url (car args)))

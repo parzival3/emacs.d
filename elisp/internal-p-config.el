@@ -225,6 +225,7 @@
   (:map dired-mode-map
    ("-" . dired-up-directory))
   :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
   ;; prevent for creating new buffers for each folder.
   (setf dired-kill-when-opening-new-dired-buffer t)
   ;; easilly copy to other windows

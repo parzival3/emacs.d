@@ -125,6 +125,7 @@
 (use-package org
   :defer t
   :config
+  (setq org-element-cache-persistent nil)
   (setq org-notes-folder (concat et-git-directory "/notes/"))
   (defun org-list-of-notes ()
     (interactive)
