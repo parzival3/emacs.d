@@ -234,3 +234,6 @@
 
 (use-package all-the-icons
   :ensure f)
+
+(use-package all-the-icons-dired
+  :ensure f)

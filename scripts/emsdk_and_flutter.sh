@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -ex
 CMD="env \
     LD_LIBRARY_PATH=/lib \
@@ -20,4 +20,5 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY --share=/home/enrico/tools/flutter 
     $CMD bash --init-file <(echo 'source $EMSDK_HOME' && echo 'PATH=$PATH:$FLUTTER_HOME:$HOME/.pub-cache/bin'; echo "$@")
 
 !#
-(specifications->manifest (list "bash" "curl" "unzip" "git" "make" "findutils" "gzip" "python" "binutils" "coreutils" "nss-certs" "tar" "xz" "grep" "node" "glibc" "gcc-toolchain" "fd" "which" "zlib" "pkg-config"))
+
+(specifications->manifest (list "bash" "curl" "unzip" "git" "make" "findutils" "gzip" "python" "binutils" "coreutils" "nss-certs" "tar" "xz" "grep" "glibc" "gcc-toolchain" "fd" "which" "zlib" "pkg-config"))
