@@ -71,5 +71,6 @@
     "tmux"
     "universal-ctags"
     "fd"
+    "ripgrep"
     "python"
     ))
