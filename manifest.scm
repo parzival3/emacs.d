@@ -73,4 +73,5 @@
     "fd"
     "ripgrep"
     "python"
+    "bzip2"
     ))

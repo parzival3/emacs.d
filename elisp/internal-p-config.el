@@ -18,6 +18,13 @@
   :config
   (eval `(bind-keys :map debugger-mode-map ,@meow-normal-movement)))
 
+(use-package simple
+  :ensure nil
+  :defer t
+  :config
+  (eval `(bind-keys :map messages-buffer-mode-map ,@meow-normal-movement)))
+
+
 (use-package grep
   :ensure nil
   :config
