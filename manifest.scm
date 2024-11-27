@@ -4,6 +4,8 @@
 
 (specifications->manifest
   (list
+    "glibc-enrico-utf8-locales"
+    "nss-certs"
     "aspell-dict-en"
     "binutils"
     "cmake"
