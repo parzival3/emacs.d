@@ -1,4 +1,7 @@
 #!/bin/bash
+# To build the linux version I had to do this otherwise limis.h was not found
+# CPLUS_INCLUDE_PATH="/gnu/store/l9467jv5sw5cc2a60nl6w96sxs8ls5m2-linux-libre-headers-5.15.49/include" flutter build linux -v
+
 set -ex
 CMD="env \
     LD_LIBRARY_PATH=/lib \
@@ -11,7 +14,7 @@ CMD="env \
     EMSDK_HOME=/home/enrico/tools/emsdk/emsdk_env.sh \
     FLUTTER_HOME=/home/enrico/tools/flutter/bin"
 
-exec guix shell -C --pure  -F -N -E ^DISPLAY --share=/home/enrico/tools/flutter \
+exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/enrico/tools/flutter \
     --expose=/home/enrico/tools/emsdk \
     --share=/home/enrico/tools/pub-cache=/home/enrico/.pub-cache \
     --share=/home/enrico/tools/config=/home/enrico/.config \
@@ -21,4 +24,30 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY --share=/home/enrico/tools/flutter 
 
 !#
 
-(specifications->manifest (list "bash" "curl" "unzip" "git" "make" "findutils" "gzip" "python" "binutils" "coreutils" "nss-certs" "tar" "xz" "grep" "glibc" "gcc-toolchain" "fd" "which" "zlib" "pkg-config"))
+(specifications->manifest
+ (list
+  "bash"
+  "curl"
+  "unzip"
+  "git"
+  "make"
+  "findutils"
+  "gzip"
+  "python"
+  "binutils"
+  "coreutils"
+  "nss-certs"
+  "tar"
+  "xz"
+  "grep"
+  "glibc"
+  "gcc-toolchain"
+  "clang-toolchain"
+  "fd"
+  "which"
+  "zlib"
+  "pkg-config"
+  "cmake"
+  "ninja"
+  "eudev"
+  "gtk+"))
