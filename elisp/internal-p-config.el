@@ -20,10 +20,10 @@
 
 (use-package simple
   :ensure nil
+  :after (meow)
   :defer t
   :config
   (eval `(bind-keys :map messages-buffer-mode-map ,@meow-normal-movement)))
-
 
 (use-package grep
   :ensure nil
