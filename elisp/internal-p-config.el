@@ -425,4 +425,28 @@
   :config
   (advice-add 'vc-next-action :around #'et-vc-log-advice))
 
+(use-package eshell
+  :ensure nil
+  :defer t
+  :config
+
+  (defun fancy-shell ()
+    "A pretty shell with git status"
+    (let* ((cwd (abbreviate-file-name (eshell/pwd)))
+            (ref (magit-get-shortname "HEAD"))
+            (stat (magit-file-status))
+            (x-stat eshell-last-command-status))
+      (propertize
+        (format "%s %s $ "
+          (if (< 0 x-stat) (format (propertize "!%s" 'font-lock-face '(:foreground "red")) x-stat)
+            (propertize "➤" 'font-lock-face (list :foreground (if (< 0 x-stat) "red" "green"))))
+          (propertize cwd 'font-lock-face '(:foreground "#45babf")))
+        ; 'read-only t
+        'front-sticky   '(font-lock-face read-only)
+        'rear-nonsticky '(font-lock-face read-only))))
+
+  (setopt eshell-prompt-function 'fancy-shell)
+  (setopt eshell-prompt-regexp "^[^#$\n]* [#$] ")
+  (setopt eshell-highlight-prompt nil))
+
 (provide 'internal-package-config)
