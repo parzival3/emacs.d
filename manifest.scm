@@ -4,6 +4,9 @@
 
 (specifications->manifest
   (list
+    "curl"
+    "wl-clipboard"
+    "python-pyls-black"
     "bash"
     "glibc-enrico-utf8-locales"
     "nss-certs"
