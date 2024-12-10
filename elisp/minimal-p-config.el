@@ -237,3 +237,6 @@
 
 (use-package all-the-icons-dired
   :ensure f)
+
+(use-package modus-themes
+  :ensure f)
