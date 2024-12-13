@@ -111,7 +111,9 @@
   ;; Set default theme
   (load-theme 'modus-vivendi-tinted t)
 
-  ;; Need to check theese parameters
+  ;; Dyslexic font spec
+  ;; * set-frame-font(#<font-spec nil nil OpenDyslexicM\ Nerd\ Font\ Mono nil nil normal normal nil 12.0 nil nil nil nil> nil t)
+  ;; Need to check these parameters
   (setq default-frame-alist
         (append (list
                  '(font . "RobotoMono Nerd Font Mono:style=Light:size=18")
