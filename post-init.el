@@ -78,7 +78,8 @@
                              (error "Couldn't determin the machine configuration")))
 
   :bind
-  (("M-<up>" . enlarge-window)
+  (("<f1>" . read-only-mode)
+    ("M-<up>" . enlarge-window)
    ("M-<down>" . shrink-window)
    ("M-<left>" . shrink-window-horizontally)
    ("M-<right>" . enlarge-window-horizontally)
