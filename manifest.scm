@@ -38,6 +38,7 @@
     "emacs-embark"
     "emacs-gcmh"
     "emacs-geiser-guile"
+    "guile"
     "emacs-gptel"
     "emacs-jinx"
     "emacs-nano-modeline"
