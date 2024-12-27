@@ -37,6 +37,7 @@
     "emacs-eat"
     "emacs-embark"
     "emacs-gcmh"
+    "emacs-nix-mode"
     "emacs-geiser-guile"
     "guile"
     "emacs-gptel"

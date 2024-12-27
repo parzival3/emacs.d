@@ -15,6 +15,27 @@
 (use-package debug
   :ensure nil
   :defer t
+  :bind
+  (:map debugger-mode-map
+   ("c" . debugger-continue)
+   ("B" . debugger-frame) ;; "b"
+   ("J" . debugger-jump)  ;; "j"
+   ("r" . debugger-return-value)
+   ("u" . debugger-frame-clear)
+   ("d" . debugger-step-through)
+   ("L" . debugger-list-functions)
+   ("Q" . debugger-quit) ;; q
+   ("E" . debugger-eval-expression) ;; e
+   ("R" . debugger-record-expression)
+   ("n" . backtrace-forward-frame)
+   ("p" . backtrace-backward-frame)
+   ("v" . backtrace-toggle-locals)
+   ("#" . backtrace-toggle-print-circle)
+   (":" . backtrace-toggle-print-gensym)
+   ("RET" . backtrace-help-follow-symbol)
+   ("+" .  backtrace-multi-line)
+   ("-" .  backtrace-single-line)
+   ("." .  backtrace-expand-ellipses))
   :config
   (eval `(bind-keys :map debugger-mode-map ,@meow-normal-movement)))
 
