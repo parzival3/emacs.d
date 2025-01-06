@@ -16,7 +16,7 @@
 
     (unless (get-buffer flutter-eshell)
       (let ((eshell-buffer-name flutter-eshell)
-             (default-directory "~/Git/dci/motomoto"))
+             (default-directory "~/Git/dci/"))
         (eshell)
         (with-current-buffer flutter-eshell
           (insert "~/.emacs.d/scripts/emsdk_and_flutter.sh ./run_motomoto_server.sh")

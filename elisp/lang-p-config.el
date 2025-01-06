@@ -67,15 +67,18 @@
     ;; same for parameters
     ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
     ((parent-is "parameter_list") (nth-sibling 1) 0)
-    ;; indent inside case blocks
+    ((parent-is "try_statement") (nth-sibling 1) 0)
+
+     ;; indent inside case blocks
     ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
     ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
     ;; do not indent preprocessor statements
     ((node-is "preproc") column-0 0)
     ;; namespace
     ((n-p-gp nil "declaration_list" "namespace_definition") parent-bol 0)
-    ((n-p-gp "compound_statement" "for_statement" nil) standalone-parent c-ts-mode-indent-offset)
-    ;; append to bsd style
+    ((n-p-gp "compound_statement" "catch_clause" nil) standalone-parent 0)
+    ((n-p-gp "compound_statement" "try_statement" nil) standalone-parent 0)
+     ;; append to bsd style
     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
 
