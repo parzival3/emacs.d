@@ -84,7 +84,7 @@
     ;; same for parameters
     ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
     ((parent-is "parameter_list") (nth-sibling 1) 0)
-    ((parent-is "try_statement") (nth-sibling 1) 0)
+    ((parent-is "try_statement") parent-bol 0)
 
      ;; indent inside case blocks
     ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
