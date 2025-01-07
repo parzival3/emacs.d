@@ -263,16 +263,12 @@
 
 (use-package compile
   :ensure nil
-  :bind (:map compilation-mode-map
-              ("w" . meow-mark-word)
-              ("e" . meow-next-word)
-              ("b".  meow-back-word)
-              ("l" . meow-right)
-              ("h" . meow-left)
-              ("y" . platform-copy)
-              ("s" . platform-cut)
-              ("x" . meow-line))
+  :bind
+  (:map compilation-mode-map
+    ("g" . recompile))
   :config
+  (eval `(bind-keys :map compilation-mode-map ,@meow-normal-movement))
+
   (setq compilation-scroll-output t)
   (setq compilation-auto-jump-to-first-error t)
   ;; How to debug compilation regex alist
