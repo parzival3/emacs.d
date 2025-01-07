@@ -205,32 +205,37 @@
   (git-commit-setup . et-file-commit-message))
 
 
-(use-package nano-modeline
+(use-package spacious-padding
   :ensure t
-  :demand t
-  :custom
-  (nano-modeline-position #'nano-modeline-footer)
-
   :config
-  (add-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
-  (add-hook 'text-mode-hook            #'nano-modeline-text-mode)
-  (add-hook 'org-mode-hook             #'nano-modeline-org-mode)
-  ;; (add-hook 'pdf-view-mode-hook        #'nano-modeline-pdf-mode)
-  ;; (add-hook 'mu4e-headers-mode-hook    #'nano-modeline-mu4e-headers-mode)
-  ;; (add-hook 'mu4e-view-mode-hook       #'nano-modeline-mu4e-message-mode)
-  ;; (add-hook 'mu4e-compose-mode-hook    #'nano-modeline-mu4e-compose-mode)
-  ;; (add-hook 'elfeed-show-mode-hook     #'nano-modeline-elfeed-entry-mode)
-  ;; (add-hook 'elfeed-search-mode-hook   #'nano-modeline-elfeed-search-mode)
-  ;; (add-hook 'elpher-mode-hook          #'nano-modeline-elpher-mode)
-  (add-hook 'term-mode-hook            #'nano-modeline-term-mode)
-  (add-hook 'eat-mode-hook             #'nano-modeline-eat-mode)
-  ;; (add-hook 'xwidget-webkit-mode-hook  #'nano-modeline-xwidget-mode)
-  ;; (add-hook 'messages-buffer-mode-hook #'nano-modeline-message-mode)
-  (add-hook 'org-capture-mode-hook     #'nano-modeline-org-capture-mode)
-  (add-hook 'org-agenda-mode-hook      #'nano-modeline-org-agenda-mode)
+  (setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 4
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 30
+         :scroll-bar-width 8
+         :fringe-width 8
+         ))
 
-  (nano-modeline-text-mode t))
+  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+  ;; is very flexible and provides several examples.
+  (setq spacious-padding-subtle-mode-line
+    `( :mode-line-active 'default
+       :mode-line-inactive vertical-border))
 
+  (defvar-local file-modified?
+    (list (propertize "%1*") (propertize "%1+")))
+
+  (setq-default mode-line-format
+    `("%e" mode-line-front-space
+       (:propertize
+         ("" file-modified?))
+       mode-line-front-space mode-line-buffer-identification "   "
+       mode-line-position (project-mode-line project-mode-line-format)
+       "  " mode-line-mode  mode-line-end-spaces))
+
+  (spacious-padding-mode 1))
 
 (use-package all-the-icons
   :ensure f)

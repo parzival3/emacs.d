@@ -1,4 +1,4 @@
-;;; lang.el --- Programming modes -*- no-byte-compile: t; lexical-binding: t; -*-
+;; lang.el --- Programming modes -*- no-byte-compile: t; lexical-binding: t; -*-
 (use-package flyspell
   :defer t
   :config
@@ -52,11 +52,28 @@
   :defer t)
 
 (use-package devdocs
-  :defer t)
+  :defer t
+  :bind
+  (:map devdocs-mode-map
+    ("d" . #'devdocs-peruse)
+    ("i" . #'devdocs-lookup)
+    ("p" . #'devdocs-previous-entry)
+    ("n" . #'devdocs-next-entry)
+    ("g" . #'devdocs-goto-page)
+    ("[" . #'devdocs-previous-page)
+    ("]" . #'devdocs-next-page)
+    ("<" . #'devdocs-first-page)
+    (">" . #'devdocs-last-page)
+    ("L" . #'devdocs-go-back)
+    ("r" . #'devdocs-go-forward)
+    ("w" . #'devdocs-copy-url)
+    ("." . #'devdocs-goto-target))
+  :config
+  (eval `(bind-keys :map devdocs-mode-map ,@meow-normal-movement)))
+
 
 (use-package dash-docs
   :defer t)
-
 
 (defun et-indent-style()
   "Override the built-in BSD indentation style with some additional rules"
