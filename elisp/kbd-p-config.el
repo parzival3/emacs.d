@@ -81,50 +81,9 @@
         ((eq coding-system 'unix) (string-equal eol-type-memonic eol-mnemonic-unix)))))
 
   ; wsl-copy
-  (defun wsl-copy (start end)
-    (interactive "r")
-    (shell-command-on-region start end "/mnt/c/Windows/System32/clip.exe")
-    (kill-ring-save start end)
-    (deactivate-mark))
 
-  (defun wsl-paste ()
-    (interactive)
-    (let ((clipboard
-           (shell-command-to-string "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'")))
-      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
-      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
-      (insert clipboard)))
-
-  (defun wsl-cut (start end)
-    (interactive "r")
-    (wsl-copy start end)
-    (delete-region start end))
-
-  (defun platform-copy ()
-    (interactive)
-    (if (eq et-system-type 'wsl)
-      (call-interactively #'wsl-copy)
-      (call-interactively #'meow-clipboard-save)))
-
-  (defun platform-paste ()
-    (interactive)
-    (if (eq et-system-type 'wsl)
-      (call-interactively #'wsl-paste)
-      (call-interactively #'meow-clipboard-yank)))
-
-  (defun platform-cut ()
-    (interactive)
-    (if (eq et-system-type 'wsl)
-     (call-interactively #'wsl-cut)
-      (call-interactively #'meow-clipboard-kill)))
-
-  (defun to-clipboard ()
-    (interactive)
-    (if-let ((direct-copy (or (eq last-command 'meow-save)
-                            (eq last-command 'kill-ring-save)))
-              (text (car kill-ring)))
-      (gui-set-selection 'CLIPBOARD text)
-      (gui-set-selection 'CLIPBOARD (read-from-kill-ring "Copy from kill-ring: "))))
+  (meow-thing-register 'arrow '(pair ("<") (">")) '(pair ("<") (">")))
+  (add-to-list 'meow-char-thing-table '(?a . arrow))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

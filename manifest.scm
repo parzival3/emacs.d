@@ -6,7 +6,7 @@
   (list
     "curl"
     "wl-clipboard"
-    "python-pyls-black"
+    "python-lsp-black"
     "bash"
     "glibc-enrico-utf8-locales"
     "nss-certs"
@@ -15,6 +15,7 @@
     "cmake"
     "coreutils"
     "emacs-all-the-icons"
+    "emacs-spacious-padding"
     "emacs-all-the-icons-dired"
     "emacs-async"
     "emacs-auto-compile"

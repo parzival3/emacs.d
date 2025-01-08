@@ -262,6 +262,8 @@
 
 
 (use-package compile
+  :after (meow)
+  :defer t
   :ensure nil
   :bind
   (:map compilation-mode-map
