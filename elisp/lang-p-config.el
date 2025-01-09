@@ -78,25 +78,26 @@
 (defun et-indent-style()
   "Override the built-in BSD indentation style with some additional rules"
   `(
-    ;; align function arguments to the start of the first one, offset if standalone
-    ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-    ((parent-is "argument_list") (nth-sibling 1) 0)
-    ;; same for parameters
-    ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-    ((parent-is "parameter_list") (nth-sibling 1) 0)
-    ((parent-is "try_statement") parent-bol 0)
+     ;; align function arguments to the start of the first one, offset if standalone
+     ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+     ((parent-is "argument_list") (nth-sibling 1) 0)
+     ;; same for parameters
+     ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+     ((parent-is "parameter_list") (nth-sibling 1) 0)
+     ((parent-is "try_statement") parent-bol 0)
 
      ;; indent inside case blocks
-    ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
-    ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
-    ;; do not indent preprocessor statements
-    ((node-is "preproc") column-0 0)
-    ;; namespace
-    ((n-p-gp nil "declaration_list" "namespace_definition") parent-bol 0)
-    ((n-p-gp "compound_statement" "catch_clause" nil) standalone-parent 0)
-    ((n-p-gp "compound_statement" "try_statement" nil) standalone-parent 0)
+     ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
+     ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
+
+     ;; do not indent preprocessor statements
+     ((node-is "preproc") column-0 0)
+     ((node-is "compound_statement") standalone-parent 0)
+
+     ;; namespace
+     ((n-p-gp nil "declaration_list" "namespace_definition") parent-bol 0)
      ;; append to bsd style
-    ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+     ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
 
 
 (unless (file-directory-p (concat package-user-dir "/copilot"))
