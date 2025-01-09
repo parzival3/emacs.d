@@ -3,6 +3,7 @@
 (defun emscripten-flutter-guix-env ()
   "Function for quickly start the development of Motomoto on web"
   (interactive)
+  (require 'eshell)
   (let ((default-directory "~/Git/dci")
          (emscripten-eshell "emscripten-eshell")
          (flutter-eshell "flutter-eshell"))

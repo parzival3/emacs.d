@@ -120,8 +120,13 @@
   (defun project-magit-status ()
     (interactive)
     (magit-status (project-root (project-current t))))
+
+  ;; remove the default project-find-regexp
+  (assoc-delete-all 'project-find-regexp project-switch-commands)
   (add-to-list 'project-switch-commands '(project-magit-status "Magit Status" ?m))
   (add-to-list 'project-switch-commands '(project-compile "Compile Project" ?c))
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Grep Consult rg" ?g))
+
 
   (defun project-keep-dir-open (dir)
     (dired-other-window dir))
@@ -284,6 +289,14 @@
   ;;                                  (remove 'ada)))))))
   )
 
+;; Internal package to uniquify buffer names
+(use-package uniquify
+  :ensure nil
+  :custom
+  (uniquify-buffer-name-style 'reverse)
+  (uniquify-separator "•")
+  (uniquify-after-kill-buffer-p t)
+  (uniquify-ignore-buffers-re "^\\*"))
 
 (use-package hippie-exp
   :ensure nil
@@ -398,7 +411,10 @@
   (add-to-list 'auto-mode-alist '("\\.\\(cc\\|hh\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(py\\|pyi\\)\\'" . python-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(json\\|jsonnet\\)\\'" . json-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.\\(ino\\)\\'" . c++-ts-mode))
+
+  (setq pixel-scroll-precision-use-momentum nil)
+  (pixel-scroll-precision-mode 1))
 
 (use-package gud
   :ensure nil
