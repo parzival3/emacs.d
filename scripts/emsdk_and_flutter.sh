@@ -55,4 +55,5 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/e
   "eudev"
   "go"
   "zip"
+  "python-requests"
   "gtk+"))
