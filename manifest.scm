@@ -46,7 +46,7 @@
     "emacs-magit"
     "emacs-marginalia"
     "emacs-meow"
-    "emacs-next-pgtk-sans-ctags"
+    "emacs-next-lucid-sans-ctags"
     "emacs-orderless"
     "emacs-org"
     "emacs-paredit"
