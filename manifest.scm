@@ -89,4 +89,5 @@
     "patchelf"
     "ninja"
     "pkg-config"
+    "virt-manager"
     ))
