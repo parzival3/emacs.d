@@ -460,28 +460,40 @@
   :config
   (advice-add 'vc-next-action :around #'et-vc-log-advice))
 
-(use-package eshell
+(use-package em-prompt
   :ensure nil
   :defer t
   :config
+  (setopt eshell-prompt-function 'fancy-shell)
+  (setopt eshell-highlight-prompt nil)
 
   (defun fancy-shell ()
     "A pretty shell with git status"
     (let* ((cwd (abbreviate-file-name (eshell/pwd)))
-            (ref (magit-get-shortname "HEAD"))
-            (stat (magit-file-status))
             (x-stat eshell-last-command-status))
       (propertize
         (format "%s %s $ "
           (if (< 0 x-stat) (format (propertize "!%s" 'font-lock-face '(:foreground "red")) x-stat)
-            (propertize "➤" 'font-lock-face (list :foreground (if (< 0 x-stat) "red" "green"))))
+            (propertize "λ ➤" 'font-lock-face (list :foreground (if (< 0 x-stat) "red" "green"))))
           (propertize cwd 'font-lock-face '(:foreground "#45babf")))
-        ; 'read-only t
+        'read-only t
         'front-sticky   '(font-lock-face read-only)
         'rear-nonsticky '(font-lock-face read-only))))
 
-  (setopt eshell-prompt-function 'fancy-shell)
-  (setopt eshell-prompt-regexp "^[^#$\n]* [#$] ")
-  (setopt eshell-highlight-prompt nil))
+
+  ;; It seems that in Emacs 30.1 the function `eshell-emit-prompt` changes the property of the
+  ;; prompt based on the variable `eshell-highlight-prompt`. Since I'm not yet 100% on board on
+  ;; Emacs faces, it was easier for me to re-define the emit-prompt function
+  (defun eshell-emit-prompt ()
+    "Emit a prompt if eshell is being used interactively."
+    (when (boundp 'ansi-color-context-region)
+      (setq ansi-color-context-region nil))
+    (run-hooks 'eshell-before-prompt-hook)
+    (if (not eshell-prompt-function)
+      (set-marker eshell-last-output-end (point))
+      (eshell-interactive-filter nil (funcall eshell-prompt-function)))
+    (run-hooks 'eshell-after-prompt-hook))
+
+  )
 
 (provide 'internal-package-config)
