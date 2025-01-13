@@ -95,8 +95,8 @@
   (advice-add #'register-preview :override #'consult-register-window)
 
   ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
+  (setq-default xref-show-xrefs-function #'consult-xref
+                xref-show-definitions-function #'consult-xref)
 
   :config
   (consult-customize
@@ -141,8 +141,6 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-
-
 (use-package corfu
   :ensure t
   :defer t
@@ -151,7 +149,6 @@
   :hook ((prog-mode . corfu-mode)
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode))
-
   :custom
   ;; Hide commands in M-x which do not apply to the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
