@@ -460,12 +460,14 @@
   :config
   (advice-add 'vc-next-action :around #'et-vc-log-advice))
 
-(use-package em-prompt
+(use-package eshell
   :ensure nil
   :defer t
+  :after ('esh-module)
   :config
   (setopt eshell-prompt-function 'fancy-shell)
-  (setopt eshell-highlight-prompt nil)
+  (setopt eshell-highlight-prompt 't)
+  (add-to-list 'eshell-modules-list 'eshell-smart)
 
   (defun fancy-shell ()
     "A pretty shell with git status"
@@ -478,22 +480,6 @@
           (propertize cwd 'font-lock-face '(:foreground "#45babf")))
         'read-only t
         'front-sticky   '(font-lock-face read-only)
-        'rear-nonsticky '(font-lock-face read-only))))
-
-
-  ;; It seems that in Emacs 30.1 the function `eshell-emit-prompt` changes the property of the
-  ;; prompt based on the variable `eshell-highlight-prompt`. Since I'm not yet 100% on board on
-  ;; Emacs faces, it was easier for me to re-define the emit-prompt function
-  (defun eshell-emit-prompt ()
-    "Emit a prompt if eshell is being used interactively."
-    (when (boundp 'ansi-color-context-region)
-      (setq ansi-color-context-region nil))
-    (run-hooks 'eshell-before-prompt-hook)
-    (if (not eshell-prompt-function)
-      (set-marker eshell-last-output-end (point))
-      (eshell-interactive-filter nil (funcall eshell-prompt-function)))
-    (run-hooks 'eshell-after-prompt-hook))
-
-  )
+        'rear-nonsticky '(font-lock-face read-only)))))
 
 (provide 'internal-package-config)

@@ -14,7 +14,10 @@ CMD="env \
     EMSDK_HOME=/home/enrico/tools/emsdk/emsdk_env.sh \
     FLUTTER_HOME=/home/enrico/tools/flutter/bin"
 
+mkdir -p /home/enrico/tools/emscripten_cache
+
 exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/enrico/tools/flutter \
+    --share=/home/enrico/tools/emscripten_cache=/home/enrico/.emscripten_cache/ \
     --expose=/home/enrico/tools/emsdk \
     --share=/home/enrico/tools/pub-cache=/home/enrico/.pub-cache \
     --share=/home/enrico/tools/config=/home/enrico/.config \
