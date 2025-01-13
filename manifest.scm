@@ -77,7 +77,6 @@
     "pkg-config"
     "python"
     "python-lsp-black"
-    "python-requests"
     "ripgrep"
     "roboto-mono-nerd-font"
     "tmux"

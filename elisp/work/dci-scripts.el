@@ -16,9 +16,11 @@
           (eshell-send-input))))
 
     (unless (get-buffer flutter-eshell)
-      (let ((eshell-buffer-name flutter-eshell)
-             (default-directory "~/Git/dci/"))
+      (let ((eshell-buffer-name flutter-eshell))
         (eshell)
         (with-current-buffer flutter-eshell
-          (insert "~/.emacs.d/scripts/emsdk_and_flutter.sh ./run_motomoto_server.sh")
-          (eshell-send-input))))))
+          (insert "~/.emacs.d/scripts/emsdk_and_flutter.sh")
+          (eshell-send-input)
+          (insert "cd motomoto/build/web")
+          (eshell-send-input)
+          )))))
