@@ -78,11 +78,7 @@
   (when-let ((has-rg? (executable-find "rg"))
              (et-xref-rg-command (concat "xargs -0 "xargs-max-chars xref-rg-command)))
     (add-to-list 'xref-search-program-alist `(ripgrep .  ,et-xref-rg-command))
-    (setq xref-search-program 'ripgrep))
-
-  ;; Select from xref candidates in minibuffer
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read
-        xref-show-xrefs-function #'xref-show-definitions-completing-read))
+    (setq xref-search-program 'ripgrep)))
 
 
 (use-package artist
