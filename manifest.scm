@@ -70,6 +70,7 @@
     "make"
     "ncurses"
     "ninja"
+    "node"
     "nss-certs"
     "opendyslexic-nerd-font"
     "openssh"
@@ -91,5 +92,4 @@
     "unzip"
     "virt-manager"
     "wl-clipboard"
-    "zip"
-    ))
+    "zip"))
