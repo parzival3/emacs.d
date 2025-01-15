@@ -176,11 +176,14 @@
       (magit-git "commit" "--all" "-m" commit-message)))
 
   (defun et-file-commit-message ()
-    (if-let ((files (magit-staged-files))
+    (if-let ((current-line-is-empty (save-excursion
+                                      (beginning-of-line)
+                                      (eq (char-after (point)) ?\C-j))) ;; check that the line is empty
+             (files (magit-staged-files))
              (file-name (abbreviate-file-name (file-name-sans-extension (car files))))
              (final-file-name (mapconcat #'identity
                                          (cl-remove-duplicates (split-string file-name)
-                                                               :test #'string-equal) ":")))
+                                           :test #'string-equal) ":")))
         (insert (concat final-file-name ": "))
       (error "No files staged")))
   :bind
