@@ -422,6 +422,7 @@
   (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\(?:\\(?:\\.\\(?:b\\(?:\\(?:abel\\|ower\\)rc\\)\\|json\\(?:ld\\)?\\)\\|composer\\.lock\\)\\'\\)'" . json-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(CC?\\|HH?\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-ts-mode))

@@ -83,7 +83,9 @@
   ; wsl-copy
 
   (meow-thing-register 'arrow '(pair ("<") (">")) '(pair ("<") (">")))
+  (meow-thing-register 'ticks '(pair ("'") ("'")) '(pair ("'") ("'")))
   (add-to-list 'meow-char-thing-table '(?a . arrow))
+  (add-to-list 'meow-char-thing-table '(?t . ticks)) ;; Not working?
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
