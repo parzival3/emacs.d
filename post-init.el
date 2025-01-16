@@ -45,6 +45,9 @@
 
 (use-package emacs
   :ensure nil
+  :custom
+  (custom-file (expand-file-name "custom.el" minimal-emacs-var-dir))
+  (custom-theme-directory (expand-file-name "themes/" minimal-emacs-var-dir))
   :init
   (put 'list-timers 'disabled nil)
   (defvar wsl (string-match "-[Mm]icrosoft" operating-system-release)
@@ -202,3 +205,9 @@
 (eval-and-compile
   (load-file (concat utils-package-dir "/utils-banner.el"))
   (setq initial-buffer-choice (setup-ascii-banner)))
+
+;; Load customizations
+(load custom-file)
+
+;; Start the Emacs server
+(server-start)
