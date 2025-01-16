@@ -9,10 +9,13 @@ CMD="env \
     PLATFORM=emscripten \
     CONFIGURATIONS=release \
     LINKAGES=static \
+    CPLUS_INCLUDE_DIR=$CPLUS_INCLUDE_PATH \
     CPLUS_INCLUDE_PATH= \
+    C_INCLUDE_DIR=$C_INCLUDE_PATH \
     C_INCLUDE_PATH= \
     EMSDK_HOME=/home/enrico/tools/emsdk/emsdk_env.sh \
     FLUTTER_HOME=/home/enrico/tools/flutter/bin"
+
 
 mkdir -p /home/enrico/tools/emscripten_cache
 
@@ -45,7 +48,7 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/e
   "grep"
   "glibc"
   "gcc-toolchain"
-  "clang-toolchain"
+  "ncurses"
   "fd"
   "which"
   "zlib"
