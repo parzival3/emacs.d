@@ -12,8 +12,7 @@
   (prin1-to-string `(system ,command)))
 
 (defun set-current-branch ()
-  (run-system-command
-    (format "git fetch --all; git reset --hard origin/%s" (magit-get-current-branch))))
+  `(system ,(format "git fetch --all; git reset --hard origin/%s" (magit-get-current-branch))))
 
 (defun set-master-branch ()
   (run-system-command "git reset --hard origin/master"))
@@ -24,7 +23,21 @@
 ;;   (geiser-repl--send (run-system-command "msbuild.exe -p:Configuration=Release kowalski/src"))
 ;;   (geiser-repl--send (run-system-command "msbuild.exe -p:Configuration=Release skipperlite/src")))
 
+(defun run (command)
+    (with-current-buffer windows-guile-buffer
+      (geiser-repl--send (prin1-to-string command))))
+
 (with-current-buffer windows-guile-buffer
   (geiser-repl--send change-directory-to-dci)
   (geiser-repl--send (set-master-branch))
   (geiser-repl--send (run-system-command "msbuild.exe -p:Configuration=Release skipperlite/src")))
+
+;; TODO: fixme :-)
+(setq counter 0)
+
+(let ((default-directory "~/Git/dci"))
+  (when (magit-unstaged-files)
+    (setq-local counter (+ 1 counter))
+    (magit-stage-modified)
+    (magit-commit-fast (format "guile-repl %d" counter))
+    (run (set-current-branch))))
