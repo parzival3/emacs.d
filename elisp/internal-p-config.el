@@ -8,7 +8,8 @@
   (:map Info-mode-map
     ("-" . Info-up)
     ("n" . Info-next)
-    ("p" . Info-prev))
+    ("p" . Info-prev)
+    ("a" . info-apropos))
   :config
   (eval `(bind-keys :map Info-mode-map ,@meow-normal-movement)))
 

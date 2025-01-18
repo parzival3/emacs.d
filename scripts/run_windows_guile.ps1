@@ -10,5 +10,4 @@ $env:MSYSTEM="MINGW64"
 $env:MSYS="winsymlinks:nativestrict"
 $env:MSYS2_PATH_TYPE="inherit"
 $env:PLATFORM="x64"
-
 C:/msys64/usr/bin/bash.exe --login -c "guile --listen=9919"
