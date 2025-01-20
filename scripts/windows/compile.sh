@@ -16,7 +16,6 @@ export FOLDERS
 # export CXX=clang++
 # export CC=clang
 
-CPLUS_INCLUDE
 
 if [ $PLATFORM = linux ]; then
     # if CPLUS_INCLUDE_DIR is not empty, then export it
@@ -32,4 +31,3 @@ if [ $PLATFORM = emscripten ]; then
    (cd motomoto/build/web; flutter build web && zip -u -r ../../go/web-server-content.zip .)
    CGO_ENABLED=0 go build -ldflags "-s -w" -o motomotoserver motomoto/go/motomoto-server.go; ./motomotoserver
 fi
-
