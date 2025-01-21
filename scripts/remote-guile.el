@@ -1,8 +1,8 @@
-(setq-local windows-guile-buffer-name "Windows Guile RPL")
-(setq-local geiser-repl-buffer-name-function (lambda (_) windows-guile-buffer-name))
+(setq-default windows-guile-buffer-name "Windows Guile RPL")
 
-(setq-local windows-guile-buffer (or (get-buffer windows-guile-buffer-name)
-                                  (geiser-connect 'guile "localhost" 9919)))
+(setq-default windows-guile-buffer (let ((geiser-repl-buffer-name-function (lambda (_) windows-guile-buffer-name)))
+                                (or (get-buffer windows-guile-buffer-name)
+                                   (geiser-connect 'guile "localhost" 9919))))
 
 
 ;; use system to run bat commands
@@ -12,7 +12,6 @@
       (geiser-repl--send (prin1-to-string command))))
 
 (defvar guile-dci-repo 'guile-dci-repo)
-
 (defun guile-git-repo-init ()
   (run `(use-modules (git)))
   (run `(begin
@@ -23,10 +22,10 @@
 
 (guile-git-repo-init)
 
-(defun create-virtual-env ()
-  (let ((python-path "/c/Tools/Python3.9")
-        (dci-python-env "EposPythonRoot"))
-  (run  `(system (string-concat
+;; (defun create-virtual-env ()
+;;   (let ((python-path "/c/Tools/Python3.9")
+;;         (dci-python-env "EposPythonRoot"))
+;;   (run  `(system (string-concat
 
 (defun check-commit-value ()
   (let* ((default-directory "~/Git/dci")
@@ -34,20 +33,33 @@
          (wsl-patch (shell-command-to-string "git diff HEAD"))
          (libgit-command `(let
                             ((windows-oid (reference-target (repository-head ,guile-dci-repo))))
+
                             (unless (oid=? windows-oid (string->oid ,wsl-commit))
-                              (system "git fetch --all"))
-                            (reset ,guile-dci-repo (object-lookup ,guile-dci-repo (string->oid ,wsl-commit)) RESET_HARD)
-                            (apply-diff ,guile-dci-repo (string->diff ,wsl-patch) APPLY-LOCATION-INDEX)
+                              (system "git fetch --all")
+                              (reset ,guile-dci-repo (object-lookup ,guile-dci-repo (string->oid ,wsl-commit)) RESET_HARD))
+
+                            (let*
+                              ((new-index (apply-diff-to-tree ,guile-dci-repo (commit-tree (commit-lookup ,guile-dci-repo windows-oid)) (string->diff ,wsl-patch)))
+                               (next-diff (diff-index-to-index ,guile-dci-repo (repository-index ,guile-dci-repo) new-index)))
+                              (apply-diff ,guile-dci-repo next-diff APPLY-LOCATION-BOTH)
+                              (display "Patch is :\n")
+                              (display "\n---------------------------\n")
+                              (display (diff->string next-diff))
+                              (display "\n---------------------------\n")
+                              )
                             )))
     (run libgit-command)))
 
 (check-commit-value)
 
-(run '(setenv "EposPythonRoot" "/c/Tools/Python3.9"))
-(run `(system "msbuild.exe -p:Configuration=Release py_device_service/src"))
-(run `(system "py_device_service/quickdfu/build_quickdfu.bat"))
-(run `(system "start cmd.exe @cmd -k \"./bin/windows-x64-release-static/quickdfu.exe\""))
-(run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#6B8E35\" -p ps -Command \"/c/Git/dci/bin/windows-x64-release-static/quickdfu.exe\""))
+(defun windows:build-quick-dfu ()
+  (interactive)
+  (check-commit-value)
+  (run '(setenv "EposPythonRoot" "/c/Tools/Python3.9"))
+  (run `(system "msbuild.exe -p:Configuration=Release py_device_service/src"))
+  (run `(system "py_device_service/quickdfu/build_quickdfu.bat"))
+  (run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#6B8E35\" -p ps -Command \"/c/Git/dci/bin/windows-x64-release-static/quickdfu.exe\"")))
+
 
 ;; (with-current-buffer windows-guile-buffer
 ;;   (geiser-repl--send change-directory-to-dci)
