@@ -1,18 +1,34 @@
 (setq-default windows-guile-buffer-name "Windows Guile RPL")
 
-(setq-default windows-guile-buffer (let ((geiser-repl-buffer-name-function (lambda (_) windows-guile-buffer-name)))
-                                (or (get-buffer windows-guile-buffer-name)
-                                   (geiser-connect 'guile "localhost" 9919))))
+(setq-default windows-guile-buffer nil)
 
+(setq-default dci-socket-process nil)
+(setq-default dci-socket-buffer-name "dci-socket-buffer")
+(setq-default dci-socket-port 9912)
+(setq-default dci-socket-buffer nil)
+(setq-default guile-dci-socket 'dci-socket)
+(defvar guile-dci-repo 'guile-dci-repo)
 
 ;; use system to run bat commands
 
 (defun run (command)
-    (with-current-buffer windows-guile-buffer
-      (geiser-repl--send (prin1-to-string command))))
+  (with-current-buffer windows-guile-buffer
+    (when (eq (car command) 'bat)
+      (setq command `(system ,(concat (cadr command) " | nc -c localhost " (int-to-string dci-socket-port)))))
+    (geiser-repl--send (prin1-to-string command))))
 
-(defvar guile-dci-repo 'guile-dci-repo)
+
 (defun guile-git-repo-init ()
+  (setq-default windows-guile-buffer
+    (let ((geiser-repl-buffer-name-function (lambda (_) windows-guile-buffer-name)))
+                                (or (get-buffer windows-guile-buffer-name)
+                                   (geiser-connect 'guile "localhost" 9919))))
+
+  (setq-default dci-socket-process (make-network-process :server t :host 'local :service dci-socket-port :name "dci-socket"
+                                     :family 'ipv4 :buffer (get-buffer-create dci-socket-buffer-name)))
+
+  (run `(define ,guile-dci-socket (socket PF_INET SOCK_STREAM 0)))
+  (run `(connect dci-socket AF_INET INADDR_LOOPBACK ,dci-socket-port))
   (run `(use-modules (git)))
   (run `(begin
           (libgit2-init!)
@@ -21,11 +37,6 @@
             (repository-open ".")))))
 
 (guile-git-repo-init)
-
-;; (defun create-virtual-env ()
-;;   (let ((python-path "/c/Tools/Python3.9")
-;;         (dci-python-env "EposPythonRoot"))
-;;   (run  `(system (string-concat
 
 (defun check-commit-value ()
   (let* ((default-directory "~/Git/dci")
@@ -52,6 +63,23 @@
 
 (check-commit-value)
 
+(defun windows:create-python-venv ()
+  (interactive)
+  (let ((create-venv-command `(let ((dci-path-file
+"/Git/dci/lib/windows-x64-release-static/
+/Git/dci/cloud_client/scripts
+/Git/dci/py_device_service/src
+/Git/dci/py_device_service/lib
+/Git/dci/py_device_service/demo
+/Git/dci/py_device_service/quickdfu"))
+                                (unless (file-exists? "_python_venv")
+                                  (system "/c/Tools/Python3.9/python3 -m venv _python_venv"))
+                                (with-output-to-file "/c/Git/dci/_python_venv/Lib/site-packages/dci.pth"
+                                  (lambda ()
+                                    (display dci-path-file)))
+                                (setenv "PATH" (string-append "/c/Git/dci/_python_venv/Scripts:" (getenv "PATH"))))))
+    (run create-venv-command)))
+
 (defun windows:build-quick-dfu ()
   (interactive)
   (check-commit-value)
@@ -59,6 +87,16 @@
   (run `(system "msbuild.exe -p:Configuration=Release py_device_service/src"))
   (run `(system "py_device_service/quickdfu/build_quickdfu.bat"))
   (run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#6B8E35\" -p ps -Command \"/c/Git/dci/bin/windows-x64-release-static/quickdfu.exe\"")))
+
+
+(defun windows:run-quick-dfu ()
+  (interactive)
+  (check-commit-value)
+  (windows:create-python-venv)
+  (run '(setenv "EposPythonRoot" "/c/Tools/Python3.9"))
+  (run `(system "msbuild.exe -p:Configuration=Release py_device_service/src"))
+  (run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#AE8E35\" -d /c/Git/dci/ -p ps /c/Git/dci/_python_venv/Scripts/python.exe /c/Git/dci/py_device_service/quickdfu/quickdfu.py --epos-manager-config=staging_kowalski")))
+
 
 
 ;; (with-current-buffer windows-guile-buffer

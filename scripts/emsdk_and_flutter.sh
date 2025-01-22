@@ -1,4 +1,4 @@
-#!/usr/bin/env `$(which bash)`
+#!/usr/bin/env bash
 # To build the linux version I had to do this otherwise limis.h was not found
 # CPLUS_INCLUDE_PATH="/gnu/store/l9467jv5sw5cc2a60nl6w96sxs8ls5m2-linux-libre-headers-5.15.49/include" flutter build linux -v
 
