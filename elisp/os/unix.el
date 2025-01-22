@@ -22,6 +22,7 @@
   :bind (("M-$" . jinx-correct)
           ("C-M-$" . jinx-languages)))
 
+
 (use-package dired
   :ensure nil
   :custom

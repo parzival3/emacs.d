@@ -131,7 +131,15 @@
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                  (window-parameters (mode-line-format . none))))
+
+
+  (embark-define-overlay-target jinx category (eq %p 'jinx-overlay))
+  (add-to-list 'embark-target-finders 'embark-target-jinx-at-point)
+  (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
+  (add-to-list 'embark-repeat-actions #'jinx-next)
+  (add-to-list 'embark-repeat-actions #'jinx-previous)
+  (add-to-list 'embark-target-injection-hooks (list #'jinx-correct #'embark--ignore-target)))
 
 (use-package corfu
   :ensure t
