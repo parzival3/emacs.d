@@ -5,6 +5,8 @@
 (setq-default dci-socket-process nil)
 (setq-default dci-socket-buffer-name "dci-socket-buffer")
 (setq-default dci-socket-port 9912)
+(setq-default windows-cmd-port 9900)
+(setq-default windows-cmd-socket 'windows-cmd-socket)
 (setq-default dci-socket-buffer nil)
 (setq-default guile-dci-socket 'dci-socket)
 (defvar guile-dci-repo 'guile-dci-repo)
@@ -14,7 +16,10 @@
 (defun run (command)
   (with-current-buffer windows-guile-buffer
     (when (eq (car command) 'bat)
-      (setq command `(system ,(concat (cadr command) " | nc -c localhost " (int-to-string dci-socket-port)))))
+      (setq command `(begin
+                       (system ,(concat (cadr command) " | nc -c localhost " (int-to-string windows-cmd-port)))
+                       (let ((input-port (accept ,windows-cmd-socket)))
+                         (format ,guile-dci-socket (get-string-all (car input-port)))))))
     (geiser-repl--send (prin1-to-string command))))
 
 
@@ -26,6 +31,12 @@
 
   (setq-default dci-socket-process (make-network-process :server t :host 'local :service dci-socket-port :name "dci-socket"
                                      :family 'ipv4 :buffer (get-buffer-create dci-socket-buffer-name)))
+
+
+  (run '(use-modules (rnrs io ports)))
+  (run `(define ,windows-cmd-socket (socket PF_INET SOCK_STREAM 0)))
+  (run `(bind ,windows-cmd-socket AF_INET INADDR_ANY ,windows-cmd-port))
+  (run `(listen ,windows-cmd-socket 1))
 
   (run `(define ,guile-dci-socket (socket PF_INET SOCK_STREAM 0)))
   (run `(connect dci-socket AF_INET INADDR_LOOPBACK ,dci-socket-port))
@@ -94,8 +105,10 @@
   (check-commit-value)
   (windows:create-python-venv)
   (run '(setenv "EposPythonRoot" "/c/Tools/Python3.9"))
-  (run `(system "msbuild.exe -p:Configuration=Release py_device_service/src"))
+  (run `(bat "msbuild.exe -p:Configuration=Release py_device_service/src"))
   (run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#AE8E35\" -d /c/Git/dci/ -p ps /c/Git/dci/_python_venv/Scripts/python.exe /c/Git/dci/py_device_service/quickdfu/quickdfu.py --epos-manager-config=staging_kowalski")))
+
+
 
 
 
