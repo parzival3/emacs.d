@@ -17,12 +17,12 @@
 
 (defun elgu:run (command)
   (with-current-buffer elgu:repl-buffer
-    ;; (when (eq (car command) 'bat)
-    ;;   (setq command `(begin
-    ;;                    (system ,(concat (cadr command) " | nc -c localhost " (int-to-string elgu:guile-cmd-input-port)))
-    ;;                    (let ((input-port (accept ,elgu:guile-windows-cmd-socket)))
-    ;;                      (format ,elgu:guile-elisp-socket (get-string-all (car input-port)))))))
-    (geiser-repl--send (prin1-to-string command))))
+    (when (eq (car command) 'bat)
+      (setq command `(begin
+                       (system ,(concat (cadr command) " | nc -c localhost " (int-to-string elgu:guile-cmd-input-port)))
+                       (let ((input-port (accept ,elgu:guile-windows-cmd-socket)))
+                         (format ,elgu:guile-elisp-socket (get-string-all (car input-port)))))))
+    (geiser-repl--send (string-replace "\\#" "#" (prin1-to-string command)))))
 
 (defun elgu:run-raw (command)
   (with-current-buffer elgu:repl-buffer
@@ -60,8 +60,9 @@
   (elgu:run `(define ,elgu:guile-dci-gitrepo (repository-open ".")))
   (elgu:run '(define elgu:guile-dci-remote (remote-lookup elgu:guile-dci-gitrepo "origin")))
   (elgu:run '(remote-connect elgu:guile-dci-remote))
-  (elgu:run '(remote-fetch elgu:guile-dci-remote))
-  (elgu:run-raw "(define (remote-fetch! remote options) (remote-fetch remote #:fetch-options options))"))
+  (elgu:run '(define remote-fetch-options (make-fetch-options)))
+  (elgu:run '(set-fetch-options-download-tags! remote-fetch-options 'all))
+  (elgu:run '(remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options)))
 
 (defun elgu:sync-repo ()
   (let* ((default-directory "~/Git/dci")
@@ -70,18 +71,16 @@
           (libgit-command `(let
                             ((windows-oid (reference-target (repository-head ,elgu:guile-dci-gitrepo))))
                             (unless (oid=? windows-oid (string->oid ,wsl-commit))
-                              (define remote-fetch-options (make-fetch-options))
-                              (set-fetch-options-download-tags! remote-fetch-options 'all)
-                              (remote-fetch! elgu:guile-dci-remote remote-fetch-options)
-                              (reset ,elgu:guile-dci-gitrepo (object-lookup ,elgu:guile-dci-gitrepo (string->oid ,wsl-commit)) RESET_HARD))
-                             (when (not (string= wsl-patch ""))
+                                (remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options)
+                                (reset ,elgu:guile-dci-gitrepo (object-lookup ,elgu:guile-dci-gitrepo (string->oid ,wsl-commit)) RESET_HARD))
+                             (when (not (string= ,wsl-patch ""))
                                (display "Applying patch")
                                (let* ((new-index (apply-diff-to-tree ,elgu:guile-dci-gitrepo (commit-tree (commit-lookup ,elgu:guile-dci-gitrepo windows-oid)) (string->diff ,wsl-patch)))
                                        (next-diff (diff-index-to-index ,elgu:guile-dci-gitrepo (repository-index ,elgu:guile-dci-gitrepo) new-index)))
                                  (apply-diff ,elgu:guile-dci-gitrepo next-diff APPLY-LOCATION-BOTH)))
                                )))
     (elgu:run libgit-command)))
-;;
+
 (defun elgu:create-python-venv ()
   (interactive)
   (let ((create-venv-command `(let ((dci-path-file
