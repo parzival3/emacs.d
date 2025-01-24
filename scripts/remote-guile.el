@@ -28,7 +28,6 @@
   (with-current-buffer elgu:repl-buffer
     (geiser-repl--send command)))
 
-
 (defun elgu:init-repl-buffer ()
   (unless elgu:repl-buffer
     (let ((geiser-repl-buffer-name-function (lambda (_) elgu:repl-buffer-name))
@@ -57,22 +56,24 @@
   (elgu:run `(use-modules (git)))
   (elgu:run '(libgit2-init!))
   (elgu:run `(chdir ,elgu:windows-dci-directory))
-  (elgu:run `(define ,elgu:guile-dci-gitrepo (repository-open ".")))
+  (elgu:run `(define ,elgu:guile-dci-gitrepo (repository-open "."))))
   (elgu:run '(define elgu:guile-dci-remote (remote-lookup elgu:guile-dci-gitrepo "origin")))
-  (elgu:run '(remote-connect elgu:guile-dci-remote))
-  (elgu:run '(define remote-fetch-options (make-fetch-options)))
-  (elgu:run '(set-fetch-options-download-tags! remote-fetch-options 'all))
-  (elgu:run '(remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options)))
+  ;; (elgu:run '(remote-connect elgu:guile-dci-remote))
+  ;; (elgu:run '(define remote-fetch-options (make-fetch-options)))
+  ;; (elgu:run '(set-fetch-options-download-tags! remote-fetch-options 'all))
+  ;; (elgu:run '(remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options)))
 
 (defun elgu:sync-repo ()
   (let* ((default-directory "~/Git/dci")
           (wsl-commit (magit-rev-hash "HEAD"))
+          (wsl-branch-name (magit-name-local-branch "HEAD"))
           (wsl-patch (shell-command-to-string "git diff HEAD"))
           (libgit-command `(let
                             ((windows-oid (reference-target (repository-head ,elgu:guile-dci-gitrepo))))
-                            (unless (oid=? windows-oid (string->oid ,wsl-commit))
-                                (remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options)
-                                (reset ,elgu:guile-dci-gitrepo (object-lookup ,elgu:guile-dci-gitrepo (string->oid ,wsl-commit)) RESET_HARD))
+                             (unless (oid=? windows-oid (string->oid ,wsl-commit))
+                               (system (format \#f "git fetch origin ~s" ,wsl-branch-name))
+                               ;; (remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options) ;; TODO: fix fetch options
+                               (reset ,elgu:guile-dci-gitrepo (object-lookup ,elgu:guile-dci-gitrepo (string->oid ,wsl-commit)) RESET_HARD))
                              (when (not (string= ,wsl-patch ""))
                                (display "Applying patch")
                                (let* ((new-index (apply-diff-to-tree ,elgu:guile-dci-gitrepo (commit-tree (commit-lookup ,elgu:guile-dci-gitrepo windows-oid)) (string->diff ,wsl-patch)))
@@ -86,6 +87,7 @@
   (let ((create-venv-command `(let ((dci-path-file
 "/Git/dci/lib/windows-x64-release-static/
 /Git/dci/cloud_client/scripts
+/Git/dci/cloud_client/emscripten/scripts
 /Git/dci/py_device_service/src
 /Git/dci/py_device_service/lib
 /Git/dci/py_device_service/demo
