@@ -206,8 +206,9 @@
   (load-file (concat utils-package-dir "/utils-banner.el"))
   (setq initial-buffer-choice (setup-ascii-banner)))
 
-;; Load customizations
-(load custom-file)
+;; Load customization's
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;; Start the Emacs server
 (server-start)

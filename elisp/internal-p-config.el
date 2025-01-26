@@ -464,7 +464,8 @@
   :after ('esh-module)
   :config
   (setopt eshell-prompt-function 'fancy-shell)
-  (setopt eshell-highlight-prompt 't))
+  (setopt eshell-highlight-prompt 't)
+  (add-to-list 'eshell-modules-list 'eshell-smart)
 
   (defun fancy-shell ()
     "A pretty shell with git status"
