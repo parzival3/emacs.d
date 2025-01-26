@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # To build the linux version I had to do this otherwise limis.h was not found
 # CPLUS_INCLUDE_PATH="/gnu/store/l9467jv5sw5cc2a60nl6w96sxs8ls5m2-linux-libre-headers-5.15.49/include" flutter build linux -v
 
@@ -13,16 +14,24 @@ CMD="env \
     CPLUS_INCLUDE_PATH= \
     C_INCLUDE_DIR=$C_INCLUDE_PATH \
     C_INCLUDE_PATH= \
+    EM_CACHE=/home/enrico/tools/dot-emcache \
     EMSDK_HOME=/home/enrico/tools/emsdk/emsdk_env.sh \
     FLUTTER_HOME=/home/enrico/tools/flutter/bin"
 
-
+mkdir -p /home/enrico/tools/emsdk
+mkdir -p /home/enrico/tools/pub-cache
+mkdir -p /home/enrico/tools/config
+mkdir -p /home/enrico/tools/dot-flutter
+mkdir -p /home/enrico/tools/flutter
+mkdir -p /home/enrico/tools/dot-emcache
 mkdir -p /home/enrico/tools/emscripten_cache
 
-exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/enrico/tools/flutter \
+exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR
+    --share=/home/enrico/tools/flutter \
     --share=/home/enrico/tools/emscripten_cache=/home/enrico/.emscripten_cache/ \
     --expose=/home/enrico/tools/emsdk \
     --expose=/home/enrico/.emacs.d \
+    --share=/home/enrico/tools/dot-emcache \
     --share=/home/enrico/tools/pub-cache=/home/enrico/.pub-cache \
     --share=/home/enrico/tools/config=/home/enrico/.config \
     --share=/home/enrico/tools/dot-flutter=/home/enrico/.flutter \
@@ -45,6 +54,7 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/e
   "coreutils"
   "nss-certs"
   "tar"
+  "libx11"
   "xz"
   "grep"
   "glibc"
@@ -59,5 +69,5 @@ exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR --share=/home/e
   "eudev"
   "go"
   "zip"
-  "python-requests"
+  "sed"
   "gtk+"))
