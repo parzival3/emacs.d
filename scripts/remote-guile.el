@@ -21,7 +21,7 @@
       (setq command `(begin
                        (system ,(concat (cadr command) " | nc -c localhost " (int-to-string elgu:guile-cmd-input-port)))
                        (let ((input-port (accept ,elgu:guile-windows-cmd-socket)))
-                         (format ,elgu:guile-elisp-socket (get-string-all (car input-port)))))))
+                         (format "~s" ,elgu:guile-elisp-socket (get-string-all (car input-port)))))))
     (geiser-repl--send (string-replace "\\#" "#" (prin1-to-string command)))))
 
 (defun elgu:run-raw (command)
@@ -75,11 +75,11 @@
                                ;; (remote-fetch elgu:guile-dci-remote \#:fetch-options remote-fetch-options) ;; TODO: fix fetch options
                                (reset ,elgu:guile-dci-gitrepo (object-lookup ,elgu:guile-dci-gitrepo (string->oid ,wsl-commit)) RESET_HARD))
                              (when (not (string= ,wsl-patch ""))
-                               (display "Applying patch")
+                               (display "Applying patch\n")
                                (let* ((new-index (apply-diff-to-tree ,elgu:guile-dci-gitrepo (commit-tree (commit-lookup ,elgu:guile-dci-gitrepo windows-oid)) (string->diff ,wsl-patch)))
                                        (next-diff (diff-index-to-index ,elgu:guile-dci-gitrepo (repository-index ,elgu:guile-dci-gitrepo) new-index)))
                                  (apply-diff ,elgu:guile-dci-gitrepo next-diff APPLY-LOCATION-BOTH)))
-                               )))
+                             (display "Sync completed!\n"))))
     (elgu:run libgit-command)))
 
 (defun elgu:create-python-venv ()
@@ -115,3 +115,30 @@
   (elgu:run '(setenv "EposPythonRoot" "/c/Tools/Python3.9"))
   (elgu:run `(bat "msbuild.exe -p:Configuration=Release py_device_service/src"))
   (elgu:run `(system "wt -w 0 nt --title \"QuickDFU\" --tabColor \"#AE8E35\" -d /c/Git/dci/ -p ps /c/Git/dci/_python_venv/Scripts/python.exe /c/Git/dci/py_device_service/quickdfu/quickdfu.py --epos-manager-config=staging_kowalski")))
+
+
+(defun elgu:last-command-succeeded ()
+  (with-current-buffer elgu:repl-buffer
+    (save-excursion
+      (goto-char (geiser-repl--last-prompt-end))
+      (goto-char (geiser-repl--last-prompt-start))
+      (previous-line)
+      (message (word-at-point t))
+      (not (string= (word-at-point t) "Entering")))))
+
+(defun add-elgu-save-hooks ()
+  (when (or (eq major-mode #'c-ts-mode)
+          (eq major-mode #'python-ts-mode)
+          (eq major-mode #'c++-ts-mode)
+          (eq major-mode #'conf-space-mode))
+    (elgu:sync-repo)
+    (with-current-buffer elgu:repl-buffer
+      (letrec ((check-success-hook (lambda (_b _e _len)
+                                     (if (not (elgu:last-command-succeeded))
+                                       (message "There was an error in sync with elgu...")
+                                       (message "Sync successful"))
+                                     (remove-hook 'post-command-hook check-success-hook))))
+
+        (add-hook 'after-change-functions check-success-hook nil t)))))
+
+(add-hook 'after-save-hook 'add-elgu-save-hooks)

@@ -26,7 +26,7 @@ mkdir -p /home/enrico/tools/flutter
 mkdir -p /home/enrico/tools/dot-emcache
 mkdir -p /home/enrico/tools/emscripten_cache
 
-exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR
+exec guix shell -C --pure  -F -N -E ^DISPLAY -E ^XDG_RUNTIME_DIR \
     --share=/home/enrico/tools/flutter \
     --share=/home/enrico/tools/emscripten_cache=/home/enrico/.emscripten_cache/ \
     --expose=/home/enrico/tools/emsdk \

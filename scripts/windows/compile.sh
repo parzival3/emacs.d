@@ -6,12 +6,12 @@ FOLDERS="platform/src \
          package_repository/src \
          dci/src \
          device_service/src \
-         py_device_service/src"
-# FOLDERS+="emscripten/src"
+         emscripten/src \
+         "
 
 export CONFIGURATIONS=release
 export LINKAGES=static
-export PLATFORM=linux
+export PLATFORM=emscripten
 export FOLDERS
 # export CXX=clang++
 # export CC=clang
@@ -28,6 +28,16 @@ make
 
 
 if [ $PLATFORM = emscripten ]; then
-   (cd motomoto/build/web; flutter build web && zip -u -r ../../go/web-server-content.zip .)
-   CGO_ENABLED=0 go build -ldflags "-s -w" -o motomotoserver motomoto/go/motomoto-server.go; ./motomotoserver
+    rm -rf motomoto/build/web/dci
+    rm -rf motomoto/web/dci
+
+    if [ $CONFIGURATIONS = release ]; then
+        (cd motomoto/build/web; flutter build web && ln -s $PWD/../../../bin/emscripten-wasm32-$CONFIGURATIONS-static $PWD/dci && zip -r ../../go/web-server-content.zip .)
+        CGO_ENABLED=0 go build -ldflags "-s -w" -o motomotoserver motomoto/go/motomoto-server.go; ./motomotoserver
+    else
+      ln -s $PWD/bin/emscripten-wasm32-$CONFIGURATIONS-static  $PWD/motomoto/web/dci
+      (cd motomoto; flutter run -d web-server --web-port=8000 --web-header="Cross-Origin-Embedder-Policy=require-corp" \
+                          --web-header="Cross-Origin-Opener-Policy=same-origin" \
+                          --web-header="Content-Security-Policy=default-src 'self' 'unsafe-inline' 'unsafe-eval' *.gstatic.com *.enterprise.eposaudio.com *.eposstorage.com wss://127.0.0.1:41096/; frame-ancestors 'self';")
+    fi
 fi
