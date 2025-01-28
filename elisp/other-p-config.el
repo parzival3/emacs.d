@@ -108,4 +108,9 @@
 (use-package paredit
   :defer t)
 
+
+(use-package ox-jira
+  :defer nil
+  :ensure )
+
 (provide 'packages)

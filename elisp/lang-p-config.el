@@ -66,7 +66,7 @@
     (">" . #'devdocs-last-page)
     ("L" . #'devdocs-go-back)
     ("r" . #'devdocs-go-forward)
-    ("w" . #'devdocs-copy-url)
+    ("W" . #'devdocs-copy-url)
     ("." . #'devdocs-goto-target))
   :config
   (eval `(bind-keys :map devdocs-mode-map ,@meow-normal-movement)))

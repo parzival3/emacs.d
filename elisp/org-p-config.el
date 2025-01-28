@@ -125,6 +125,7 @@
 (use-package org
   :defer t
   :config
+  (setq org-export-copy-to-kill-ring 'if-interactive)
   (setq org-element-cache-persistent nil)
   (setq org-notes-folder (concat et-git-directory "/notes/"))
   (defun org-list-of-notes ()
@@ -161,16 +162,5 @@
   (setq org-agenda-files (list (concat et-git-directory "notes/gtd.org")
                                (concat et-git-directory "notes/journal.org"))))
 
-
-(defun et-org-start-mutagen ()
-  "Start mutagen for the org-roam directory."
-  (interactive)
-  (if (executable-find "mutagen")
-      (progn
-        (start-process "mutagen" "*mutagen*" "mutagen" "daemon" "start")
-        (message "Mutagen started"))
-    (warn "Mutagen is not installed")))
-
-(et-org-start-mutagen)
 
 (provide 'org-config)
